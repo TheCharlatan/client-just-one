@@ -1,21 +1,25 @@
 import styled from "styled-components";
 
 export const Button = styled.button`
-  &:hover {
-    transform: translateY(-2px);
-  }
-  padding: 6px;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 13px;
-  text-align: center;
-  color: rgba(255, 255, 255, 1);
-  width: ${props => props.width || null};
-  height: 35px;
-  border: none;
-  border-radius: 20px;
-  cursor: ${props => (props.disabled ? "default" : "pointer")};
-  opacity: ${props => (props.disabled ? 0.4 : 1)};
-  background: rgb(16, 89, 255);
-  transition: all 0.3s ease;
+position: relative;
+width: 267px;
+height:45px;
+
+
+background: #F8E7D1;
+border: 6px solid #DDC18E;
+box-sizing: border-box;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
+
+export const Eins = styled.div`
+position: relative;
+width: 267px;
+height:45px;
+
+background: #F8E7D1;
+border: 6px solid #DDC18E;
+box-sizing: border-box;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+`;
+

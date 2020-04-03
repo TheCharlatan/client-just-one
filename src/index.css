@@ -6,8 +6,25 @@ This file contains the general and shared style of your application.
 body {
   margin: 0;
   padding: 0;
-  font-family: "Open Sans", sans-serif;
-  background: #0e3d61;
+
+  border-color: black;
+  border-width: 2px;
+  border-style: solid;
+
+}
+
+body::after{
+  content: "";
+  background-image: url(img/logo_trans.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.2;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;
 }
 
 input,

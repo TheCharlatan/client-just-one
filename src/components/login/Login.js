@@ -1,10 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BaseContainer } from '../../helpers/layout';
+import {BaseContainer, CenterContainer, ChatContainer, LeaderboardContainer} from '../../helpers/layout';
+import {MenuContainer} from '../../views/design/style'
 import { api, handleError } from '../../helpers/api';
 import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
+import {Yellow} from '../../views/design/Font-Family';
+import {Red} from '../../views/design/Font-Family';
+import {Blue} from '../../views/design/Font-Family';
+import {Green} from '../../views/design/Font-Family';
+import {Pink} from '../../views/design/Font-Family';
+import {Violet} from '../../views/design/Font-Family';
+import {Orange} from '../../views/design/Font-Family';
+
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -26,6 +35,7 @@ const Form = styled.div`
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
+  
   background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
@@ -54,6 +64,10 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 20px;
+  background: #F8E7D1;
+  border: 13px solid #DDC18E;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
 
 /**
@@ -125,39 +139,20 @@ class Login extends React.Component {
    */
   componentDidMount() {}
 
+
+  /* Playground for the components */
   render() {
     return (
-      <BaseContainer>
-        <FormContainer>
-          <Form>
-            <Label>Username</Label>
-            <InputField
-              placeholder="Enter here.."
-              onChange={e => {
-                this.handleInputChange('username', e.target.value);
-              }}
-            />
-            <Label>Name</Label>
-            <InputField
-              placeholder="Enter here.."
-              onChange={e => {
-                this.handleInputChange('name', e.target.value);
-              }}
-            />
-            <ButtonContainer>
-              <Button
-                disabled={!this.state.username || !this.state.name}
-                width="50%"
-                onClick={() => {
-                  this.login();
-                }}
-              >
-                Login
-              </Button>
-            </ButtonContainer>
-          </Form>
-        </FormContainer>
-      </BaseContainer>
+        <BaseContainer>
+            <CenterContainer>
+                <FormContainer>
+                    <Red> Form Container </Red>
+                    <Form>
+                        <Pink> Form </Pink>
+                    </Form>
+                </FormContainer>
+            </CenterContainer>
+        </BaseContainer>
     );
   }
 }
