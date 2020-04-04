@@ -23,6 +23,8 @@ grid-row-gap: 0px;
   padding-right: 2px;
   min-width: 99vw;
   min-height: 99vh;
+  
+  
 `;
 
 /*Chat container on the left side of the grid*/
@@ -31,6 +33,8 @@ export const ChatContainer = styled.div`
 grid-area: 2 / 1 / 3 / 2;
 padding-left: 2px
 padding-right: 2px
+
+
 `;
 
 /*leaderboard container on the right side of the grid */
@@ -39,6 +43,8 @@ export const LeaderboardContainer = styled.div`
 grid-area: 2 / 3 / 3 / 4;
 padding-left: 2px
 padding-right: 2px
+
+
 `;
 
 /* center container of the grid which contains for example the menu bar */
@@ -47,4 +53,7 @@ export const CenterContainer = styled.div`
 grid-area: 2 / 2 / 3 / 3;
 padding-left: 2px
 padding-right: 2px
+
+
+
 `;

@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 
 /* the header is on top and contains for example the profile and logout button */
