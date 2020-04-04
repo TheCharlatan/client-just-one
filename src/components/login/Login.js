@@ -1,55 +1,69 @@
 import React from 'react';
 import styled from 'styled-components';
-import {BaseContainer, CenterContainer, ChatContainer, LeaderboardContainer} from '../../helpers/layout';
+import {BaseContainer, CenterContainer} from '../../helpers/layout';
 
 import { api, handleError } from '../../helpers/api';
-import User from '../shared/models/User';
+import Token from '../shared/models/Token';
 import { withRouter } from 'react-router-dom';
 import FormContainer from "../../views/design/customized-layouts/FormContainer";
-import Red from "../../views/design/font-families/Red";
 import Form from "../../views/design/customized-layouts/Form";
 import Pink from "../../views/design/font-families/Pink";
+import InputField from "../../views/design/customized-layouts/InputField";
+import Label from "../../views/design/customized-layouts/Label";
+import Green from "../../views/design/font-families/Green";
+
+import Button from "../../views/design/customized-layouts/Button";
+import ButtonContainer from "../../views/design/customized-layouts/ButtonContainer";
+import {AxiosBasicCredentials as state} from "axios";
 
 
 const FormContainerLogin = styled(FormContainer)`
-position: absolute;
-left: 0%;
-right: 0%;
-top: 0%;
-bottom: 0%;
-margin: auto;
-width: 600px;
+margin-top: 20%;
+height: 315px;
+
 `;
 
-const InputField = styled.input`
-  &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
+const FormLogin = styled(Form)`
+  width: 885px;
+  height: 100%;
+  padding-top: 50px;
+`;
+
+const InputFieldLogin = styled(InputField)`
+font-family: fantasy;
+font-style: normal;
+font-weight: normal;
+font-size: 18px;
+letter-spacing: 0.41em;
+color: #FF369D;
+text-stroke: 2px #DE1E80;
+-webkit-text-stroke: 2px #DE1E80;
+
+&::placeholder {
+    font-family: fantasy;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    letter-spacing: 0.41em;
+    color: #FF369D;
+
+    mix-blend-mode: darken;
+    text-stroke: 2px #DE1E80;
+    -webkit-text-stroke: 2px #DE1E80;
+    
   }
-  height: 35px;
-  padding-left: 15px;
-  margin-left: -4px;
-  border: none;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
 `;
 
-const Label = styled.label`
-  color: white;
-  margin-bottom: 10px;
-  text-transform: uppercase;
+const LabelLogin = styled(Label)`
+margin-right: 50px;
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  background: #F8E7D1;
-  border: 13px solid #DDC18E;
-  box-sizing: border-box;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+const ButtonLogin = styled(Button)`
+margin-right: 100px;
 `;
+
+
+
 
 /**
  * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
@@ -70,7 +84,7 @@ class Login extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: null,
+      password: null,
       username: null
     };
   }
@@ -81,17 +95,16 @@ class Login extends React.Component {
    */
   async login() {
     try {
-      const requestBody = JSON.stringify({
-        username: this.state.username,
-        name: this.state.name
-      });
-      const response = await api.post('/users', requestBody);
+
+        const requestHeader = window.btoa(Uint8Array.from(this.state.username + ":" + this.state.password));
+
+      const response = await api.get('/user/login', {headers: {'Authorization': requestHeader}});
 
       // Get the returned user and update a new object.
-      const user = new User(response.data);
-
+      const token = new Token(response.data);
+      console.log(token);
       // Store the token into the local storage.
-      localStorage.setItem('token', user.token);
+      localStorage.setItem('token', token.token);
 
       // Login successfully worked --> navigate to the route /game in the GameRouter
       this.props.history.push(`/game`);
@@ -121,17 +134,45 @@ class Login extends React.Component {
   componentDidMount() {}
 
 
-  /* Playground for the components */
   render() {
     return (
         <BaseContainer>
             <CenterContainer>
                 <FormContainerLogin>
-                    <Red> Form Container </Red>
-                    <Form>
-                        <Pink> Form </Pink>
-                    </Form>
+                    <FormLogin>
+                        <LabelLogin>
+                            <Pink>Username</Pink>
+                        </LabelLogin>
+                        <InputFieldLogin
+                            placeholder="..."
+                            onChange={e=>{this.handleInputChange('username', e.target.value);}}
+                        />
+                        <LabelLogin>
+                            <Pink>password</Pink>
+                        </LabelLogin>
+                        <InputFieldLogin
+                            type="password"
+                            placeholder="..."
+                            onChange={e=>{this.handleInputChange('password', e.target.value);}}
+                        />
+                    </FormLogin>
                 </FormContainerLogin>
+
+                <ButtonContainer>
+                    <ButtonLogin
+                        disabled={!this.state.username || !this.state.password}
+                        width="50%"
+                        onClick={()=>{this.login();}}
+                    >
+                        <Green> login </Green>
+                    </ButtonLogin>
+                    <Button
+                        width="50%"
+                        onClick={()=>{this.props.history.push('/registration');}}
+                    >
+                        <Green> registration </Green>
+                    </Button>
+                </ButtonContainer>
             </CenterContainer>
         </BaseContainer>
     );
