@@ -21,8 +21,8 @@ grid-row-gap: 0px;
   padding-left: 2px;
   margin-right: auto;
   padding-right: 2px;
-  min-width: 99vw;
-  min-height: 99vh;
+  width: ${DESKTOP_WIDTH}px;
+  height: ${DESKTOP_HEIGHT}px;
   
   
 `;
@@ -53,7 +53,5 @@ export const CenterContainer = styled.div`
 grid-area: 2 / 2 / 3 / 3;
 padding-left: 2px
 padding-right: 2px
-
-
 
 `;

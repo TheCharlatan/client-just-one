@@ -1,12 +1,7 @@
 import styled from 'styled-components';
 
 const InputField = styled.input`
-  &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
-  }
-  
-  
-  width: 410px;
+  width: 300px;
   height: 38px;
   
 background: #FFFFFF;
