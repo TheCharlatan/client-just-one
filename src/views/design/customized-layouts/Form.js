@@ -7,7 +7,7 @@ display: flex;
   flex-direction: column;
   justify-content: center;
   width: 60%;
-  height: 375px;
+  height: auto;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;

@@ -18,7 +18,7 @@ class Test extends React.Component {
             <BaseContainer>
                 <CenterContainer>
                     <FormContainer>
-                    <Form shouldHover>
+                        <Form shouldHover>
                             <Violet>test</Violet>
                             <br></br>
                             <Blue>test</Blue>
@@ -40,11 +40,11 @@ class Test extends React.Component {
                 </CenterContainer>
             </BaseContainer>
         );
-      }
     }
+}
     
-    /**
-     * You can get access to the history object's properties via the withRouter.
-     * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
-     */
-    export default withRouter(Test);
+/**
+ * You can get access to the history object's properties via the withRouter.
+ * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
+ */
+export default withRouter(Test);
