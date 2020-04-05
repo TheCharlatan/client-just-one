@@ -1,5 +1,13 @@
 import React from 'react';
-import {BaseContainer, CenterContainer, ChatContainer, LeaderboardContainer} from '../../helpers/layout';
+import {
+    BaseContainer,
+    BottomLeftContainer,
+    CenterContainer,
+    ChatContainer,
+    LeaderboardContainer,
+    TopLeftContainer,
+    TopRightContainer
+} from '../../helpers/layout';
 
 import { withRouter } from 'react-router-dom';
 import Chat from "../chat/Chat";
@@ -9,6 +17,9 @@ import Form from "../../views/design/customized-layouts/Form";
 import CreateLobbyButton from "./CreateLobbyButton"
 import JoinLobbyButton from "./JoinLobbyButton"
 import TutorialButton from "./TutorialButton"
+import LogoutButton from "./LogoutButton";
+import ChatButton from "./ChatButton";
+import ProfileButton from "./ProfileButton";
 
 
 /**
@@ -39,18 +50,27 @@ export class MainPage extends React.Component {
     render() {
         return (
             <BaseContainer>
+                <TopLeftContainer>
+                    <LogoutButton/>
+                </ TopLeftContainer>
                 <ChatContainer>
                     <Chat/>
                 </ChatContainer>
+                <BottomLeftContainer>
+                    <ChatButton/>
+                </BottomLeftContainer>
                 <CenterContainer>
                     <FormContainer>
-                        <Form>
+                        <Form style={{width: "auto", height: "auto"}}>
                             <CreateLobbyButton/>
                             <JoinLobbyButton/>
                             <TutorialButton/>
                         </Form>
                     </FormContainer>
                 </CenterContainer>
+                <TopRightContainer>
+                    <ProfileButton />
+                </TopRightContainer>
                 <LeaderboardContainer>
                     <Leaderboard/>
                 </LeaderboardContainer>
@@ -59,8 +79,5 @@ export class MainPage extends React.Component {
     }
 }
 
-/**
- * You can get access to the history object's properties via the withRouter.
- * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
- */
+
 export default withRouter(MainPage);

@@ -14,6 +14,7 @@ const FlexButton = styled(Button)`
 `;
 
 
+// one of the buttons in the middle part of main page
 function CreateLobbyButton() {
     return (
         <FlexButton

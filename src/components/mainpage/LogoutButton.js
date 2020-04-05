@@ -9,21 +9,20 @@ import { api, handleError } from '../../helpers/api';
 const FlexButton = styled(Button)`
   display: flex;
   justify-content: center;
-  margin: 10px;
   background: #FFFFFF;
 `;
 
 
-// one of the buttons in the middle part of main page
-function JoinLobbyButton() {
+// button above chat component on main page
+function LogoutButton() {
     return (
         <FlexButton
             onClick={() => {
-                // join lobby
+                // log user out (and redirect to login)
             }}>
-            <Red>Join Lobby</Red>
+            <Red>Logout</Red>
         </FlexButton>
     );
 }
 
-export default JoinLobbyButton;
+export default LogoutButton;

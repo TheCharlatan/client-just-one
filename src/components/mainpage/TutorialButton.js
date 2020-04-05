@@ -14,11 +14,12 @@ const FlexButton = styled(Button)`
 `;
 
 
+// one of the buttons in the middle part of main page
 function TutorialButton() {
     return (
         <FlexButton
             onClick={() => {
-                // create lobby
+                // redirect to tutorial
             }}>
             <Pink>Tutorial</Pink>
         </FlexButton>

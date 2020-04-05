@@ -9,7 +9,10 @@ class Leaderboard extends React.Component {
 
     render() {
         return (
-          <p>Leaderboard Placeholder</p>
+            // placeholder to visualize dimensions
+            <div style={{height: "100%", background: "yellow"}}>
+                <p style={{margin: 0}}>Leaderboard Placeholder</p>
+            </div>
         );
     }
 }

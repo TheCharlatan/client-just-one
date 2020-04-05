@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import Leaderboard from "../leaderboard/Leaderboard";
 
 class Chat extends React.Component {
 
@@ -10,7 +9,10 @@ class Chat extends React.Component {
 
     render() {
         return (
-            <p>Chat Placeholder</p>
+            // placeholder to visualize dimensions
+            <div style={{height: "100%", background: "yellow"}}>
+                <p style={{margin: 0}}>Chat Placeholder</p>
+            </div>
         );
     }
 }

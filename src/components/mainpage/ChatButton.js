@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import {Button} from "../../views/design/Button";
-import Red from "../../views/design/font-families/Red";
+import Yellow from "../../views/design/font-families/Yellow";
 import React from "react";
 
 import { api, handleError } from '../../helpers/api';
@@ -9,21 +9,20 @@ import { api, handleError } from '../../helpers/api';
 const FlexButton = styled(Button)`
   display: flex;
   justify-content: center;
-  margin: 10px;
   background: #FFFFFF;
 `;
 
 
-// one of the buttons in the middle part of main page
-function JoinLobbyButton() {
+// button below chat component on main page
+function ChatButton() {
     return (
         <FlexButton
             onClick={() => {
-                // join lobby
+                // implement chat button
             }}>
-            <Red>Join Lobby</Red>
+            <Yellow>Chat</Yellow>
         </FlexButton>
     );
 }
 
-export default JoinLobbyButton;
+export default ChatButton;
