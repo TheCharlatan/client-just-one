@@ -12,6 +12,7 @@ background-size: 41px 36px;
   box-shadow: 0 8px 8px rgba(0, 0, 0, 0.4);
   transform: translateY(-0.25em);
   cursor:pointer;
+  
 }
 `;
 

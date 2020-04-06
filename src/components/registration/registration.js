@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import {BaseContainer, CenterContainer} from '../../helpers/layout';
-import { api, handleError } from '../../helpers/api';
-import { withRouter } from 'react-router-dom';
+import {api, handleError} from '../../helpers/api';
+import {withRouter} from 'react-router-dom';
 import FormContainer from "../../views/design/customized-layouts/FormContainer";
 import Form from "../../views/design/customized-layouts/Form";
 import Label from "../../views/design/customized-layouts/Label";
@@ -13,7 +13,26 @@ import ProfilePictureContainer from "../../views/design/customized-layouts/Profi
 import EditProfilePictureButton from "../../views/design/customized-layouts/EditProfilePictureButton";
 import Blue from "../../views/design/font-families/Blue";
 import Yellow from "../../views/design/font-families/Yellow";
+import {ChooseImageContainer} from "./ImageContainer";
+import {
+    DogContainer,
+    ElephantContainer,
+    GiraffeContainer,
+    HippoContainer,
+    LionContainer,
+    PenguinContainer,
+    SquirrelContainer,
+    TigerContainer
+} from "./ImageContainerContent";
 
+import dog from "../../img/dog.png"
+import lion from "../../img/lion.png"
+import elephant from "../../img/elephant.png"
+import giraffe from "../../img/giraffe.png"
+import hippo from "../../img/hippo.png"
+import penguin from "../../img/penguin.png"
+import squirrel from "../../img/squirrel.png"
+import tiger from "../../img/tiger.png"
 
 
 const FormRegistration = styled(Form)`
@@ -65,6 +84,7 @@ margin-right: 15px;
 const ButtonRegistration = styled(Button)`
 margin-left: 20px;
 margin-right: 20px;
+width: 200px;
 `;
 
 const Select = styled.select`
@@ -108,10 +128,7 @@ const Select = styled.select`
 const Message = styled.span`
 height: 38px;
 margin-left: 5px;
-
-
 `;
-
 
 
 /**
@@ -140,6 +157,8 @@ class Registration extends React.Component {
             birthDay: null,
             gender: null,
             country: null,
+            image: null,
+            showHiddenElement: false,
 
         };
 
@@ -157,7 +176,8 @@ class Registration extends React.Component {
                 name: this.state.name,
                 birthDay: this.state.birthDay,
                 gender: this.state.gender,
-                country: this.state.country
+                country: this.state.country,
+                image: this.state.image,
             });
 
             /**
@@ -190,6 +210,7 @@ class Registration extends React.Component {
         this.setState({[key]: value});
     }
     checkPassword: boolean;
+
     check() {
 
         if(document.getElementById('password').value ===
@@ -207,6 +228,54 @@ class Registration extends React.Component {
         }
     }
 
+    showProfileImages() {
+        if(this.state.showHiddenElement === false){
+            this.setState({['showHiddenElement'] : true});
+            document.getElementById("hiddenProfileImages").style.display="flex";
+
+        }
+        else {
+            this.setState({['showHiddenElement'] : false});
+            document.getElementById("hiddenProfileImages").style.display="none";
+        }
+    }
+
+    chooseProfileImages(value) {
+        var url;
+        switch (value) {
+            case "lion":
+                url = lion;
+                break;
+            case "dog":
+                url = dog;
+                break;
+            case "elephant":
+                url = elephant;
+                break;
+            case "giraffe":
+                url = giraffe;
+                break;
+            case "penguin":
+                url = penguin;
+                break;
+            case "squirrel":
+                url = squirrel;
+                break;
+            case "hippo":
+                url = hippo;
+                break;
+            case "tiger":
+                url = tiger;
+                break;
+            default:
+                url = null;
+        }
+        document.getElementById("profilePicture").style.backgroundImage =`url(${url})`;
+        this.setState({['showHiddenElement'] : false});
+        document.getElementById("hiddenProfileImages").style.display="none";
+        this.setState({["image"] : value});
+    }
+
     /**
      * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
      * Initialization that requires DOM nodes should go here.
@@ -219,10 +288,46 @@ class Registration extends React.Component {
     render() {
         return (
             <BaseContainer>
+                <ChooseImageContainer id={"hiddenProfileImages"}>
+                    <LionContainer
+                        value={"lion"}
+                        onClick={e => {this.chooseProfileImages(e.target.value)}}
+                    />
+                    <DogContainer
+                        value={"dog"}
+                        onClick={e => {this.chooseProfileImages(e.target.value)}}
+                    />
+                    <ElephantContainer
+                        value={"elephant"}
+                        onClick={e => {this.chooseProfileImages(e.target.value)}}
+                    />
+                    <GiraffeContainer
+                        value={"giraffe"}
+                        onClick={e => {this.chooseProfileImages(e.target.value)}}
+                    />
+                    <HippoContainer
+                        value={"hippo"}
+                        onClick={e => {this.chooseProfileImages(e.target.value)}}
+                    />
+                    <SquirrelContainer
+                        value={"squirrel"}
+                        onClick={e => {this.chooseProfileImages(e.target.value)}}
+                    />
+                    <TigerContainer
+                        value={"tiger"}
+                        onClick={e => {this.chooseProfileImages(e.target.value)}}
+                    />
+                    <PenguinContainer
+                        value={"penguin"}
+                        onClick={e => {this.chooseProfileImages(e.target.value)}}
+                    />
+                </ChooseImageContainer>
                 <CenterContainer>
                     <FormContainerRegistration>
-                        <ProfilePictureContainer>
-                            <EditProfilePictureButton/>
+                        <ProfilePictureContainer id={"profilePicture"}>
+                            <EditProfilePictureButton
+                                onClick={() => {this.showProfileImages()}}
+                            />
                         </ProfilePictureContainer>
                         <FormRegistration>
                             <LabelRegistration>
@@ -338,99 +443,3 @@ class Registration extends React.Component {
  * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
  */
 export default withRouter(Registration);
-
-/*
-<FormContainerRegistration>
-                        <ProfilePictureContainerRegistration>
-                            <EditProfilePictureButton/>
-                        </ProfilePictureContainerRegistration>
-                                <LabelRegistration>
-                                    <Blue> username </Blue>
-                                    <Blue> name </Blue>
-                                    <Blue> password </Blue>
-                                    <Blue> repeat password </Blue>
-                                    <Blue> birthday </Blue>
-                                    <Blue> gender </Blue>
-                                    <Blue> country </Blue>
-                                </LabelRegistration>
-                                <FormRegistration>
-                                <InputFieldRegistration
-                                    placeholder="..."
-                                    onChange={e => {
-                                        this.handleInputChange('username', e.target.value);
-                                    }}
-                                />
-
-                                <InputFieldRegistration
-                                    placeholder="..."
-                                    onChange={e => {
-                                        this.handleInputChange('name', e.target.value);
-                                    }}
-                                />
-
-                                <InputFieldRegistration
-                                    id = "password"
-                                    type = "password"
-                                    placeholder="..."
-                                    onChange={e => {
-                                        this.handleInputChange('password', e.target.value);
-                                        this.check();
-                                    }}
-
-                                />
-
-                                <InputFieldRegistration
-                                    id = "confirm_password"
-                                    type = "password"
-                                    placeholder="..."
-                                    onChange={e => {
-                                        this.handleInputChange('repeat_password', e.target.value);
-                                        this.check();
-                                    }}
-                                />
-
-
-                                <InputFieldRegistration
-                                    placeholder="DD/HH/YYYY"
-                                    onChange={e => {
-                                        this.handleInputChange('birthday', e.target.value);
-                                    }}
-                                />
-
-
-                                <Select onChange={e => {this.handleChange('gender', e.target.value);}}>
-                                    <option value='${null}' hidden>
-                                        ...
-                                    </option>
-                                    <option value="female"> female </option>
-                                    <option value="male"> male </option>
-                                </Select>
-
-
-                                <InputFieldRegistration
-                                    placeholder="..."
-                                    onChange={e => {
-                                        this.handleInputChange('country', e.target.value);
-                                    }}
-                                />
-                            </FormRegistration>
-                        <Message id="message"> </Message>
-                        <ButtonContainer>
-                            <ButtonRegistration
-                                disabled={!this.state.username || !this.state.password || !this.state.repeat_password}
-                                width="50%"
-                                onClick={() => {
-                                    this.register();
-                                }}
-                            >
-                                <Yellow>register</Yellow>
-                            </ButtonRegistration>
-                            <ButtonRegistration
-                                width="50%"
-                                onClick={()=>{this.props.history.push('/login');}}
-                            >
-                                <Yellow> cancel </Yellow>
-                            </ButtonRegistration>
-                        </ButtonContainer>
-                    </FormContainerRegistration>
- */

@@ -12,6 +12,7 @@ height: 200px;
 background-image: url(${profilePlaceholder});
 background-repeat: no-repeat;
 background-size: 181px 200px;
+background-color: #F8E7D1;
 
 border: 2px solid black;
 `;
