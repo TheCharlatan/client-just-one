@@ -4,8 +4,12 @@ import { GameGuard } from "../routeProtectors/GameGuard";
 import GameRouter from "./GameRouter";
 import { LoginGuard } from "../routeProtectors/LoginGuard";
 import Login from "../../login/Login";
+import { MainPageGuard } from "../routeProtectors/MainpageGuard";
+import MainPageRouter from "./MainPageRouter";
 import Test from "../../login/Test";
+
 import Registration from "../../registration/registration";
+
 /**
  * Main router of your application.
  * In the following class, different routes are rendered. In our case, there is a Login Route with matches the path "/login"

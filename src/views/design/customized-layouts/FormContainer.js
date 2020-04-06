@@ -7,7 +7,6 @@ flex-direction: column;
 align-items: center;
 min-height: 300px;
 justify-content: center;
-
 `;
 
 export default FormContainer;

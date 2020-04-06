@@ -14,7 +14,9 @@ import Green from "../../views/design/font-families/Green";
 
 import Button from "../../views/design/Button";
 import ButtonContainer from "../../views/design/customized-layouts/ButtonContainer";
-import {AxiosBasicCredentials as state} from "axios";
+
+import toBinary from "./toBinary";
+
 
 
 const FormContainerLogin = styled(FormContainer)`
@@ -60,6 +62,7 @@ margin-right: 50px;
 
 const ButtonLogin = styled(Button)`
 margin-right: 100px;
+width: 272px;
 `;
 
 
@@ -95,16 +98,10 @@ class Login extends React.Component {
    */
   async login() {
     try {
-        /*
-      const requestBody = JSON.stringify({
-        username: this.state.username,
-        password: this.state.password
-      });
-         */
-      const requestHeader = ArrayBuffer.from(`${this.state.username}, ${this.state.password}`, 'utf8').toString('base64');
 
-      //Buffer.from(`${this.state.username}, ${this.state.password}`, 'utf8').toString('base64');
-      const response = await api.get('/user/login', {headers: {'Authorization': `${requestHeader}`}});
+        const requestHeader = window.btoa(toBinary(this.state.username + ":" + this.state.password));
+
+        const response = await api.get('/user/login', {headers: {'Authorization': requestHeader}});
 
       // Get the returned user and update a new object.
       const token = new Token(response.data);
@@ -172,12 +169,14 @@ class Login extends React.Component {
                     >
                         <Green> login </Green>
                     </ButtonLogin>
-                    <Button
+
+                    <ButtonLogin
+
                         width="50%"
                         onClick={()=>{this.props.history.push('/registration');}}
                     >
                         <Green> registration </Green>
-                    </Button>
+                    </ButtonLogin>
                 </ButtonContainer>
             </CenterContainer>
         </BaseContainer>

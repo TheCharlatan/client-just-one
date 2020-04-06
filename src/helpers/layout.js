@@ -17,8 +17,9 @@ grid-template-rows: 5% 90% 5%;
 grid-column-gap: 0px;
 grid-row-gap: 0px;
 
-height: ${DESKTOP_HEIGHT}px;
-width: ${DESKTOP_WIDTH}px;
+  min-width: 100vw;
+  min-height: 100vh;
+
 `;
 
 /*Chat container on the left side of the grid*/
