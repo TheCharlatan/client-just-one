@@ -18,7 +18,6 @@ class User {
     this.creationDate = null;
     this.gameId = null;
     this.lobbyId = null;
-    this.image = null;
     Object.assign(this, data);
   }
 }

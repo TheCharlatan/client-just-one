@@ -1,9 +1,11 @@
 import styled from "styled-components";
 
 const InputField = styled.input`
+  &::placeholder {
+    color: rgba(255, 255, 255, 1);
+  }
 
-  width: 300px;
-
+  width: 410px;
   height: 38px;
 
   background: #ffffff;

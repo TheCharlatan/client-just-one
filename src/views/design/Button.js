@@ -10,6 +10,7 @@ border: 6px solid #DDC18E;
 box-sizing: border-box;
 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
+
 align-items: center;
 justify-content: center;
 text-align:center;
@@ -20,7 +21,6 @@ text-align:center;
   cursor:pointer;
 }
 `;
-
 
 export default Button;
 

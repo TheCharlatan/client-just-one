@@ -14,9 +14,7 @@ import Green from "../../views/design/font-families/Green";
 
 import Button from "../../views/design/Button";
 import ButtonContainer from "../../views/design/customized-layouts/ButtonContainer";
-
 import toBinary from "./toBinary";
-
 
 
 const FormContainerLogin = styled(FormContainer)`
@@ -109,8 +107,8 @@ class Login extends React.Component {
       // Store the token into the local storage.
       localStorage.setItem('token', token.token);
 
-      // Login successfully worked --> navigate to the route /mainpage in the MainPageRouter
-      this.props.history.push(`/mainpage`);
+      // Login successfully worked --> navigate to the route /game in the GameRouter
+      this.props.history.push(`/game`);
     } catch (error) {
       alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
@@ -169,9 +167,7 @@ class Login extends React.Component {
                     >
                         <Green> login </Green>
                     </ButtonLogin>
-
                     <ButtonLogin
-
                         width="50%"
                         onClick={()=>{this.props.history.push('/registration');}}
                     >
