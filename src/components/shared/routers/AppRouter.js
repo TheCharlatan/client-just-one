@@ -21,6 +21,14 @@ class AppRouter extends React.Component {
       <BrowserRouter>
         <Switch>
           <div>
+              <Route
+                  path="/mainpage"
+                  render={() => (
+                      <MainPageGuard>
+                          <MainPageRouter base={""} />
+                      </MainPageGuard>
+                  )}
+              />
             <Route
               path="/game"
               render={() => (

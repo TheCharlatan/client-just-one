@@ -8,7 +8,7 @@ import Form from "../../views/design/customized-layouts/Form";
 import Label from "../../views/design/customized-layouts/Label";
 import InputField from "../../views/design/customized-layouts/InputField";
 import ButtonContainer from "../../views/design/customized-layouts/ButtonContainer";
-import Button from "../../views/design/customized-layouts/Button";
+import Button from "../../views/design/Button";
 import ProfilePictureContainer from "../../views/design/customized-layouts/ProfilePictureContainer";
 import EditProfilePictureButton from "../../views/design/customized-layouts/EditProfilePictureButton";
 import Blue from "../../views/design/font-families/Blue";

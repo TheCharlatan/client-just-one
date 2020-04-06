@@ -11,7 +11,7 @@ import Red from '../../views/design/font-families/Red';
 import Orange from '../../views/design/font-families/Orange';
 import Green from '../../views/design/font-families/Orange';
 import Label from '../../views/design/customized-layouts/Label'
-import Button from "../../views/design/customized-layouts/Button";
+import Button from "../../views/design/Button";
 
 class Test extends React.Component {
     render() {

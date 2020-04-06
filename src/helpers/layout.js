@@ -11,47 +11,45 @@ export const SMALL_WIDTH = 768;
 /* The footer and header are defined in the Header.js file */
 export const BaseContainer = styled.div`
 /*defines the grid of the page */
-  display: grid;
+display: grid;
 grid-template-columns: 20% 60% 20%;
 grid-template-rows: 5% 90% 5%;
 grid-column-gap: 0px;
 grid-row-gap: 0px;
 
-  margin-left: auto;
-  padding-left: 2px;
-  margin-right: auto;
-  padding-right: 2px;
-  width: ${DESKTOP_WIDTH}px;
-  height: ${DESKTOP_HEIGHT}px;
-  
-  
+height: ${DESKTOP_HEIGHT}px;
+width: ${DESKTOP_WIDTH}px;
 `;
 
 /*Chat container on the left side of the grid*/
 export const ChatContainer = styled.div`
 /* defines the position in the grid */
 grid-area: 2 / 1 / 3 / 2;
-padding-left: 2px
-padding-right: 2px
-
-
-`;
-
-/*leaderboard container on the right side of the grid */
-export const LeaderboardContainer = styled.div`
-/* defines the position in the grid */
-grid-area: 2 / 3 / 3 / 4;
-padding-left: 2px
-padding-right: 2px
-
-
 `;
 
 /* center container of the grid which contains for example the menu bar */
 export const CenterContainer = styled.div`
 /* defines the position in the grid */
 grid-area: 2 / 2 / 3 / 3;
-padding-left: 2px
-padding-right: 2px
+`;
 
+/*leaderboard container on the right side of the grid */
+export const LeaderboardContainer = styled.div`
+/* defines the position in the grid */
+grid-area: 2 / 3 / 4 / 4;
+`;
+
+// container for top left part (logout button on main page)
+export const TopLeftContainer = styled.div`
+grid-area: 1 / 1 / 2 / 2;
+`;
+
+// container for top right part (profile button on main page)
+export const TopRightContainer = styled.div`
+grid-area: 1 / 3 / 2 / 4;
+`;
+
+// container for top left part (logout button on main page)
+export const BottomLeftContainer = styled.div`
+grid-area: 3 / 1 / 4 / 2;
 `;
