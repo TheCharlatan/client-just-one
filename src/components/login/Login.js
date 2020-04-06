@@ -12,7 +12,7 @@ import InputField from "../../views/design/customized-layouts/InputField";
 import Label from "../../views/design/customized-layouts/Label";
 import Green from "../../views/design/font-families/Green";
 
-import Button from "../../views/design/customized-layouts/Button";
+import Button from "../../views/design/Button";
 import ButtonContainer from "../../views/design/customized-layouts/ButtonContainer";
 import toBinary from "./toBinary";
 
@@ -60,6 +60,7 @@ margin-right: 50px;
 
 const ButtonLogin = styled(Button)`
 margin-right: 100px;
+width: 272px;
 `;
 
 
@@ -166,12 +167,12 @@ class Login extends React.Component {
                     >
                         <Green> login </Green>
                     </ButtonLogin>
-                    <Button
+                    <ButtonLogin
                         width="50%"
                         onClick={()=>{this.props.history.push('/registration');}}
                     >
                         <Green> registration </Green>
-                    </Button>
+                    </ButtonLogin>
                 </ButtonContainer>
             </CenterContainer>
         </BaseContainer>
