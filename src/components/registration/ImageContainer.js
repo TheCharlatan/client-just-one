@@ -30,5 +30,11 @@ export const ImageContainer = styled.button`
     background-size: 85px 94px;
     
     border: 2px solid black;
+    
+    &:hover {
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.4);
+  transform: translateY(-0.25em);
+  cursor:pointer;
+}
 `;
 
