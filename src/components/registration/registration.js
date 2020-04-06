@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import {BaseContainer, CenterContainer} from '../../helpers/layout';
-import { api, handleError } from '../../helpers/api';
-import { withRouter } from 'react-router-dom';
+import {api, handleError} from '../../helpers/api';
+import {withRouter} from 'react-router-dom';
 import FormContainer from "../../views/design/customized-layouts/FormContainer";
 import Form from "../../views/design/customized-layouts/Form";
 import Label from "../../views/design/customized-layouts/Label";
@@ -13,7 +13,19 @@ import ProfilePictureContainer from "../../views/design/customized-layouts/Profi
 import EditProfilePictureButton from "../../views/design/customized-layouts/EditProfilePictureButton";
 import Blue from "../../views/design/font-families/Blue";
 import Yellow from "../../views/design/font-families/Yellow";
+import {ChooseImageContainer} from "./ImageContainer";
+import {
+    DogContainer,
+    ElephantContainer,
+    GiraffeContainer,
+    HippoContainer,
+    LionContainer,
+    PenguinContainer,
+    SquirrelContainer,
+    TigerContainer
+} from "./ImageContainerContent";
 
+import lion from "../../img/lion.png"
 
 
 const FormRegistration = styled(Form)`
@@ -65,6 +77,7 @@ margin-right: 15px;
 const ButtonRegistration = styled(Button)`
 margin-left: 20px;
 margin-right: 20px;
+width: 200px;
 `;
 
 const Select = styled.select`
@@ -108,10 +121,7 @@ const Select = styled.select`
 const Message = styled.span`
 height: 38px;
 margin-left: 5px;
-
-
 `;
-
 
 
 /**
@@ -140,6 +150,8 @@ class Registration extends React.Component {
             birthDay: null,
             gender: null,
             country: null,
+            image: null,
+            showHiddenElement: false,
 
         };
 
@@ -157,7 +169,8 @@ class Registration extends React.Component {
                 name: this.state.name,
                 birthDay: this.state.birthDay,
                 gender: this.state.gender,
-                country: this.state.country
+                country: this.state.country,
+                image: this.state.image,
             });
 
             /**
@@ -207,6 +220,25 @@ class Registration extends React.Component {
         }
     }
 
+    showProfileImages() {
+        if(this.state.showHiddenElement === false){
+            this.setState({['showHiddenElement'] : true});
+            document.getElementById("hiddenProfileImages").style.display="flex";
+
+        }
+        else {
+            this.setState({['showHiddenElement'] : false});
+            document.getElementById("hiddenProfileImages").style.display="none";
+        }
+    }
+
+    chooseProfileImages(value) {
+        document.getElementById("profilePicture").style.backgroundImage ="url('${lion}')";
+        this.setState({['showHiddenElement'] : false});
+        document.getElementById("hiddenProfileImages").style.display="none";
+        this.setState({["image"] : value});
+    }
+
     /**
      * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
      * Initialization that requires DOM nodes should go here.
@@ -219,10 +251,28 @@ class Registration extends React.Component {
     render() {
         return (
             <BaseContainer>
+                <ChooseImageContainer id={"hiddenProfileImages"}>
+                    <LionContainer
+                        value={'lion'}
+                        onClick={e => {this.chooseProfileImages(e.target.value)}}
+                    />
+                    <DogContainer
+                        value={"dog"}
+                        onClick={e => {this.chooseProfileImages(e.target.value)}}
+                    />
+                    <ElephantContainer/>
+                    <GiraffeContainer/>
+                    <HippoContainer/>
+                    <SquirrelContainer/>
+                    <TigerContainer/>
+                    <PenguinContainer/>
+                </ChooseImageContainer>
                 <CenterContainer>
                     <FormContainerRegistration>
-                        <ProfilePictureContainer>
-                            <EditProfilePictureButton/>
+                        <ProfilePictureContainer id={"profilePicture"}>
+                            <EditProfilePictureButton
+                                onClick={() => {this.showProfileImages()}}
+                            />
                         </ProfilePictureContainer>
                         <FormRegistration>
                             <LabelRegistration>
