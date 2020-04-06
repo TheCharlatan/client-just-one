@@ -16,6 +16,7 @@ grid-template-columns: 20% 60% 20%;
 grid-template-rows: 5% 90% 5%;
 grid-column-gap: 0px;
 grid-row-gap: 0px;
+
   min-width: 100vw;
   min-height: 100vh;
 `;
