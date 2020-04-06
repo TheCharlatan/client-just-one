@@ -1,7 +1,6 @@
-import React from 'react';
 import styled from 'styled-components';
 
-const Label = styled.div`
+const Label = styled.label`
 width: 263px;
 height: 38px;
 background: white;

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import {BaseContainer, CenterContainer, ChatContainer, LeaderboardContainer} from '../../helpers/layout';
 import FormContainer from '../../views/design/customized-layouts/FormContainer';
-import ButtonContainer from '../../views/design/customized-layouts/ButtonContainer'
+
 import Form from '../../views/design/customized-layouts/Form';
 import { withRouter } from 'react-router-dom';
 import Violet from '../../views/design/font-families/Violet';
@@ -11,6 +11,7 @@ import Red from '../../views/design/font-families/Red';
 import Orange from '../../views/design/font-families/Orange';
 import Green from '../../views/design/font-families/Orange';
 import Label from '../../views/design/customized-layouts/Label'
+import Button from "../../views/design/Button";
 
 class Test extends React.Component {
     render() {
@@ -31,7 +32,7 @@ class Test extends React.Component {
                                </div>
                                <br></br>
                                <div>
-                           <ButtonContainer><Orange>Submit</Orange></ButtonContainer>
+                           <Button><Orange>Submit</Orange></Button>
 
                             </div>
                         </Form>
