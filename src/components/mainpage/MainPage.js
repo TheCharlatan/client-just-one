@@ -20,7 +20,7 @@ import TutorialButton from "./TutorialButton"
 import LogoutButton from "./LogoutButton";
 import ChatButton from "./ChatButton";
 import ProfileButton from "./ProfileButton";
-import Modal from "../models/Modal.js";
+
 
 /**
  * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
@@ -35,24 +35,8 @@ export class MainPage extends React.Component {
 
     constructor() {
         super();
-        this.state = {
-          show: false,
-        };
-        this.showModal = this.showModal.bind(this);
-        this.hideModal = this.hideModal.bind(this)
-      }
-    
-      showModal() {
-        this.setState({
-          show: true,
-        });
-      }
-    
-      hideModal() {
-        this.setState({
-          show: false,
-        });
-      }
+    }
+
     /**
      * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
      * Initialization that requires DOM nodes should go here.
@@ -78,12 +62,11 @@ export class MainPage extends React.Component {
                 <CenterContainer>
                     <FormContainer>
                         <Form style={{width: "auto", height: "auto"}}>
-                            <CreateLobbyButton onClick={() => this.showModal()}/>
+                            <CreateLobbyButton/>
                             <JoinLobbyButton/>
                             <TutorialButton/>
                         </Form>
                     </FormContainer>
-                    <Modal  hideModal={this.hideModal}  show={this.state.show} />
                 </CenterContainer>
                 <TopRightContainer>
                     <ProfileButton />
