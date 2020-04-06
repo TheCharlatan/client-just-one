@@ -4,6 +4,7 @@ import { GameGuard } from "../routeProtectors/GameGuard";
 import GameRouter from "./GameRouter";
 import { LoginGuard } from "../routeProtectors/LoginGuard";
 import Login from "../../login/Login";
+import Lobby from "../../lobby/Lobby";
 import { MainPageGuard } from "../routeProtectors/MainpageGuard";
 import MainPageRouter from "./MainPageRouter";
 import Test from "../../login/Test";
@@ -48,6 +49,16 @@ class AppRouter extends React.Component {
                 </LoginGuard>
               )}
             />
+              <Route
+              path="/lobby"
+              exact
+              render={() => (
+               
+                  <Lobby />
+              
+              )}
+            />
+
             <Route
               path="/test"
               exact
