@@ -97,7 +97,7 @@ class Login extends React.Component {
   async login() {
     try {
 
-        const requestHeader = window.btoa(toBinary(this.state.username + ":" + this.state.password));
+        const requestHeader = 'Basic ' + window.btoa(toBinary(this.state.username + ':' + this.state.password));
 
         const response = await api.get('/user/login', {headers: {'Authorization': requestHeader}});
 
