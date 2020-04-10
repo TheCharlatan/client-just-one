@@ -75,22 +75,37 @@ export class LobbiesContainer extends React.Component {
 
 
     render() {
+
+        let openLobbiesComponent;
+        if (this.state.openLobbies.length > 0) {
+            openLobbiesComponent =
+                <React.Fragment>
+                    <Label>
+                        <Yellow>Open Lobbies:</Yellow>
+                    </Label>
+                    <LobbiesList lobbies={this.state.openLobbies} history={this.props.history} />
+                </React.Fragment>;
+        }
+        else {
+            openLobbiesComponent =
+                <p style={{width: "200px"}}>There are no open lobbies. Please create a new one if you want to play.</p>
+        }
+
+        let invitedLobbiesComponent = <p />;
+        if (this.state.openLobbies.count > 0) {
+            invitedLobbiesComponent =
+                <React.Fragment>
+                    <Label style={{marginTop: "15px"}}>
+                        <Yellow>Invited To:</Yellow>
+                    </Label>
+                    <LobbiesList lobbies={this.state.invitedLobbies}  history={this.props.history} />
+                </React.Fragment>;
+        }
+
         return (
             <BorderContainer>
-                <Label>
-                    <Yellow>Open Lobbies:</Yellow>
-                </Label>
-                {this.state.openLobbies.length > 0
-                    ? <LobbiesList lobbies={this.state.openLobbies} history={this.props.history} />
-                    : <p>No open lobbies available.</p>
-                }
-                <Label style={{marginTop: "15px"}}>
-                    <Yellow>Invited To:</Yellow>
-                </Label>
-                {this.state.invitedLobbies.length > 0
-                ? <LobbiesList lobbies={this.state.invitedLobbies}  history={this.props.history} />
-                : <p style={{paddingBottom: "10px"}}>You were not invited to any lobby.</p>
-                }
+                {openLobbiesComponent}
+                {invitedLobbiesComponent}
             </BorderContainer>
         );
     }

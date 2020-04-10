@@ -47,7 +47,6 @@ export class MainPage extends React.Component {
      */
     componentDidMount() {}
 
-
     render() {
         return (
             <BaseContainer>
@@ -68,7 +67,9 @@ export class MainPage extends React.Component {
                             <TutorialButton/>
                         </Form>
                     </FormContainer>
-                    <LobbiesContainer history={this.props.history}/>
+                    <div id="lobbiesContainer" style={{display: "none"}}>
+                        <LobbiesContainer history={this.props.history}/>
+                    </div>
                 </CenterContainer>
                 <TopRightContainer>
                     <ProfileButton />
