@@ -33,17 +33,17 @@ export class LobbiesList extends React.Component {
                 {this.props.lobbies.map((lobby) => {
                     return (
                         <LobbyContainer>
-                            <Label style={{width: "300px"}} key={`label1-${lobby.id}`}>
-                                <Red>{lobby.name}</Red>
+                            <Label style={{width: "300px"}} key={`nameLabel-${lobby.id}`}>
+                                <Red key={`lobbyName-${lobby.id}`}>{lobby.name}</Red>
                             </Label>
                             <Button
                                 style={{width: "160px", height: "38px"}}
                                 key={`button-${lobby.id}`}
                                 onClick={() => {this.joinLobby(lobby.id)}}>
-                                <Red>Join</Red>
+                                <Red key={`joinLabel-${lobby.id}`}>Join</Red>
                             </Button>
-                            <Label style={{width: "80px"}} key={`label2-${lobby.id}`}>
-                                <Red>{lobby.playerIds.length}/7</Red>
+                            <Label style={{width: "80px"}} key={`playerCountLabel-${lobby.id}`}>
+                                <Red key={`playerCount-${lobby.id}`}>{lobby.playerIds.length}/7</Red>
                             </Label>
                         </LobbyContainer>
                     );

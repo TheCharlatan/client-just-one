@@ -76,9 +76,10 @@ export class LobbiesContainer extends React.Component {
 
     render() {
 
-        let openLobbiesComponent;
+        let lobbiesComponent;
+
         if (this.state.openLobbies.length > 0) {
-            openLobbiesComponent =
+            lobbiesComponent =
                 <React.Fragment>
                     <Label>
                         <Yellow>Open Lobbies:</Yellow>
@@ -87,14 +88,14 @@ export class LobbiesContainer extends React.Component {
                 </React.Fragment>;
         }
         else {
-            openLobbiesComponent =
+            lobbiesComponent =
                 <p style={{width: "200px"}}>There are no open lobbies. Please create a new one if you want to play.</p>
         }
 
-        let invitedLobbiesComponent = <p />;
         if (this.state.openLobbies.count > 0) {
-            invitedLobbiesComponent =
+            lobbiesComponent =
                 <React.Fragment>
+                    {lobbiesComponent}
                     <Label style={{marginTop: "15px"}}>
                         <Yellow>Invited To:</Yellow>
                     </Label>
@@ -104,8 +105,7 @@ export class LobbiesContainer extends React.Component {
 
         return (
             <BorderContainer>
-                {openLobbiesComponent}
-                {invitedLobbiesComponent}
+                {lobbiesComponent}
             </BorderContainer>
         );
     }
