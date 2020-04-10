@@ -20,6 +20,7 @@ import TutorialButton from "./TutorialButton"
 import LogoutButton from "./LogoutButton";
 import ChatButton from "./ChatButton";
 import ProfileButton from "./ProfileButton";
+import {LobbiesContainer} from "./lobbies/LobbiesContainer";
 
 
 /**
@@ -33,8 +34,8 @@ import ProfileButton from "./ProfileButton";
  */
 export class MainPage extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
     }
 
     /**
@@ -59,14 +60,15 @@ export class MainPage extends React.Component {
                 <BottomLeftContainer>
                     <ChatButton/>
                 </BottomLeftContainer>
-                <CenterContainer>
-                    <FormContainer>
+                <CenterContainer style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                    <FormContainer style={{marginTop: 0}}>
                         <Form style={{width: "auto", height: "auto"}}>
                             <CreateLobbyButton/>
                             <JoinLobbyButton/>
                             <TutorialButton/>
                         </Form>
                     </FormContainer>
+                    <LobbiesContainer />
                 </CenterContainer>
                 <TopRightContainer>
                     <ProfileButton />
