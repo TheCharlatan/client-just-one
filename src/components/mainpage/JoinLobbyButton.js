@@ -3,8 +3,6 @@ import {Button} from "../../views/design/Button";
 import Red from "../../views/design/font-families/Red";
 import React from "react";
 
-import { api, handleError } from '../../helpers/api';
-
 
 const FlexButton = styled(Button)`
   display: flex;
@@ -19,7 +17,13 @@ function JoinLobbyButton() {
     return (
         <FlexButton
             onClick={() => {
-                // join lobby
+                let lobbiesContainer = document.getElementById("lobbiesContainer");
+                if (lobbiesContainer.style.display == "none") {
+                    lobbiesContainer.style.display = "block";
+                }
+                else {
+                    lobbiesContainer.style.display = "none";
+                }
             }}>
             <Red>Join Lobby</Red>
         </FlexButton>

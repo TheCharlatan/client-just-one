@@ -20,6 +20,7 @@ import TutorialButton from "./TutorialButton"
 import LogoutButton from "./LogoutButton";
 import ChatButton from "./ChatButton";
 import ProfileButton from "./ProfileButton";
+import {LobbiesContainer} from "./lobbies/LobbiesContainer";
 
 
 /**
@@ -33,8 +34,8 @@ import ProfileButton from "./ProfileButton";
  */
 export class MainPage extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
     }
 
     /**
@@ -45,7 +46,6 @@ export class MainPage extends React.Component {
      * It will trigger an extra rendering, but it will happen before the browser updates the screen.
      */
     componentDidMount() {}
-
 
     render() {
         return (
@@ -59,14 +59,17 @@ export class MainPage extends React.Component {
                 <BottomLeftContainer>
                     <ChatButton/>
                 </BottomLeftContainer>
-                <CenterContainer>
-                    <FormContainer>
+                <CenterContainer style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                    <FormContainer style={{marginTop: 0}}>
                         <Form style={{width: "auto", height: "auto"}}>
                             <CreateLobbyButton/>
                             <JoinLobbyButton/>
                             <TutorialButton/>
                         </Form>
                     </FormContainer>
+                    <div id="lobbiesContainer" style={{display: "none"}}>
+                        <LobbiesContainer history={this.props.history}/>
+                    </div>
                 </CenterContainer>
                 <TopRightContainer>
                     <ProfileButton />
