@@ -9,8 +9,6 @@ align-items: center;
 min-height: 50px;
 justify-content: center;
 
-
-
 `;
 
 export default ButtonContainer;
