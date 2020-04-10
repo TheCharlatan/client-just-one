@@ -1,9 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import { api, handleError } from '../../helpers/api';
 import {Redirect, withRouter} from 'react-router-dom';
 import Red from "../../views/design/font-families/Red";
 import Orange from "../../views/design/font-families/Orange";
 import {
+  BaseContainerBody,
   BaseContainerGame,
   CardGuessedContainer,
   CardStacksContainer,
@@ -18,12 +19,30 @@ import {CardStack, CardStackLabel, CardStackNumber} from "./GameCardStackStyle";
 import {Spinner} from "../../views/design/Spinner";
 import styled from "styled-components";
 
-const BaseContainerBody = styled.div`
-min-width: 100vw;
-min-height: 100vh;
+const Timer = styled.div`
+position: fixed;
+top: 50%;
+left: 50%
+transform: translate( -50%, -50%);
+
+font-family: fantasy;
+font-style: normal;
+font-weight: normal;
+font-size: 80px;
+line-height: 0px;
+letter-spacing: 0.41em;
+text-transform: uppercase;
+font-feature-settings: 'cpsp' on, 'ss04' on;
+color: #00B637;
+mix-blend-mode: darken;
+text-stroke: 2px #00922B;
+-webkit-text-stroke: 2px #00922B;
+text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+z-index: 10;
 `;
 
-class Game extends React.Component {
+
+class GameTurnBegins extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -31,7 +50,12 @@ class Game extends React.Component {
       gameModel: null,
       users: [],
       redirect: false,
+      seconds: 5,
+      time: {},
     };
+    this.timer = 0;
+    this.startTimer = this.startTimer.bind(this);
+    this.countDown = this.countDown.bind(this);
   }
 
   async componentDidMount() {
@@ -47,7 +71,8 @@ class Game extends React.Component {
         this.state.users[i] = this.state.user;
       }
 
-      this.id = setTimeout(() => this.setState({ redirect: true}), 5000);
+      let timeLeftVar = this.state.seconds;
+      this.setState({time: timeLeftVar});
 
     } catch (error) {
       alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
@@ -55,9 +80,21 @@ class Game extends React.Component {
 
   }
 
-  async componentWillMount() {
-    clearTimeout(this.id);
+  startTimer() {
+    if (this.timer === 0 && this.state.seconds > 0) {
+      this.timer = setInterval(this.countDown, 1000);
+    }
   }
+
+  countDown() {
+    let seconds = this.state.seconds - 1;
+    this.setState({time: seconds, seconds: seconds});
+    if (seconds === -1) {
+      clearInterval(this.timer);
+      this.setState({redirect: true});
+    }
+  }
+
 
   render() {
     return this.state.redirect
@@ -67,6 +104,7 @@ class Game extends React.Component {
             <Spinner />
               ) : (
             <BaseContainerGame>
+              <Timer>{this.startTimer()} {this.state.seconds} </Timer>
                     <GameInfoContainer>
                       <GameInfo>
                         <GameInfoLabel>
@@ -119,57 +157,4 @@ class Game extends React.Component {
   }
 }
 
-export default withRouter(Game);
-/*
-<Container>
-        <h2>Happy Coding! </h2>
-        <p>Get all users from secure end point:</p>
-        {!this.state.users ? (
-          <Spinner />
-        ) : (
-          <div>
-            <Users>
-              {this.state.users.map(user => {
-                return (
-                  <PlayerContainer key={user.id}>
-                    <Player user={user} />
-                  </PlayerContainer>
-                );
-              })}
-            </Users>
-            <Button
-              width="100%"
-              onClick={() => {
-                this.logout();
-              }}
-            >
-              Logout
-            </Button>
-          </div>
-        )}
-      </Container>
- */
-
-/*
-const response = await api.get('/users');
-      // delays continuous execution of an async operation for 1 second.
-      // This is just a fake async call, so that the spinner can be displayed
-      // feel free to remove it :)
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Get the returned users and update the state.
-      this.setState({ users: response.data });
-
-      // This is just some data for you to see what is available.
-      // Feel free to remove it.
-      console.log('request to:', response.request.responseURL);
-      console.log('status code:', response.status);
-      console.log('status text:', response.statusText);
-      console.log('requested data:', response.data);
-
-      // See here to get more data.
-      console.log(response);
-    } catch (error) {
-      alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
-    }
- */
+export default withRouter(GameTurnBegins);
