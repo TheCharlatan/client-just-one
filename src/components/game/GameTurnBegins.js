@@ -19,6 +19,9 @@ import {CardStack, CardStackLabel, CardStackNumber} from "./GameCardStackStyle";
 import {Spinner} from "../../views/design/Spinner";
 import styled from "styled-components";
 
+import User from "../shared/models/User";
+import GameModel from "../shared/models/GameModel";
+
 const Timer = styled.div`
 position: fixed;
 top: 50%;
@@ -42,12 +45,11 @@ z-index: 10;
 `;
 
 
+
 class GameTurnBegins extends React.Component {
   constructor() {
     super();
     this.state = {
-      user: null,
-      gameModel: null,
       users: [],
       redirect: false,
       seconds: 5,
@@ -61,15 +63,19 @@ class GameTurnBegins extends React.Component {
   async componentDidMount() {
     try {
       const response = await api.get('game/mock');
-      this.setState({gameModel: response.data});
-      this.setState({playerIds: response.data.playerIds});
+      const gameModel = new GameModel(response.data);
 
       var i;
       for (i=0; i<response.data.playerIds.length; i++) {
-        const user = await api.get('user/mock/' + response.data.playerIds[i]);
-        this.setState({user: user.data});
-        this.state.users[i] = this.state.user;
+        const responseUser = await api.get('user/mock/' + response.data.playerIds[i]);
+        const user = new User(responseUser.data);
+
+        if (user.id === gameModel.activePlayerId) {
+          user.isActivePlayer = true;
+        }
+        this.state.users[i] = user;
       }
+
 
       let timeLeftVar = this.state.seconds;
       this.setState({time: timeLeftVar});
