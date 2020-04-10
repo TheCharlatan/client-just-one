@@ -68,7 +68,7 @@ export class MainPage extends React.Component {
                             <TutorialButton/>
                         </Form>
                     </FormContainer>
-                    <LobbiesContainer />
+                    <LobbiesContainer history={this.props.history}/>
                 </CenterContainer>
                 <TopRightContainer>
                     <ProfileButton />

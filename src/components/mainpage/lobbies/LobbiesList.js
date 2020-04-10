@@ -2,6 +2,8 @@ import React from 'react';
 import styled from "styled-components";
 import Label from "../../../views/design/customized-layouts/Label";
 import Red from "../../../views/design/font-families/Red";
+import Button from "../../../views/design/Button";
+import {api} from "../../../helpers/api";
 
 
 export class LobbiesList extends React.Component {
@@ -9,6 +11,21 @@ export class LobbiesList extends React.Component {
     constructor(props) {
         super(props);
     }
+
+    joinLobby = async (lobbyId) => {
+        try {
+            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            // TODO: Replace userId with name of user id (if stored in localStorage).
+            let requestBody = 1;
+            await api.put(`/lobby/${lobbyId}`, requestBody, {headers: {'Authorization': requestHeader}});
+        }
+        catch (error) {
+            alert("Could not join lobby:\nReason: " + error);
+            return;
+        }
+
+        this.props.history.push("/lobby/" + lobbyId);
+    };
 
     render() {
         return (
@@ -19,9 +36,11 @@ export class LobbiesList extends React.Component {
                             <Label style={{width: "300px"}}>
                                 <Red>{lobby.name}</Red>
                             </Label>
-                            <Label style={{width: "160px"}}>
+                            <Button
+                                style={{width: "160px", height: "38px"}}
+                                onClick={() => {this.joinLobby(lobby.id)}}>
                                 <Red>Join</Red>
-                            </Label>
+                            </Button>
                             <Label style={{width: "80px"}}>
                                 <Red>{lobby.playerIds.length}/7</Red>
                             </Label>
@@ -57,4 +76,9 @@ margin-bottom: 10px;
 
 background: #F8E7D1;
 box-sizing: border-box;
+`;
+
+let joinButton = styled(Button)`
+width: 280px;
+height: 38px;
 `;

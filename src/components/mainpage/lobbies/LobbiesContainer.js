@@ -81,15 +81,15 @@ export class LobbiesContainer extends React.Component {
                     <Yellow>Open Lobbies:</Yellow>
                 </Label>
                 {this.state.openLobbies.length > 0
-                    ? <LobbiesList lobbies={this.state.openLobbies}/>
+                    ? <LobbiesList lobbies={this.state.openLobbies} history={this.props.history} />
                     : <p>No open lobbies available.</p>
                 }
                 <Label style={{marginTop: "15px"}}>
                     <Yellow>Invited To:</Yellow>
                 </Label>
                 {this.state.invitedLobbies.length > 0
-                ? <LobbiesList lobbies={this.state.invitedLobbies}/>
-                : <p>You were not invited to any lobby.</p>
+                ? <LobbiesList lobbies={this.state.invitedLobbies}  history={this.props.history} />
+                : <p style={{paddingBottom: "10px"}}>You were not invited to any lobby.</p>
                 }
             </BorderContainer>
         );
@@ -98,11 +98,9 @@ export class LobbiesContainer extends React.Component {
 
 
 let BorderContainer = styled.div`
-margin-top: 2em;
 display: flex;
 flex-direction: column;
 align-items: left;
-justify-content: center;
 
 width: min-content;
 max-height: 55vh;
