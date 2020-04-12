@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const FormContainer = styled.div`
+ margin: auto;
 margin-top: 2em;
 display: flex;
 flex-direction: column;

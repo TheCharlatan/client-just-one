@@ -9,7 +9,7 @@ const FlexButton = styled(Button)`
   display: flex;
   justify-content: center;
   margin: 10px;
-  width:50%;
+  width: 80% !important;
 `;
 
 

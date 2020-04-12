@@ -21,7 +21,7 @@ import LogoutButton from "./LogoutButton";
 import ChatButton from "./ChatButton";
 import ProfileButton from "./ProfileButton";
 import {LobbiesContainer} from "./lobbies/LobbiesContainer";
-
+import Modal from "../../views/design/customized-layouts/Modal";
 
 /**
  * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
@@ -36,6 +36,23 @@ export class MainPage extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            show: false,
+        };
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
+    }
+
+    showModal() {
+        this.setState({
+            show: true,
+        });
+    }
+
+    hideModal() {
+        this.setState({
+            show: false,
+        });
     }
 
     /**
@@ -62,11 +79,12 @@ export class MainPage extends React.Component {
                 <CenterContainer style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                     <FormContainer style={{marginTop: 0}}>
                         <Form style={{width: "auto", height: "auto"}}>
-                            <CreateLobbyButton/>
+                            <CreateLobbyButton onClick={() => this.showModal()}/>
                             <JoinLobbyButton/>
                             <TutorialButton/>
                         </Form>
                     </FormContainer>
+                    <Modal  hideModal={this.hideModal}  show={this.state.show} />
                     <div id="lobbiesContainer" style={{display: "none"}}>
                         <LobbiesContainer history={this.props.history}/>
                     </div>
