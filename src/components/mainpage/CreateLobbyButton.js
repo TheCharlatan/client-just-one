@@ -15,12 +15,10 @@ const FlexButton = styled(Button)`
 
 
 // one of the buttons in the middle part of main page
-function CreateLobbyButton() {
+function CreateLobbyButton(props) {
     return (
         <FlexButton
-            onClick={() => {
-                // create lobby
-            }}>
+            onClick={props.onClick}>
                 <Orange>Create Lobby</Orange>
         </FlexButton>
     );
