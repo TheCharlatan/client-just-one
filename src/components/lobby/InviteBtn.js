@@ -3,8 +3,6 @@ import {Button} from "../../views/design/Button";
 import Green from "../../views/design/font-families/Green";
 import React from "react";
 
-import { api, handleError } from '../../helpers/api';
-
 const FlexButton = styled(Button)`
   display: flex;
   justify-content: center;
@@ -14,12 +12,10 @@ const FlexButton = styled(Button)`
 
 
 // one of the buttons in the middle part of lobby page
-function InviteBtn() {
+function InviteBtn(props) {
     return (
         <FlexButton
-            onClick={() => {
-                // leave lobby
-            }}>
+            onClick={props.onClick}>
             <Green>Invite</Green>
         </FlexButton>
     );
