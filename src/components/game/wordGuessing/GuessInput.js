@@ -2,7 +2,7 @@ import React from 'react';
 
 
 // The input field to submit the guess.
-class GuessInput extends React.Component {
+export class GuessInput extends React.Component {
 
     constructor(props) {
         super(props);

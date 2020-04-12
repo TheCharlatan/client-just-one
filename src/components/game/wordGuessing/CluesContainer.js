@@ -2,7 +2,7 @@ import React from 'react';
 
 
 // The container that holds the clues.
-class CluesContainer extends React.Component {
+export class CluesContainer extends React.Component {
 
     constructor(props) {
         super(props);
