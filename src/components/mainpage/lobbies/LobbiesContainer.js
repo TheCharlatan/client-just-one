@@ -47,7 +47,7 @@ export class LobbiesContainer extends React.Component {
         try {
             requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             // TODO: Replace userId with name of user id (if stored in localStorage).
-            response = await api.get(`/user/${localStorage.userId}`, {headers: {'X-Auth-Token': requestHeader}});
+            response = await api.get(`/user/${localStorage.getItem('userId')}`, {headers: {'X-Auth-Token': requestHeader}});
         }
         catch {
             console.log("Ooops 2");
