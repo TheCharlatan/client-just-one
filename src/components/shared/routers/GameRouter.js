@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Redirect, Route } from "react-router-dom";
-import GameTurnBegins from "../../game/GameTurnBegins";
+import Game from "../../game/Game";
 
 const Container = styled.div`
   display: flex;
@@ -18,7 +18,7 @@ class GameRouter extends React.Component {
         <Route
           exact
           path={`${this.props.base}/turnbegins`}
-          render={() => <GameTurnBegins />}
+          render={() => <Game />}
         />
 
         <Route
