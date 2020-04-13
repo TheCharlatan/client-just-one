@@ -10,7 +10,7 @@ import FormContainer from "../../views/design/customized-layouts/FormContainer";
 import Form from "../../views/design/customized-layouts/Form";
 import Heading from "../../views/design/customized-layouts/Heading.js";
 import Pink from "../../views/design/font-families/Pink";
-import InviteModal from "./InviteModal";
+import InviteModal from "./invite/InviteModal";
 
 export class Lobby extends React.Component {
 
@@ -18,6 +18,7 @@ export class Lobby extends React.Component {
         super(props);
         this.state = {
             show: false,
+            lobbyId: this.props.match.params.id
         };
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
@@ -35,7 +36,8 @@ export class Lobby extends React.Component {
         });
     }
 
-    componentDidMount() {}
+    componentDidMount() {
+    }
 
 
     render() {

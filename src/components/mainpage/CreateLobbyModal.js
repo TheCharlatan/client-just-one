@@ -26,12 +26,25 @@ export default class CreateLobbyModal extends React.Component {
     try {
       requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
       response = await api.post('/lobby', requestBody, {headers: {'X-Auth-Token': requestHeader}});
+      if(response.status)
       this.props.hideModal();
     }
     catch {
       console.log("Ooops 1");
       return;
     }
+
+    try {
+      requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+      // TODO: Replace userId with name of user id (if stored in localStorage).
+      response = await api.get(`/user/${localStorage.getItem('userId')}`, {headers: {'X-Auth-Token': requestHeader}});
+    }
+    catch {
+      console.log("Ooops 2");
+      return;
+    }
+    localStorage.setItem("lobbyId",response.data.lobbyId);
+    this.props.history.push(`/lobby/${response.data.lobbyId}`);
   }
 
   /**
