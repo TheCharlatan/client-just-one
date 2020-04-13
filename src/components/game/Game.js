@@ -19,11 +19,12 @@ import {TurnEndScreen} from "./turnEnd/TurnEndScreen";
 import {CluesContainer} from "./wordGuessing/CluesContainer";
 import {GuessInput} from "./wordGuessing/GuessInput";
 
-import styled from "styled-components";
+
 import {Spinner} from "../../views/design/Spinner";
 import Red from "../../views/design/font-families/Red";
 import Orange from "../../views/design/font-families/Orange";
 import Yellow from "../../views/design/font-families/Yellow";
+
 
 
 // The game component responsible for the conditional rendering.
@@ -34,7 +35,8 @@ class Game extends React.Component {
         this.state = {
             currentUser: null,
             gameModel: null,
-            users: []
+            users: [],
+            loaded: null,
         };
     }
 
@@ -47,13 +49,18 @@ class Game extends React.Component {
             this.setState({gameModel: response.data, users: []});
 
             for (let i=0; i<response.data.playerIds.length; i++) {
-                const user = await api.get('/user/' + response.data.playerIds[i]);
-                this.state.users[i] = user;
+                const userResponse = await api.get('/user/' + response.data.playerIds[i]);
 
-                if (user.id == localStorage.getItem('userId')) {
-                    this.setState({currentUser: user.data});
+                //add a data field to user which shows if the user is the active player
+                userResponse.data.isActivePlayer = userResponse.data.id === this.state.gameModel.activePlayer;
+
+                if (userResponse.data.id === localStorage.getItem('userId')) {
+                    this.setState({currentUser: userResponse.data});
                 }
+                this.state.users[i] = userResponse.data;
             }
+            this.setState({loaded: 'loaded'});
+
 
         } catch (error) {
             alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
@@ -68,22 +75,23 @@ class Game extends React.Component {
 
 
     render() {
+        // delay until all the information is loaded
+        if(this.state.loaded === null) {
+            return <Spinner />
+        }
 
         // game has ended -> use separate screen
-        if (this.state.gameModel.gameStatus == "GAME_OVER") {
+        if (this.state.gameModel.gameStatus === "GAME_OVER") {
             return <GameOverview />;
         }
 
-        if (this.state.gameModel === null) {
-            return <Spinner />;
-        }
 
         // React component(s) that change depending on the game state.
         let changingElements = null;
 
 
         // elements needed to decide word
-        if (this.state.gameModel.gameStatus == "AWAITING_INDEX") {
+        if (this.state.gameModel.gameStatus === "AWAITING_INDEX") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
                 // set elements depending on if the player has to select a number or wait form word acceptation/rejection
                 changingElements = <p>Placeholder</p>;
@@ -94,7 +102,7 @@ class Game extends React.Component {
             }
         }
 
-        if (this.state.gameModel.gameStatus == "AWAITING_CLUES") {
+        if (this.state.gameModel.gameStatus === "AWAITING_CLUES") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
                 // display waiting message
                 changingElements = <p>Placeholder for waiting message.</p>;
@@ -104,7 +112,7 @@ class Game extends React.Component {
             }
         }
 
-        if (this.state.gameModel.gameStatus == "AWAITING_GUESS") {
+        if (this.state.gameModel.gameStatus === "AWAITING_GUESS") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
                 changingElements = (
                     <React.Fragment>
@@ -138,7 +146,7 @@ class Game extends React.Component {
                             </InfoLabel>
                             <Info>
                                 <Orange>
-                                    {this.state.gameModel.gameInfo.wordsGuessedCorrect}
+                                    {this.state.gameModel.wordsGuessedCorrect}
                                 </Orange>
                             </Info>
                             <InfoLabel>
@@ -146,7 +154,7 @@ class Game extends React.Component {
                             </InfoLabel>
                             <Info>
                                 <Orange>
-                                    {this.state.gameModel.gameInfo.wordsGuessedWrong}
+                                    {this.state.gameModel.wordsGuessedWrong}
                                 </Orange>
                             </Info>
                         </GameInfo>
@@ -159,7 +167,7 @@ class Game extends React.Component {
                         <CardStack/>
                         <CardStackNumber>
                             <Yellow>
-                                {this.state.gameModel.gameInfo.cardStackCount}
+                                {this.state.gameModel.cardStackCount}
                             </Yellow>
                         </CardStackNumber>
                     </CardStacksContainer>
@@ -171,7 +179,7 @@ class Game extends React.Component {
                         <CardStack/>
                         <CardStackNumber>
                             <Yellow>
-                                // {this.state.gameModel.cardGuessedCount}
+                                {this.state.gameModel.cardGuessedCount}
                             </Yellow>
                         </CardStackNumber>
                     </CardGuessedContainer>

@@ -77,6 +77,7 @@ background: ${props => props.isActivePlayer ? 'radial-gradient(81.05% 81.05% at 
 
 
 const UserLayout = ({user}) => {
+
     var url;
     switch (user.image) {
         case "lion":
