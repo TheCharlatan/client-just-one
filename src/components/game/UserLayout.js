@@ -21,8 +21,6 @@ flex-direction: column;
 align-items: center;
 justify-content: center;
 
-margin-left: 90px;
-margin-right: 90px;
 `;
 
 const UserNameContainer = styled.div`
@@ -59,8 +57,27 @@ background-color: #F8E7D1;
 border: 2px solid black;
 `;
 
+const ActivePlayer = styled.div`
+width: 139px;
+height: 190px;
+
+margin-left: 90px;
+margin-right: 90px;
+
+display: flex;
+flex-direction: column;
+
+align-items: center;
+justify-content: center;
+
+box-shadow: ${ props => props.isActivePlayer ? '4px 4px 12px rgba(0, 0, 0, 0.78)' : 'none'};
+
+background: ${props => props.isActivePlayer ? 'radial-gradient(81.05% 81.05% at 50% 50%, #DDC18E 0%, #FFFFFF 100%)' : 'none'};
+`;
+
 
 const UserLayout = ({user}) => {
+
     var url;
     switch (user.image) {
         case "lion":
@@ -90,13 +107,16 @@ const UserLayout = ({user}) => {
         default:
             url = profilePlaceholder;
     }
+
     return (
-        <UserContainer>
-            <UserProfilePicture image={url}/>
-            <UserNameContainer>
-                <UserName> {user.username} </UserName>
-            </UserNameContainer>
-        </UserContainer>
+        <ActivePlayer isActivePlayer={user.isActivePlayer}>
+            <UserContainer>
+                <UserProfilePicture image={url}/>
+                <UserNameContainer>
+                    <UserName> {user.username} </UserName>
+                </UserNameContainer>
+            </UserContainer>
+        </ActivePlayer>
     );
 };
 
