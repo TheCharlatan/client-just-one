@@ -21,7 +21,7 @@ import LogoutButton from "./LogoutButton";
 import ChatButton from "./ChatButton";
 import ProfileButton from "./ProfileButton";
 import {LobbiesContainer} from "./lobbies/LobbiesContainer";
-import Modal from "../../views/design/customized-layouts/Modal";
+import CreateLobbyModal from "./CreateLobbyModal";
 
 /**
  * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
@@ -37,7 +37,7 @@ export class MainPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            show: false,
+            show: false
         };
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
@@ -45,15 +45,17 @@ export class MainPage extends React.Component {
 
     showModal() {
         this.setState({
-            show: true,
+            show: true
         });
     }
 
     hideModal() {
         this.setState({
-            show: false,
+            show: false
         });
     }
+
+
 
     /**
      * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
@@ -84,7 +86,7 @@ export class MainPage extends React.Component {
                             <TutorialButton/>
                         </Form>
                     </FormContainer>
-                    <Modal  hideModal={this.hideModal}  show={this.state.show} />
+                    <CreateLobbyModal hideModal={this.hideModal} createLobby={this.createLobby} show={this.state.show} />
                     <div id="lobbiesContainer" style={{display: "none"}}>
                         <LobbiesContainer history={this.props.history}/>
                     </div>
