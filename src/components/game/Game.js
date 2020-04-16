@@ -82,7 +82,7 @@ class Game extends React.Component {
 
         // game has ended -> use separate screen
         if (this.state.gameModel.gameStatus === "GAME_OVER") {
-            return <GameOverview />;
+            return <GameOverview gameModel={this.props.gameModel}/>;
         }
 
 
