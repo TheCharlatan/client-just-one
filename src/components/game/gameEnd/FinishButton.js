@@ -21,7 +21,8 @@ class FinishButton extends React.Component {
         try {
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             let requestBody = localStorage.getItem('userId');
-            await api.delete(`game/${localStorage.getItem('gameId')}`, requestBody, {headers:{'X-Auth-Token': requestHeader}})
+            await api.delete(`game/${localStorage.getItem('gameId')}`, requestBody, {headers:{'X-Auth-Token': requestHeader}});
+            clearTimeout(this.props.timerId);
         }
         catch {
             console.log("fail");
