@@ -20,7 +20,7 @@ class GameOverview extends React.Component {
                 requestBody,
                 {headers:{'X-Auth-Token': requestHeader}})
                 .then(r => this.props.history.push(`/lobby/${localStorage.getItem('lobbyId')}`));
-        }, 5000);
+        }, 20000);
 
         return (
           <FinishButton timerId={this.timerId}/>
