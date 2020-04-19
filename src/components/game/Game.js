@@ -13,7 +13,7 @@ import {GameInfo, GameInfoLabel, Info, InfoLabel} from "./GameInfoStyle";
 import UserLayout from "./UserLayout";
 import {CardStack, CardStackLabel, CardStackNumber} from "./GameCardStackStyle";
 
-import {GameOverview} from "./gameEnd/GameOverview";
+import GameOverview from "./gameEnd/GameOverview";
 import {ClueInput} from "./clueSelection/ClueInput";
 import {TurnEndScreen} from "./turnEnd/TurnEndScreen";
 import {CluesContainer} from "./wordGuessing/CluesContainer";

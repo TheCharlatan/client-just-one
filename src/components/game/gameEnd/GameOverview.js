@@ -1,8 +1,10 @@
 import React from 'react';
+import FinishButton from "./FinishButton";
+import {withRouter} from "react-router-dom";
 
 
 // The end of game overview.
-export class GameOverview extends React.Component {
+class GameOverview extends React.Component {
 
     constructor(props) {
         super(props);
@@ -10,7 +12,8 @@ export class GameOverview extends React.Component {
 
     render() {
         return (
-          <p>Placeholder</p>
+          <FinishButton/>
         );
     }
 }
+export default withRouter(GameOverview);
