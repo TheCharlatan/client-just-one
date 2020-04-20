@@ -1,11 +1,10 @@
 import React from "react";
-import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import { GameGuard } from "../routeProtectors/GameGuard";
+import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 import GameRouter from "./GameRouter";
-import { LoginGuard } from "../routeProtectors/LoginGuard";
+import {LoginGuard} from "../routeProtectors/LoginGuard";
 import Login from "../../login/Login";
 import Lobby from "../../lobby/Lobby";
-import { MainPageGuard } from "../routeProtectors/MainpageGuard";
+import {MainPageGuard} from "../routeProtectors/MainpageGuard";
 import MainPageRouter from "./MainPageRouter";
 import Test from "../../login/Test";
 import Registration from "../../registration/registration";
@@ -59,7 +58,7 @@ class AppRouter extends React.Component {
               )}
             />
               <Route
-              path="/lobby"
+              path="/lobby/:pathParam?"
               exact
               render={() => (
                

@@ -1,22 +1,36 @@
 import React from 'react';
 import styled from "styled-components";
 
+import {withRouter} from "react-router-dom";
+import {api} from "../../../helpers/api";
+
 import {UserStats} from "./UserStats";
 import {TeamStats} from "./TeamStats";
 import Green from "../../../views/design/font-families/Green";
+import FinishButton from "./FinishButton";
 
 
 // The end of game overview.
-export class GameOverview extends React.Component {
+class GameOverview extends React.Component {
 
     constructor(props) {
         super(props);
     }
 
+
     render() {
+        this.timerId = setTimeout(() => {
+            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            let requestBody = localStorage.getItem('userId');
+            api.delete(`game/${localStorage.getItem('gameId')}`,
+                requestBody,
+                {headers:{'X-Auth-Token': requestHeader}})
+                .then(r => this.props.history.push(`/lobby/${localStorage.getItem('lobbyId')}`));
+        }, 20000);
+
         return (
           <React.Fragment>
-              <p>Finish button placeholder.</p>
+              <FinishButton timerId={this.timerId}/>
               <IndividualStatsContainer style={{margin: '10px 50px'}}>
                   <div style={{paddingTop: '10.45em'}}>
                   <TextLabel>
@@ -69,3 +83,6 @@ box-sizing: border-box;
 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 text-align:center;
 `;
+
+
+export default withRouter(GameOverview);

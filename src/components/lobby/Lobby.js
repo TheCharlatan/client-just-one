@@ -1,31 +1,43 @@
 import React from 'react';
-import {
-    BaseContainer,
-    BottomLeftContainer,
-    CenterContainer,
-    ChatContainer,
-    LeaderboardContainer,
-    TopLeftContainer,
-    TopRightContainer
-} from '../../helpers/layout';
+import {BaseContainer, BottomLeftContainer, CenterContainer, ChatContainer} from '../../helpers/layout';
 import ChatButton from "./ChatButton";
 import StartGameBtn from "./StartGameBtn";
 import LeaveBtn from "./LeaveBtn";
 import InviteBtn from "./InviteBtn";
-import { withRouter } from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import Chat from "../chat/Chat";
 import FormContainer from "../../views/design/customized-layouts/FormContainer";
 import Form from "../../views/design/customized-layouts/Form";
 import Heading from "../../views/design/customized-layouts/Heading.js";
 import Pink from "../../views/design/font-families/Pink";
+import InviteModal from "./invite/InviteModal";
 
 export class Lobby extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        this.state = {
+            show: false,
+            lobbyId: this.props.match.params.id
+        };
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
     }
 
-    componentDidMount() {}
+    showModal() {
+        this.setState({
+            show: true,
+        });
+    }
+
+    hideModal() {
+        this.setState({
+            show: false,
+        });
+    }
+
+    componentDidMount() {
+    }
 
 
     render() {
@@ -55,10 +67,11 @@ export class Lobby extends React.Component {
                     >
                         <Form style={{ width: "auto", height: "auto" }}>
                             <StartGameBtn></StartGameBtn>
-                            <InviteBtn></InviteBtn>
+                            <InviteBtn onClick={() => this.showModal()}></InviteBtn>
                             <LeaveBtn></LeaveBtn>
                         </Form>
                     </FormContainer>
+                    <InviteModal hideModal={this.hideModal} show={this.state.show} />
                 </CenterContainer>
             </BaseContainer>
         );
