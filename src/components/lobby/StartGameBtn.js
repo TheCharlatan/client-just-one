@@ -13,13 +13,13 @@ const FlexButton = styled(Button)`
 `;
 
 
+
+
 // one of the buttons in the middle part of lobby page
-function StartGameBtn() {
+function StartGameBtn(props) {
     return (
         <FlexButton
-            onClick={() => {
-                // start game
-            }}>
+            onClick={props.onClick}>
             <Blue>Start Game</Blue>
         </FlexButton>
     );

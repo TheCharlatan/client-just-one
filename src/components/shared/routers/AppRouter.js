@@ -32,14 +32,21 @@ class AppRouter extends React.Component {
                       </MainPageGuard>
                   )}
               />
-            <Route
-              path="/game"
+              //todo add path parameter variabe.
+          {/*
+           <Route
+
+              path="/game:pathParam?"
               render={() => (
-
-                  <GameRouter base={"/game"} />
-
+                  <GameRouter base={"/game/:pathParam?"} />
               )}
-            />
+            />*/}
+              <Route
+                  path="/game/1"
+                  render={() => (
+                      <GameRouter base={"/game/1"} />
+                  )}
+              />
               <Route
                   path="/registration"
                   exact
@@ -60,9 +67,7 @@ class AppRouter extends React.Component {
               path="/lobby/:pathParam?"
               exact
               render={() => (
-               
                   <Lobby />
-              
               )}
             />
 
