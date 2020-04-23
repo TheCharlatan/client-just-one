@@ -8,7 +8,7 @@ import {MainPageGuard} from "../routeProtectors/MainpageGuard";
 import MainPageRouter from "./MainPageRouter";
 import Test from "../../login/Test";
 import Registration from "../../registration/registration";
-
+import Game from "../../game/Game";
 /**
  * Main router of your application.
  * In the following class, different routes are rendered. In our case, there is a Login Route with matches the path "/login"
@@ -32,21 +32,14 @@ class AppRouter extends React.Component {
                       </MainPageGuard>
                   )}
               />
-              //todo add path parameter variabe.
-          {/*
-           <Route
 
+
+           <Route
               path="/game:pathParam?"
-              render={() => (
-                  <GameRouter base={"/game/:pathParam?"} />
+              render={(props) => (
+                  <Game base={"/game/"+props.match.params.id} id={props.match.params.id} />
               )}
-            />*/}
-              <Route
-                  path="/game/1"
-                  render={() => (
-                      <GameRouter base={"/game/1"} />
-                  )}
-              />
+            />
               <Route
                   path="/registration"
                   exact

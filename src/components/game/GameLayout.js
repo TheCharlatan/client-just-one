@@ -43,17 +43,18 @@ grid-area: 1 / 4 / 3 / 5;
 `;
 
 export const UserGameContainer = styled.div`
-grid-area: 4 / 1 / 4 / 5;
+grid-area: 3 / 1 / 5 / 5;
 display: flex;
 flex-direction: row;
 flex-wrap: wrap;
 
 align-items: center;
 justify-content: center;
+
 `;
 
 export const ChangeElementContainer = styled.div`
-grid-area: 3 / 1 / 3 / 5;
+grid-area: 5 / 1 / 2 / 5;
 display: flex;
 flex-direction: row;
 flex-wrap: wrap;

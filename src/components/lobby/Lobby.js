@@ -19,10 +19,14 @@ export class Lobby extends React.Component {
         super(props);
         this.state = {
             show: false,
-            playerIds : []
+            playerIds: [],
+            lobbyModel: null,
+            lobbyName: null,
+            hostPlayerId: null
         };
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
+        this.startGame = this.startGame.bind(this);
     }
 
     showModal() {
@@ -37,72 +41,80 @@ export class Lobby extends React.Component {
         });
     }
 
-    componentDidMount() {
-    }
-
-    async startGame()
-    {
+    async componentDidMount() {
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
         try {
-            const response = await api.get(`/lobby/${localStorage.getItem('lobbyId')}`, {headers: {'Authorization': requestHeader}});
-            let playerIds = [];
-            if (response.data && response.data.playerIds && response.data.playerIds.length > 0) {
-                response.data.playerIds.forEach(playerId => {
-                    this.state.playerIds.push(playerId);
-                });
+            const response = await api.get(`/lobby/${localStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
+            if (response.data == null) {
+                alert("Unexpected error");
+                return;
             }
+            console.log(response.data);
+            if (response.data.name)
+                this.setState({
+                    lobbyName: response.data.name
+                });
+            if (response.data.playerIds && response.data.playerIds.length > 0) {
+                this.setState({
+                    playerIds: this.state.playerIds.concat(response.data.playerIds)
+                })
+            }
+            if (response.data.hostPlayerId)
+                this.setState({hostPlayerId: response.data.hostPlayerId});
         } catch (error) {
             alert(`An error occurred when retrieving lobby players: ${error}`);
             return;
         }
+    }
 
-        if(this.state.playerIds == null || this.state.playerIds.length < 3 )
-        {
+    async startGame() {
+        let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+        if (this.state.hostPlayerId != localStorage.getItem('userId')) {
+            alert("Only Lobby player is allowed to start the game.");
+            return;
+        }
+        console.log(this.state.playerIds);
+        if (this.state.playerIds == null || this.state.playerIds.length < 3) {
             alert("not enough players to start the game.")
             return;
         }
-
         try {
             const requestBody = JSON.stringify({
-                playerIds:this.state.playerIds
+                playerIds: this.state.playerIds
             });
-            const response = await api.post(`/game/`, requestBody, {headers: {'Authorization': requestHeader}});
+            const response = await api.post(`/game/`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
         } catch (error) {
             alert(`An error occurred when starting a new game: ${error}`);
             return;
         }
 
         try {
-            const response = await api.get(`/lobby/${localStorage.getItem('lobbyId')}` , {headers: {'Authorization': requestHeader}});
+            const response = await api.get(`/user/${localStorage.getItem("userId")}`, {headers: {'X-Auth-Token': requestHeader}});
 
-            if (response.data && response.data.gameId ) {
-                localStorage.setItem("gameId",  response.data.gameId);
+            if (response.data && response.data.gameId) {
+                localStorage.setItem("gameId", response.data.gameId);
                 this.props.history.push(`/game/${response.data.gameId}/`);
             }
         } catch (error) {
             alert(`An error occurred when starting a new game: ${error}`);
             return;
         }
-
-
-
     }
-
 
     render() {
         return (
             <BaseContainer>
                 <BottomLeftContainer>
-                    <ChatButton />
+                    <ChatButton/>
                 </BottomLeftContainer>
-                <ChatContainer style={{ gridArea: "1 / 1 / 3 / 2" }}>
-                    <Chat />
+                <ChatContainer style={{gridArea: "1 / 1 / 3 / 2"}}>
+                    <Chat/>
                 </ChatContainer>
                 <CenterContainer>
-                    <FormContainer style={{ minHeight: "0" }}>
+                    <FormContainer style={{minHeight: "0"}}>
                         <Heading>
-                            <Pink style={{ fontSize: "x-large", fontSizeImportant: "true" }}>
-                                Lobby Name
+                            <Pink style={{fontSize: "x-large", fontSizeImportant: "true"}}>
+                                {this.state.lobbyName}
                             </Pink>
                         </Heading>
                     </FormContainer>
@@ -114,13 +126,13 @@ export class Lobby extends React.Component {
                             marginTop: "4em",
                         }}
                     >
-                        <Form style={{ width: "auto", height: "auto" }}>
-                            <StartGameBtn onClick={this.startGame}></StartGameBtn>
+                        <Form style={{width: "auto", height: "auto"}}>
+                            <StartGameBtn onClick={() => this.startGame()}></StartGameBtn>
                             <InviteBtn onClick={() => this.showModal()}></InviteBtn>
                             <LeaveBtn></LeaveBtn>
                         </Form>
                     </FormContainer>
-                    <InviteModal hideModal={this.hideModal} show={this.state.show} />
+                    <InviteModal hideModal={this.hideModal} show={this.state.show}/>
                 </CenterContainer>
             </BaseContainer>
         );

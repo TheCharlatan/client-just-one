@@ -40,7 +40,7 @@ export class GuessInput extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            placeholder:'Enter your guess here...',
+            placeholder: 'Enter your guess here...',
             guess: ''
         }
     }
@@ -55,7 +55,8 @@ export class GuessInput extends React.Component {
         var guess = this.state.guess;
         return (
             <div>
-                <InputGuess value={this.state.guess} placeholder={this.state.placeholder} onFocus={() => this.handleInputChange('placeholder' , '')} onChange={e => {
+                <InputGuess value={this.state.guess} placeholder={this.state.placeholder}
+                            onFocus={() => this.handleInputChange('placeholder', '')} onChange={e => {
                     this.handleInputChange('guess', e.target.value);
                 }}/>
                 <div className="pull-right" style={{width: "100%"}}>
