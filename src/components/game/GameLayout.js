@@ -50,4 +50,15 @@ flex-wrap: wrap;
 
 align-items: center;
 justify-content: center;
+
+`;
+
+export const ChangeElementContainer = styled.div`
+grid-area: 5 / 1 / 2 / 5;
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+
+align-items: center;
+justify-content: center;
 `;

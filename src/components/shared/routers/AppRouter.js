@@ -8,6 +8,7 @@ import {MainPageGuard} from "../routeProtectors/MainpageGuard";
 import MainPageRouter from "./MainPageRouter";
 import Test from "../../login/Test";
 import Registration from "../../registration/registration";
+import Game from "../../game/Game";
 import {GameOverview} from "../../game/gameEnd/GameOverview";
 
 /**
@@ -33,12 +34,12 @@ class AppRouter extends React.Component {
                       </MainPageGuard>
                   )}
               />
-            <Route
-              path="/game"
-              render={() => (
 
-                  <GameRouter base={"/game"} />
 
+           <Route
+              path="/game:pathParam?"
+              render={(props) => (
+                  <Game base={"/game/"+props.match.params.id} id={props.match.params.id} />
               )}
             />
               <Route
@@ -61,9 +62,7 @@ class AppRouter extends React.Component {
               path="/lobby/:pathParam?"
               exact
               render={() => (
-               
                   <Lobby />
-              
               )}
             />
 

@@ -5,18 +5,19 @@ import Blue from "../../../views/design/font-families/Blue";
 import close from '../../../img/close.png'
 import User from "../../shared/models/User";
 import InviteModalBtn from "./InviteModalBtn";
+import {api} from '../../../helpers/api';
 
 export default class InviteModal extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state={
-            users : []
+        this.state = {
+            users: []
         }
     }
 
     async componentDidMount() {
-        /*let requestHeader= null;
+        let requestHeader = null;
         let responseLobby = null;
 
         try {
@@ -46,39 +47,21 @@ export default class InviteModal extends React.Component {
             return;
         }
         let users = [];
-        if (responseInvite.data  && responseInvite.data.length > 0) {
+        if (responseInvite.data && responseInvite.data.length > 0) {
             responseInvite.data.map(user => {
-                if(!invitedPlayers.includes(user.id))
-                    users.push(new User(item))
+                    if (!invitedPlayers.includes(user.id))
+                        users.push(new User(user))
                 }
             );
             this.setState({
                 users: users
             });
-        }
-        else {
+        } else {
             this.setState({
                 users: []
             });
             return;
-        }*/
-        //TODO - mock users
-        let users = [];
-        users.push(this.mockUser('name2', 2));
-        users.push(this.mockUser('name3', 3));
-        users.push(this.mockUser('name4', 4));
-        users.push(this.mockUser('name5', 5));
-        this.setState({
-            users: users
-        });
-    }
-
-    mockUser(name, userid)
-    {
-        var user1 = new User();
-        user1.name =name;
-        user1.id = userid;
-        return user1;
+        }
     }
 
     render() {
