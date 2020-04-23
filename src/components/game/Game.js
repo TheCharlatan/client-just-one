@@ -19,13 +19,16 @@ import {ClueInput} from "./clueSelection/ClueInput";
 import {CluesContainer} from "./wordGuessing/CluesContainer";
 import {GuessInput} from "./wordGuessing/GuessInput";
 
-
 import {Spinner} from "../../views/design/Spinner";
 import Red from "../../views/design/font-families/Red";
 import Orange from "../../views/design/font-families/Orange";
 import Yellow from "../../views/design/font-families/Yellow";
 import {TurnEndScreen} from "./turnEnd/TurnEndScreen";
 import {PleaseWait} from "./message/PleaseWait";
+import {SelectNumberContainer} from "./wordSelection/SelectNumberContainer";
+import {MysteryWordContainer} from "./shared/MysteryWordContainer";
+import {AcceptRejectButtons} from "./wordSelection/AcceptRejectButtons";
+
 
 // The game component responsible for the conditional rendering.
 class Game extends React.Component {
@@ -36,14 +39,15 @@ class Game extends React.Component {
             currentUser: null,
             users: [],
             clues: null,
-            loaded: null,
-            gameModel:null,
-            guessCorrect :null,
-            activeUser : null
+            loaded: false,
+            gameModel: null,
+            guessCorrect: null,
+            activeUser: null
         };
         this.handleClue = this.handleClue.bind(this);
         this.handleGuess = this.handleGuess.bind(this);
     }
+
 
     async handleGuess(guess) {
         let requestHeader = null;
@@ -77,6 +81,7 @@ class Game extends React.Component {
 
     }
 
+
     async handleClue(clue) {
         let requestHeader = null;
         let response = null;
@@ -103,6 +108,7 @@ class Game extends React.Component {
         //todo change game status according to the gamegetinfo object.
     }
 
+
     changeGameStatus(status) {
         this.setState(prevState => {
             let gameModel = Object.assign({}, prevState.gameModel);  // creating copy of state variable jasper
@@ -111,10 +117,11 @@ class Game extends React.Component {
         })
     }
 
+
     // TODO: Get gameId, userId (currently assumed it is in localStorage).
     async componentDidMount() {
         let requestHeader = null;
-        var gameId = localStorage.getItem("gameId");
+        let gameId = localStorage.getItem("gameId");
         try {
             requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             const response = await api.get(`/game/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
@@ -139,9 +146,11 @@ class Game extends React.Component {
         this.changeGameStatus("AWAITING_GUESS");
     }
 
+
     isActivePlayer(playerId) {
         return playerId === this.state.gameModel.activePlayer;
     }
+
 
     render() {
         // delay until all the information is loaded
@@ -160,11 +169,26 @@ class Game extends React.Component {
         // elements needed to decide word
         if (this.state.gameModel.gameStatus === "AWAITING_INDEX") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
-                // set elements depending on if the player has to select a number or wait form word acceptation/rejection
-                changingElements = <p>Placeholder</p>;
+                // TODO: Determine if active player has already selected number (currently assumes wordIndex != -1).
+                if (this.state.gameModel.wordIndex === -1) {
+                    changingElements = <SelectNumberContainer />;
+                }
+                else {
+                    changingElements = <PleaseWait keyword={this.state.gameModel.wordIndex} />;
+                }
             } else {
-                // set elements depending on if the word was already been selected or not
-                changingElements = <p>Placeholder</p>;
+                // TODO: Determine if active player has already selected number (currently assumes wordIndex != -1).
+                if (this.state.gameModel.wordIndex === -1) {
+                    changingElements = <PleaseWait keyword={"Nothing yet"} />;
+                }
+                else {
+                    changingElements = (
+                        <React.Fragment>
+                            <MysteryWordContainer mysteryWord={this.state.gameModel.words[this.state.gameModel.wordIndex]} />
+                            <AcceptRejectButtons gameId={this.state.gameModel.gameId} wordIndex={this.state.gameModel.wordIndex}/>
+                        </React.Fragment>
+                    );
+                }
             }
         }
 
@@ -177,6 +201,7 @@ class Game extends React.Component {
 
             }
         }
+
         if (this.state.gameModel.gameStatus === "AWAITING_GUESS") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
                 changingElements = (
@@ -195,6 +220,7 @@ class Game extends React.Component {
             // display waiting message
             changingElements = <TurnEndScreen correct={this.state.guessCorrect} activeuser={this.state.activeUser}/>
         }
+
         return (
             // Basic layout that is (nearly) the same in all game states.
             <BaseContainerBody>
@@ -258,10 +284,12 @@ class Game extends React.Component {
                             <UserGameContainer style={{marginTop: "5%"}}>
                                 <UserLayout user={this.state.currentUser} key={this.state.currentUser.id}/>;
                             </UserGameContainer>}
-                    <ChangeElementContainer> {changingElements}</ChangeElementContainer>
+                    <ChangeElementContainer style={{flexDirection: 'column'}}> {changingElements}</ChangeElementContainer>
                 </BaseContainerGame>
             </BaseContainerBody>
         );
     }
 }
+
+
 export default withRouter(Game);

@@ -16,7 +16,6 @@ grid-row-gap: 0px;
 
 min-width: 100vw;
 min-height: 100vh;
-
 `;
 
 export const CardStacksContainer = styled.div`
@@ -28,6 +27,7 @@ flex-direction: column;
 align-items: center;
 justify-content: center;
 `;
+
 export const CardGuessedContainer = styled.div`
 grid-area: 1 / 3 / 3 / 4;
 
@@ -50,7 +50,6 @@ flex-wrap: wrap;
 
 align-items: center;
 justify-content: center;
-
 `;
 
 export const ChangeElementContainer = styled.div`

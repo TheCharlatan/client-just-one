@@ -21,7 +21,7 @@ export class PleaseWait extends React.Component {
                 }}
             >
                 <Form style={{ width: "auto", height: "auto" ,borderWidth:"3px", marginTop:"10%"}}>
-                    <Green>Please Wait. {this.props.keyword} entered</Green>
+                    <Green>Please Wait. {this.props.keyword} entered.</Green>
                 </Form>
             </FormContainer>
         );
