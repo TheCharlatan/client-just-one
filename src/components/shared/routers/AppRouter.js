@@ -9,6 +9,8 @@ import MainPageRouter from "./MainPageRouter";
 import Test from "../../login/Test";
 import Registration from "../../registration/registration";
 import Game from "../../game/Game";
+import {GameOverview} from "../../game/gameEnd/GameOverview";
+
 /**
  * Main router of your application.
  * In the following class, different routes are rendered. In our case, there is a Login Route with matches the path "/login"
@@ -84,3 +86,47 @@ class AppRouter extends React.Component {
 * Don't forget to export your component!
  */
 export default AppRouter;
+
+
+/*
+To test GameOverview:
+<Route path="/gameOverviewTest" exact render={() => <GameOverview
+                  test = {1}
+                gameModel = {{
+                  id: 22,
+                  playerIds: [1, 2, 3],
+                  round: 13,
+                  gameStatus: 'GAME_OVER',
+                  words: ['a', 'b', 'c', 'd', 'e'],
+                  wordIndex: 2,
+                  score: 128,
+                  activePlayerId: 2,
+                  clues: ['clue1', 'clue2'],
+                  timestamp: 1,
+                  activePlayer: 3,
+                  wordsGuessedCorrect: 9,
+                  wordsGuessedWrong: 3,
+                  cardStackCount: 0,
+                  cardGuessedCount: 6}}
+                users = {[
+                    {
+                        id: 1,
+                        username: 'user1',
+                        gameId: 22,
+                        isActivePlayer: false
+                    },
+                    {
+                        id: 2,
+                        username: 'user2',
+                        gameId: 22,
+                        isActivePlayer: true
+                    },
+                    {
+                        id: 3,
+                        username: 'user3',
+                        gameId: 22,
+                        isActivePlayer: false
+                    }
+                ]}
+              />} />
+ */

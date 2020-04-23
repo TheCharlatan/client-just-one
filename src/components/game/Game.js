@@ -151,7 +151,7 @@ class Game extends React.Component {
 
         // game has ended -> use separate screen
         if (this.state.gameModel.gameStatus === "GAME_OVER") {
-            return <GameOverview/>;
+            return <GameOverview gameModel={this.state.gameModel} users={this.state.users}/>;
         }
 
         // React component(s) that change depending on the game state.
