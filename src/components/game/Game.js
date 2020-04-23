@@ -51,12 +51,12 @@ class Game extends React.Component {
 
         const requestBody = JSON.stringify({
             guess: guess,
-            wordIndex: localStorage.getItem("wordId")
+            wordIndex: this.gameModel.wordIndex
         });
 
         try {
             requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            response = await api.put(`/game/${localStorage.getItem('gameId')}/guess?${localStorage.getItem('wordId')}`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+            response = await api.put(`/game/${localStorage.getItem('gameId')}/guess`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
         } catch {
             console.log("Ooops 1");
             return;
@@ -114,7 +114,7 @@ class Game extends React.Component {
     // TODO: Get gameId, userId (currently assumed it is in localStorage).
     async componentDidMount() {
         let requestHeader = null;
-        var gameId = localStorage.getItem("gameId");
+        let gameId = localStorage.getItem("gameId");
         try {
             requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             const response = await api.get(`/game/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
