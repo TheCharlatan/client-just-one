@@ -84,7 +84,17 @@ class Game extends React.Component {
 
         if (prevState.gameModel.gameStatus === FrontendGameStates.AWAITING_GUESS && this.state.gameModel.gameStatus === "AWAITING_INDEX") {
             this.setFrontendGameStatus("TURN_FINISHED");
-            // TODO: Set correctness of guess (compare wordsGuessedCorrect, -Wrong to prevState).
+
+            if (this.state.gameModel.wordsGuessedCorrect > prevState.gameModel.wordsGuessedCorrect) {
+                this.setState({ guessCorrect: 'correct' });
+            }
+            else if (this.state.gameModel.wordsGuessedWrong > prevState.gameModel.wordsGuessedWrong) {
+                this.setState({ guessCorrect: 'wrong' });
+            }
+            else {
+                this.setState({ guessCorrect: 'skipped' }); // TODO: Currently skipped is counted as wrong on server side (status from 66. commit).
+            }
+
             this.setState({ lastTurnEndScreenDate: Date.now() });
         }
 
