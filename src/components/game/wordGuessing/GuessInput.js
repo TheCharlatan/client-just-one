@@ -54,7 +54,6 @@ export class GuessInput extends React.Component {
 
 
     async handleGuess(guess) {
-        let response = null;
 
         const requestBody = JSON.stringify({
             guess: guess,
@@ -63,14 +62,14 @@ export class GuessInput extends React.Component {
 
         try {
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            response = await api.put(`/game/${localStorage.getItem('gameId')}/guess`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+            await api.put(`/game/${localStorage.getItem('gameId')}/guess`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
         }
         catch (error) {
             console.log(`An error occurred when submitting the guess: \n${handleError(error)}`);
             return;
         }
 
-        // TODO: Update state (therefore trigger transition to turn overview).
+        this.props.updateGame();
     }
 
 

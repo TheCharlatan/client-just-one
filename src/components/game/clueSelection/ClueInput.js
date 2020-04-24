@@ -23,6 +23,7 @@ export class ClueInput extends React.Component {
     }
 
     async handleClue(clue) {
+
         try {
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             let requestBody = JSON.stringify({ clue: clue });
@@ -33,7 +34,7 @@ export class ClueInput extends React.Component {
             return;
         }
 
-        this.props.setFrontendGameStatus("AWAITING_GUESS");
+        this.props.updateGame();
     }
 
 
