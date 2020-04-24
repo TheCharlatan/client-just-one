@@ -6,6 +6,7 @@ import Button from "../../../views/design/Button";
 import Red from "../../../views/design/font-families/Red";
 import {api, handleError} from "../../../helpers/api";
 
+
 const InputGuess = styled(InputField)`
   &::placeholder {
   font-family: fantasy;
@@ -35,6 +36,7 @@ const InputGuess = styled(InputField)`
     text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
 
+
 // The input field to submit the guess.
 export class GuessInput extends React.Component {
 
@@ -63,7 +65,7 @@ export class GuessInput extends React.Component {
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             response = await api.put(`/game/${localStorage.getItem('gameId')}/guess`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
         }
-        catch {
+        catch (error) {
             console.log(`An error occurred when submitting the guess: \n${handleError(error)}`);
             return;
         }

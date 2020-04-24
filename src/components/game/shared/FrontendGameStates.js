@@ -1,4 +1,4 @@
-const FrontendGameStates = Object.freeze({
+export const FrontendGameStates = Object.freeze({
     // AWAITING_INDEX
     'SELECT_INDEX': 'select_index', // active player has not yet selected a word
     'ACCEPT_REJECT_WORD': 'accept_reject_word', // an index has been selected but not accepted/rejected

@@ -28,6 +28,7 @@ import {PleaseWait} from "./message/PleaseWait";
 import {SelectNumberContainer} from "./wordSelection/SelectNumberContainer";
 import {MysteryWordContainer} from "./shared/MysteryWordContainer";
 import {AcceptRejectButtons} from "./wordSelection/AcceptRejectButtons";
+import {FrontendGameStates} from "./shared/FrontendGameStates";
 
 
 // The game component responsible for the conditional rendering.
