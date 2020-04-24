@@ -46,53 +46,16 @@ class Game extends React.Component {
             frontendGameStatus: "SELECT_INDEX" // frontend status to allow more fine-grained control
             // TODO: Timer
         };
-        this.handleClue = this.handleClue.bind(this);
-        this.handleGuess = this.handleGuess.bind(this);
+        this.setGameState = this.setGameState.bind(this);
+        this.setFrontendGameStatus = this.setFrontendGameStatus.bind(this);
     }
 
 
     // TODO: function to update data and set frontendGameStatus accordingly, set timer, etc.
 
 
-    async handleGuess(guess) {
-        let requestHeader = null;
-        let response = null;
-
-        const requestBody = JSON.stringify({
-            guess: guess,
-            wordIndex: this.gameModel.wordIndex
-        });
-
-        try {
-            requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            response = await api.put(`/game/${localStorage.getItem('gameId')}/guess`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
-        }
-        catch {
-            console.log(`An error occurred when submitting the guess: \n${handleError(error)}`);
-            return;
-        }
-
-        if (response.data && response.data.guessCorrect) {
-            this.setState({guessCorrect: response.data.guessCorrect})
-            // TODO: Notify other players as well.
-            this.setFrontendGameStatus("TURN_FINISHED");
-        }
-    }
-
-
-    async handleClue(clue) {
-
-        try {
-            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            let requestBody = JSON.stringify({ clue: clue });
-            await api.put(`/game/${localStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
-        }
-        catch {
-            console.log(`An error occurred when submitting the clue: \n${handleError(error)}`);
-            return;
-        }
-
-        this.setFrontendGameStatus("AWAITING_GUESS");
+    setGameState(stateUpdate) {
+        this.setState(stateUpdate);
     }
 
 
@@ -105,8 +68,13 @@ class Game extends React.Component {
     }
 
 
-    // TODO: Get gameId, userId (currently assumed it is in localStorage).
     async componentDidMount() {
+        await this.updateGameData();
+    }
+
+
+    // TODO: Get gameId, userId (currently assumed it is in localStorage).
+    async updateGameData() {
         let response = null;
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
 
@@ -123,7 +91,7 @@ class Game extends React.Component {
 
         try {
             for (let i=0; i<response.data.playerIds.length; i++) {
-                const userResponse = await api.get('/user/' + response.data.playerIds[i], {headers: {'X-Auth-Token': requestHeader}});
+                let userResponse = await api.get('/user/' + response.data.playerIds[i], {headers: {'X-Auth-Token': requestHeader}});
                 if (userResponse.data.id == localStorage.getItem('userId')) {
                     this.setState({currentUser: userResponse.data});
                 }
@@ -179,7 +147,10 @@ class Game extends React.Component {
                 changingElements = (
                     <React.Fragment>
                         <MysteryWordContainer mysteryWord={this.state.gameModel.words[this.state.gameModel.wordIndex]} />
-                        <AcceptRejectButtons gameId={this.state.gameModel.gameId} wordIndex={this.state.gameModel.wordIndex}/>
+                        <AcceptRejectButtons
+                            gameId={this.state.gameModel.gameId}
+                            wordIndex={this.state.gameModel.wordIndex}
+                        />
                     </React.Fragment>
                 );
             }
@@ -190,7 +161,7 @@ class Game extends React.Component {
                 changingElements = <PleaseWait keyword="Clues are being "/>
             }
             else {
-                changingElements = <ClueInput handleClue={this.handleClue} />
+                changingElements = <ClueInput setFrontendGameStatus={this.setFrontendGameStatus} />
             }
         }
 
@@ -199,7 +170,10 @@ class Game extends React.Component {
                 changingElements = (
                     <React.Fragment>
                         <CluesContainer style={{marginBottom: "5%"}}/>
-                        <GuessInput handleGuess={this.handleGuess}/>
+                        <GuessInput
+                            setGameState={this.setGameState}
+                            setFrontendGameStatus={this.setFrontendGameStatus}
+                        />
                     </React.Fragment>
                 );
             }
@@ -209,7 +183,12 @@ class Game extends React.Component {
         }
 
         if (this.state.gameModel.gameStatus === "TURN_FINISHED") {
-            changingElements = <TurnEndScreen correct={this.state.guessCorrect} activeUser={this.state.activeUser}/>
+            changingElements = (
+                <TurnEndScreen
+                    correct={this.state.guessCorrect}
+                    activeUser={this.state.activeUser}
+                />
+            );
         }
 
 
