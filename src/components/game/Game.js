@@ -43,10 +43,15 @@ class Game extends React.Component {
             gameModel: null,
             guessCorrect: null,
             activeUser: null
+            frontendGameStatus: "SELECT_INDEX" // frontend status to allow more fine-grained control
+            // TODO: Timer
         };
         this.handleClue = this.handleClue.bind(this);
         this.handleGuess = this.handleGuess.bind(this);
     }
+
+
+    // TODO: function to update data and set frontendGameStatus accordingly, set timer, etc.
 
 
     async handleGuess(guess) {
@@ -65,6 +70,7 @@ class Game extends React.Component {
             console.log("Ooops 1");
             return;
         }
+
         if (response.data && response.data.guessCorrect) {
 
             this.setState({guessCorrect:response.data.guessCorrect})
@@ -76,7 +82,8 @@ class Game extends React.Component {
             } else {
                 // todo guess is skipped
             }
-            this.changeGameStatus("TURN_ENDS");
+
+            this.setFrontendGameStatus("TURN_ENDS");
         }
 
     }
@@ -103,29 +110,29 @@ class Game extends React.Component {
             return {clues};                                 // return new object jasper object
         }, () => {
             console.log(this.state.clues);
-            this.changeGameStatus("AWAITING_GUESS");
+            this.setFrontendGameStatus("AWAITING_GUESS");
         });
         //todo change game status according to the gamegetinfo object.
     }
 
 
-    changeGameStatus(status) {
-        this.setState(prevState => {
-            let gameModel = Object.assign({}, prevState.gameModel);  // creating copy of state variable jasper
-            gameModel.gameStatus = status;                     // update the name property, assign a new value
-            return {gameModel};                                 // return new object jasper object
-        })
+    setFrontendGameStatus(status) {
+        if (status in FrontendGameStates) {
+            this.setState({
+                frontendGameStatus: status
+            });
+        }
     }
 
 
     // TODO: Get gameId, userId (currently assumed it is in localStorage).
     async componentDidMount() {
-        let requestHeader = null;
-        let gameId = localStorage.getItem("gameId");
         try {
-            requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            let gameId = localStorage.getItem("gameId");
+            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             const response = await api.get(`/game/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
             this.setState({gameModel: response.data, users: []});
+
             for (let i=0; i<response.data.playerIds.length; i++) {
                 const userResponse = await api.get('/user/' + response.data.playerIds[i], {headers: {'X-Auth-Token': requestHeader}});
                 //add a data field to user which shows if the user is the active player
@@ -138,12 +145,12 @@ class Game extends React.Component {
                 }
                 this.state.users[i] = userResponse.data;
             }
-            this.setState({loaded: 'loaded'});
+
+            this.setState({loaded: true});
 
         } catch (error) {
             alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
         }
-        this.changeGameStatus("AWAITING_GUESS");
     }
 
 
@@ -154,7 +161,7 @@ class Game extends React.Component {
 
     render() {
         // delay until all the information is loaded
-        if (this.state.loaded === null) {
+        if (!this.state.loaded) {
             return <Spinner/>
         }
 
@@ -166,39 +173,38 @@ class Game extends React.Component {
         // React component(s) that change depending on the game state.
         let changingElements = null;
 
-        // elements needed to decide word
-        if (this.state.gameModel.gameStatus === "AWAITING_INDEX") {
+        // no index selected yet
+        if (this.state.frontendGameStatus === "SELECT_INDEX") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
-                // TODO: Determine if active player has already selected number (currently assumes wordIndex != -1).
-                if (this.state.gameModel.wordIndex === -1) {
-                    changingElements = <SelectNumberContainer />;
-                }
-                else {
-                    changingElements = <PleaseWait keyword={this.state.gameModel.wordIndex} />;
-                }
-            } else {
-                // TODO: Determine if active player has already selected number (currently assumes wordIndex != -1).
-                if (this.state.gameModel.wordIndex === -1) {
-                    changingElements = <PleaseWait keyword={"Nothing yet"} />;
-                }
-                else {
-                    changingElements = (
-                        <React.Fragment>
-                            <MysteryWordContainer mysteryWord={this.state.gameModel.words[this.state.gameModel.wordIndex]} />
-                            <AcceptRejectButtons gameId={this.state.gameModel.gameId} wordIndex={this.state.gameModel.wordIndex}/>
-                        </React.Fragment>
-                    );
-                }
+                changingElements = <SelectNumberContainer gameId={this.state.gameModel.id} /> // active player can select number
+            }
+            else {
+                changingElements = <PleaseWait keyword={"Nothing yet "} /> // non-active players have to wait
+            }
+        }
+
+        // index selected, but not confirmed
+        if (this.state.frontendGameStatus === "ACCEPT_REJECT_WORD") {
+            if (this.isActivePlayer(this.state.currentUser.id)) {
+                changingElements = <PleaseWait keyword={"Not all confirmations/rejections "} /> // non-active players have to wait
+            }
+            else {
+                changingElements = (
+                    <React.Fragment>
+                        <MysteryWordContainer mysteryWord={this.state.gameModel.words[this.state.gameModel.wordIndex]} />
+                        <AcceptRejectButtons gameId={this.state.gameModel.gameId} wordIndex={this.state.gameModel.wordIndex}/>
+                    </React.Fragment>
+                );
             }
         }
 
         if (this.state.gameModel.gameStatus === "AWAITING_CLUES") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
-                changingElements = <PleaseWait keyword="clues are"/>
-            } else {
+                changingElements = <PleaseWait keyword="Clues are"/>
+            }
+            else {
                 changingElements =
-                    <ClueInput handleClue={this.handleClue}></ClueInput>
-
+                    <ClueInput handleClue={this.handleClue} />
             }
         }
 
@@ -210,13 +216,14 @@ class Game extends React.Component {
                         <GuessInput handleGuess={this.handleGuess}/>
                     </React.Fragment>
                 );
-            } else {
+            }
+            else {
                 // display waiting message
                 changingElements = <PleaseWait keyword="guess is"/>
             }
         }
 
-        if (this.state.gameModel.gameStatus === "TURN_ENDS") {
+        if (this.state.gameModel.gameStatus === "TURN_FINISHED") {
             // display waiting message
             changingElements = <TurnEndScreen correct={this.state.guessCorrect} activeuser={this.state.activeUser}/>
         }
@@ -284,7 +291,9 @@ class Game extends React.Component {
                             <UserGameContainer style={{marginTop: "5%"}}>
                                 <UserLayout user={this.state.currentUser} key={this.state.currentUser.id}/>;
                             </UserGameContainer>}
-                    <ChangeElementContainer style={{flexDirection: 'column'}}> {changingElements}</ChangeElementContainer>
+                    <ChangeElementContainer style={{flexDirection: 'column'}}>
+                        {changingElements}
+                    </ChangeElementContainer>
                 </BaseContainerGame>
             </BaseContainerBody>
         );
