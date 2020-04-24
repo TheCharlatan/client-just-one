@@ -44,15 +44,11 @@ class Game extends React.Component {
             guessCorrect: null, // gets set in GuessInput.handleGuess
             activeUser: null,
             frontendGameStatus: "SELECT_INDEX", // frontend status to allow more fine-grained control, uses ./shared/FrontendGameStates
-            // TODO: 30s Timer
-            // TODO: Timer to periodically update game data/state
+            updateTimer: null, // Timer to periodically pull the newest game data and update the game state accordingly
             lastTurnEndScreenDate: null // when the last TurnEndScreen was opened
         };
         this.updateGame = this.updateGame.bind(this);
     }
-
-
-    // TODO: Timer to update game data and state periodically.
 
 
     // update the game data, based on this update state
@@ -110,17 +106,21 @@ class Game extends React.Component {
 
     async componentDidMount() {
         await this.updateGameData();
-        // TODO: Start timer to update data/state.
+        this.setState({
+            updateTimer: setInterval(() => this.updateGame(), 500)
+        });
     }
 
 
     componentWillUnmount() {
-        // TODO: Dispose of timer(s).
+        clearInterval(this.updateTimer);
     }
 
 
     // TODO: Get gameId, userId (currently assumed it is in localStorage).
     async updateGameData() {
+        const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
+
         let response = null;
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
 
@@ -132,6 +132,12 @@ class Game extends React.Component {
         }
         catch (error) {
             alert(`Something went wrong while fetching the game data: \n${handleError(error)}`);
+            return;
+        }
+
+        // reduce requests by only updating when new round/player has left
+        if (this.state.gameModel.round == prevState.gameModel.round && this.state.gameModel.playerIds.length == prevState.gameModel.playerIds.length) {
+            this.setState({loaded: true});
             return;
         }
 
