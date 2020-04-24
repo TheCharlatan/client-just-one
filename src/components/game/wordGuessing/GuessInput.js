@@ -70,11 +70,7 @@ export class GuessInput extends React.Component {
             return;
         }
 
-        if (response.data && response.data.guessCorrect) {
-            this.props.setGameState({guessCorrect: response.data.guessCorrect});
-            // TODO: Notify other players as well.
-            this.props.setFrontendGameStatus("TURN_FINISHED");
-        }
+        // TODO: Update state (therefore trigger transition to turn overview).
     }
 
 

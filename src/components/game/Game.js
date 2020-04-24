@@ -39,20 +39,65 @@ class Game extends React.Component {
         this.state = {
             currentUser: null,
             users: [],
-            clues: null,
             loaded: false,
             gameModel: null,
-            guessCorrect: null,
+            guessCorrect: null, // gets set in GuessInput.handleGuess
             activeUser: null,
-            frontendGameStatus: "SELECT_INDEX" // frontend status to allow more fine-grained control
-            // TODO: Timer
+            frontendGameStatus: "SELECT_INDEX", // frontend status to allow more fine-grained control, uses ./shared/FrontendGameStates
+            // TODO: 30s Timer
+            // TODO: Timer to periodically update game data/state
+            lastTurnEndScreenDate: null // when the last TurnEndScreen was opened
         };
         this.setGameState = this.setGameState.bind(this);
         this.setFrontendGameStatus = this.setFrontendGameStatus.bind(this);
     }
 
 
-    // TODO: function to update data and set frontendGameStatus accordingly, set timer, etc.
+    // TODO: Timer to update game data and state periodically.
+
+
+    // update the game data, based on this update state
+    async updateGame() {
+        const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
+        await this.updateGameData();
+
+        // TODO: Player has left (new number of players is lower than in prevState.gameModel) -> reset state.
+
+        // display the TurnEndScreen for at least 5s
+        if (prevState.frontendGameStatus == "TURN_FINISHED" && Date.now() - this.state.lastTurnEndScreenDate <= 5000) {
+            return;
+        }
+
+        if (this.state.gameModel.gameStatus == "AWAITING_INDEX") {
+            if (this.state.gameModel.wordIndex == -1) {
+                this.setFrontendGameStatus("SELECT_INDEX");
+            }
+            else {
+                this.setFrontendGameStatus("ACCEPT_REJECT_WORD");
+            }
+        }
+
+        if (prevState.gameModel.gameStatus == "AWAITING_INDEX" && this.state.gameModel.gameStatus == "AWAITING_CLUES") {
+            this.setFrontendGameStatus("AWAITING_CLUES");
+            // TODO: Start 30s timer.
+        }
+
+        if (prevState.gameModel.gameStatus == "AWAITING_CLUES" && this.state.gameModel.gameStatus == "AWAITING_GUESS") {
+            this.setFrontendGameStatus("AWAITING_GUESS");
+            // TODO: Start 30s timer.
+        }
+
+        if (prevState.gameModel.gameStatus == "AWAITING_GUESS" && this.state.gameModel.gameStatus == "AWAITING_INDEX") {
+            this.setFrontendGameStatus("TURN_FINISHED");
+            // TODO: Set correctness of guess (compare wordsGuessedCorrect, -Wrong to prevState).
+            this.setState({ lastTurnEndScreenDate: Date.now() });
+        }
+
+        if (this.state.gameModel.gameStatus == "GAME_OVER") {
+            this.setFrontendGameStatus("GAME_OVER");
+            // TODO: Start timer to move player back to lobby after 20s.
+        }
+    }
 
 
     setGameState(stateUpdate) {
@@ -71,13 +116,18 @@ class Game extends React.Component {
 
     async componentDidMount() {
         await this.updateGameData();
+        // TODO: Start timer to update data/state.
+    }
+
+
+    componentWillUnmount() {
+        // TODO: Dispose of timer(s).
     }
 
 
     // TODO: Get gameId, userId (currently assumed it is in localStorage).
     async updateGameData() {
         let response = null;
-        let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
 
         try {
             let gameId = localStorage.getItem("gameId");
@@ -115,9 +165,10 @@ class Game extends React.Component {
 
 
     render() {
+
         // delay until all the information is loaded
         if (!this.state.loaded) {
-            return <Spinner/>
+            return <Spinner />
         }
 
         // game has ended -> use separate screen
@@ -204,7 +255,7 @@ class Game extends React.Component {
                             <UserLayout
                                 user={user}
                                 key={user.id}
-                                isActivePlayer={this.isActivePlayer(user.userId)}
+                                isActivePlayer={this.isActivePlayer(user.id)}
                             />
                             );
                     })}
