@@ -14,6 +14,19 @@ export class TurnEndScreen extends React.Component {
     }
 
     render() {
+
+        let message = null;
+
+        if (this.props.correct == "correct") {
+            message = <Red>Hurray! {this.props.activeUser.name} guessed correctly.</Red>
+        }
+        else if (this.props.correct == "wrong") {
+            message = <Blue>Ohh, {this.props.activeUser.name} guessed wrong.</Blue>
+        }
+        else {
+            message = <Yellow>{this.props.activeUser.name} skipped the guess.</Yellow>
+        }
+
         return (
             <FormContainer
                 style={{
@@ -21,12 +34,15 @@ export class TurnEndScreen extends React.Component {
                     width: "100%"
                 }}
             >
-                <Form style={{width: "auto", height: "auto", borderWidth: "3px", marginTop: "10%"}}>
-                    {(this.props.correct && this.props.correct == "correct") ?
-                        (<Red>Huraay !!! {this.props.activeuser.name} guessed correctly. {}</Red>) :
-                        (this.props.correct && this.props.correct == "wrong") ?
-                            (<Blue>Ohh, {this.props.activeuser.name} - Bad Guess</Blue>) :
-                            (<Yellow>{this.props.activeuser.name} skipped the guess</Yellow>)}
+                <Form
+                    style={{
+                        width: "auto",
+                        height: "auto",
+                        borderWidth: "3px",
+                        marginTop: "10%"
+                    }}
+                >
+                    {message}
                 </Form>
             </FormContainer>
         );

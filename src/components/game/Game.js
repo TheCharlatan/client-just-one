@@ -73,48 +73,26 @@ class Game extends React.Component {
         }
 
         if (response.data && response.data.guessCorrect) {
-
             this.setState({guessCorrect: response.data.guessCorrect})
-            if (response.data.guessCorrect === "correct") {
-                //todo guess is correct
-            } else if (response.data.guessCorrect === "wrong") {
-                //todo guess is wrong
-
-            } else {
-                // todo guess is skipped
-            }
-
-            this.setFrontendGameStatus("TURN_ENDS");
+            // TODO: Notify other players as well.
+            this.setFrontendGameStatus("TURN_FINISHED");
         }
-
     }
 
 
     async handleClue(clue) {
-        let requestHeader = null;
-        let response = null;
-        const requestBody = JSON.stringify({
-            clue: clue
-        });
-        
+
         try {
-            requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            response = await api.put(`/game/${localStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
-        } catch {
-            console.log("Ooops 1");
+            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            let requestBody = JSON.stringify({ clue: clue });
+            await api.put(`/game/${localStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+        }
+        catch {
+            console.log(`An error occurred when submitting the clue: \n${handleError(error)}`);
             return;
         }
 
-        this.setState(prevState => {
-            let clues = Object.assign({}, prevState.clues);  // creating copy of state variable jasper
-            clues.userId = this.state.currentUser.id;                     // update the name property, assign a new value
-            clues.clue = clue;
-            return {clues};                                 // return new object jasper object
-        }, () => {
-            console.log(this.state.clues);
-            this.setFrontendGameStatus("AWAITING_GUESS");
-        });
-        //todo change game status according to the gamegetinfo object.
+        this.setFrontendGameStatus("AWAITING_GUESS");
     }
 
 
@@ -154,10 +132,9 @@ class Game extends React.Component {
                 }
                 this.state.users[i] = userResponse.data;
             }
-
             this.setState({loaded: true});
-
-        } catch (error) {
+        }
+        catch (error) {
             alert(`Something went wrong while fetching the user data: \n${handleError(error)}`);
         }
     }
@@ -232,7 +209,7 @@ class Game extends React.Component {
         }
 
         if (this.state.gameModel.gameStatus === "TURN_FINISHED") {
-            changingElements = <TurnEndScreen correct={this.state.guessCorrect} activeuser={this.state.activeUser}/>
+            changingElements = <TurnEndScreen correct={this.state.guessCorrect} activeUser={this.state.activeUser}/>
         }
 
 
