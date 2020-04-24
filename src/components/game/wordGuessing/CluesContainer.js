@@ -26,7 +26,7 @@ export class CluesContainer extends React.Component {
 
     async componentDidMount() {
         let requestHeader = null;
-        var gameId = localStorage.getItem("gameId");
+        let gameId = localStorage.getItem("gameId");
         try {
             requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             const response = await api.get(`/game/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
@@ -39,7 +39,6 @@ export class CluesContainer extends React.Component {
 
     render() {
         return (
-
             (this.state.gameModel && this.state.gameModel.clues && this.state.gameModel.clues.length > 0) ?
                 (<FormContainer
                     style={{
