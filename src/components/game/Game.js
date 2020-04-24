@@ -9,10 +9,10 @@ import {
     ChangeElementContainer,
     GameInfoContainer,
     UserGameContainer
-} from "./GameLayout"
-import {GameInfo, GameInfoLabel, Info, InfoLabel} from "./GameInfoStyle";
-import UserLayout from "./UserLayout";
-import {CardStack, CardStackLabel, CardStackNumber} from "./GameCardStackStyle";
+} from "./shared/layouts/GameLayout"
+import {GameInfo, GameInfoLabel, Info, InfoLabel} from "./shared/layouts/GameInfoStyle";
+import UserLayout from "./shared/layouts/UserLayout";
+import {CardStack, CardStackLabel, CardStackNumber} from "./shared/layouts/GameCardStackStyle";
 
 import GameOverview from "./gameEnd/GameOverview";
 import {ClueInput} from "./clueSelection/ClueInput";
@@ -42,7 +42,7 @@ class Game extends React.Component {
             loaded: false,
             gameModel: null,
             guessCorrect: null,
-            activeUser: null
+            activeUser: null,
             frontendGameStatus: "SELECT_INDEX" // frontend status to allow more fine-grained control
             // TODO: Timer
         };
@@ -66,14 +66,15 @@ class Game extends React.Component {
         try {
             requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             response = await api.put(`/game/${localStorage.getItem('gameId')}/guess`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
-        } catch {
-            console.log("Ooops 1");
+        }
+        catch {
+            console.log(`An error occurred when submitting the guess: \n${handleError(error)}`);
             return;
         }
 
         if (response.data && response.data.guessCorrect) {
 
-            this.setState({guessCorrect:response.data.guessCorrect})
+            this.setState({guessCorrect: response.data.guessCorrect})
             if (response.data.guessCorrect === "correct") {
                 //todo guess is correct
             } else if (response.data.guessCorrect === "wrong") {
@@ -95,6 +96,7 @@ class Game extends React.Component {
         const requestBody = JSON.stringify({
             clue: clue
         });
+        
         try {
             requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             response = await api.put(`/game/${localStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
@@ -127,16 +129,23 @@ class Game extends React.Component {
 
     // TODO: Get gameId, userId (currently assumed it is in localStorage).
     async componentDidMount() {
+        let response = null;
+        let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+
         try {
             let gameId = localStorage.getItem("gameId");
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            const response = await api.get(`/game/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
+            response = await api.get(`/game/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
             this.setState({gameModel: response.data, users: []});
+        }
+        catch (error) {
+            alert(`Something went wrong while fetching the game data: \n${handleError(error)}`);
+            return;
+        }
 
+        try {
             for (let i=0; i<response.data.playerIds.length; i++) {
                 const userResponse = await api.get('/user/' + response.data.playerIds[i], {headers: {'X-Auth-Token': requestHeader}});
-                //add a data field to user which shows if the user is the active player
-                userResponse.data.isActivePlayer = userResponse.data.id == this.state.gameModel.activePlayer;
                 if (userResponse.data.id == localStorage.getItem('userId')) {
                     this.setState({currentUser: userResponse.data});
                 }
@@ -149,7 +158,7 @@ class Game extends React.Component {
             this.setState({loaded: true});
 
         } catch (error) {
-            alert(`Something went wrong while fetching the users: \n${handleError(error)}`);
+            alert(`Something went wrong while fetching the user data: \n${handleError(error)}`);
         }
     }
 
@@ -172,6 +181,7 @@ class Game extends React.Component {
 
         // React component(s) that change depending on the game state.
         let changingElements = null;
+        let userElements = null;
 
         // no index selected yet
         if (this.state.frontendGameStatus === "SELECT_INDEX") {
@@ -186,7 +196,7 @@ class Game extends React.Component {
         // index selected, but not confirmed
         if (this.state.frontendGameStatus === "ACCEPT_REJECT_WORD") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
-                changingElements = <PleaseWait keyword={"Not all confirmations/rejections "} /> // non-active players have to wait
+                changingElements = <PleaseWait keyword={"Not all confirmations/rejections "} />
             }
             else {
                 changingElements = (
@@ -200,11 +210,10 @@ class Game extends React.Component {
 
         if (this.state.gameModel.gameStatus === "AWAITING_CLUES") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
-                changingElements = <PleaseWait keyword="Clues are"/>
+                changingElements = <PleaseWait keyword="Clues are being "/>
             }
             else {
-                changingElements =
-                    <ClueInput handleClue={this.handleClue} />
+                changingElements = <ClueInput handleClue={this.handleClue} />
             }
         }
 
@@ -218,15 +227,45 @@ class Game extends React.Component {
                 );
             }
             else {
-                // display waiting message
-                changingElements = <PleaseWait keyword="guess is"/>
+                changingElements = <PleaseWait keyword="Guess is being "/>
             }
         }
 
         if (this.state.gameModel.gameStatus === "TURN_FINISHED") {
-            // display waiting message
             changingElements = <TurnEndScreen correct={this.state.guessCorrect} activeuser={this.state.activeUser}/>
         }
+
+
+        if ((this.state.gameModel.gameStatus == "AWAITING_CLUES" && this.isActivePlayer(this.state.currentUser.id)) ||
+            (this.state.gameModel.gameStatus == "AWAITING_INDEX" && !this.isActivePlayer(this.state.currentUser.id)) ||
+            (this.state.gameModel.gameStatus == "AWAITING_GUESS" && !this.isActivePlayer(this.state.currentUser.id)) ||
+            (this.state.gameModel.gameStatus == "TURN_ENDS")) {
+            userElements = (
+                <UserGameContainer>
+                    {this.state.users.map((user) => {
+                        return (
+                            <UserLayout
+                                user={user}
+                                key={user.id}
+                                isActivePlayer={this.isActivePlayer(user.userId)}
+                            />
+                            );
+                    })}
+                </UserGameContainer>
+            );
+        }
+        else if (!this.state.gameModel.gameStatus == "AWAITING_GUESS" || !this.isActivePlayer(this.state.currentUser.id)) {
+            userElements = (
+                <UserGameContainer style={{marginTop: "5%"}}>
+                    <UserLayout
+                        user={this.state.currentUser}
+                        key={this.state.currentUser.id}
+                        isActivePlayer={this.isActivePlayer(this.state.currentUser)}
+                    />;
+                </UserGameContainer>
+            );
+        }
+
 
         return (
             // Basic layout that is (nearly) the same in all game states.
@@ -277,20 +316,7 @@ class Game extends React.Component {
                             </Yellow>
                         </CardStackNumber>
                     </CardGuessedContainer>
-                    {(this.state.gameModel.gameStatus == "AWAITING_CLUES" && this.isActivePlayer(this.state.currentUser.id)) ||
-                    (this.state.gameModel.gameStatus == "AWAITING_INDEX" && !this.isActivePlayer(this.state.currentUser.id)) ||
-                    (this.state.gameModel.gameStatus == "AWAITING_GUESS" && !this.isActivePlayer(this.state.currentUser.id)) ||
-                    (this.state.gameModel.gameStatus == "TURN_ENDS")
-                        ?
-                        <UserGameContainer>
-                            {this.state.users.map((user) => {
-                                return (<UserLayout user={user} key={user.id}/>);
-                            })}
-                        </UserGameContainer> :
-                        (this.state.gameModel.gameStatus == "AWAITING_GUESS" && this.isActivePlayer(this.state.currentUser.id)) ? null :
-                            <UserGameContainer style={{marginTop: "5%"}}>
-                                <UserLayout user={this.state.currentUser} key={this.state.currentUser.id}/>;
-                            </UserGameContainer>}
+                    {userElements}
                     <ChangeElementContainer style={{flexDirection: 'column'}}>
                         {changingElements}
                     </ChangeElementContainer>
