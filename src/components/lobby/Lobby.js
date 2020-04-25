@@ -15,7 +15,7 @@ import {api} from "../../helpers/api";
 import {ActionContainer, UserContainer} from "./LobbyLayout";
 
 import {Spinner} from "../../views/design/Spinner";
-import UserLayout from "../game/shared/layouts/UserLayout";
+import UserLayoutLobby from "./UserLayoutLobby";
 
 export class Lobby extends React.Component {
 
@@ -75,8 +75,7 @@ export class Lobby extends React.Component {
             for (let i=0; i< this.state.playerIds.length; i++) {
                 const responseUser = await api.get(`/user/${this.state.playerIds[i]}`, {headers: {'X-Auth-Token': requestHeader}});
                 //make a new field which indicates if the user is the host or not
-                // because of reuse of the "UserLayout" in game we call this "isActivePlayer"
-                responseUser.data.isActivePlayer = responseUser.data.id === this.state.hostPlayerId;
+                responseUser.data.isHost = responseUser.data.id === this.state.hostPlayerId;
                 this.state.users[i] = responseUser.data;
             }
         } catch (error){
@@ -157,7 +156,7 @@ export class Lobby extends React.Component {
                     </ActionContainer>
                     <UserContainer>
                         {this.state.users.map((user) => {
-                            return (<UserLayout user={user} key={user.id}/>);
+                            return (<UserLayoutLobby user={user} key={user.id}/>);
                         })}
                     </UserContainer>
                 </CenterContainer>
