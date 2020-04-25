@@ -109,7 +109,7 @@ const UserLayoutLobby = ({user}) => {
     }
 
     return (
-        <ActivePlayer isActivePlayer={user.isHost}>
+        <ActivePlayer isHost={user.isHost}>
             <UserContainer>
                 <UserProfilePicture image={url}/>
                 <UserNameContainer>
