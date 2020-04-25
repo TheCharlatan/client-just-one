@@ -23,7 +23,7 @@ export class LobbiesList extends React.Component {
             alert("Could not join lobby:\nReason: " + error);
             return;
         }
-
+        localStorage.setItem('lobbyId', lobbyId);
         this.props.history.push("/lobby/" + lobbyId);
     };
 
