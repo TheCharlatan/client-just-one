@@ -1,15 +1,15 @@
 import styled from "styled-components";
-import FontBasic from "../../views/design/font-families/FontBasic";
-import profilePlaceholder from "../../img/profilePlaceholder.png";
-import lion from "../../img/lion.png";
+import FontBasic from "../../../../views/design/font-families/FontBasic";
+import profilePlaceholder from "../../../../img/profilePlaceholder.png";
+import lion from "../../../../img/lion.png";
 import React from "react";
-import dog from "../../img/dog.png";
-import elephant from "../../img/elephant.png";
-import giraffe from "../../img/giraffe.png";
-import penguin from "../../img/penguin.png";
-import squirrel from "../../img/squirrel.png";
-import hippo from "../../img/hippo.png";
-import tiger from "../../img/tiger.png";
+import dog from "../../../../img/dog.png";
+import elephant from "../../../../img/elephant.png";
+import giraffe from "../../../../img/giraffe.png";
+import penguin from "../../../../img/penguin.png";
+import squirrel from "../../../../img/squirrel.png";
+import hippo from "../../../../img/hippo.png";
+import tiger from "../../../../img/tiger.png";
 
 
 const UserContainer = styled.div`

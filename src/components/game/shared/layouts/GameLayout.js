@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {BaseContainer} from "../../helpers/layout";
+import {BaseContainer} from "../../../../helpers/layout";
 
 
 export const BaseContainerBody = styled.div`

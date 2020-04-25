@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Logo from "../../img/logo.png";
+import Logo from "../../../../img/logo.png";
 
 
 export const CardStackLabel = styled.div`
