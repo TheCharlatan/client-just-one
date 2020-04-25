@@ -15,9 +15,9 @@ export class LobbiesList extends React.Component {
     joinLobby = async (lobbyId) => {
         try {
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            let requestBody = localStorage.getItem('userId');
             // TODO: Replace userId with name of user id (if stored in localStorage).
-            let requestBody = 1;
-            await api.put(`/lobby/${lobbyId}`, requestBody, {headers: {'Authorization': requestHeader}});
+            await api.put(`/lobby/${lobbyId}`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
         }
         catch (error) {
             alert("Could not join lobby:\nReason: " + error);
