@@ -57,7 +57,7 @@ export class LobbiesContainer extends React.Component {
         if (response.data && response.data.invitations && response.data.invitations.length > 0) {
             let invitedLobbies = [];
             this.state.openLobbies.forEach(lobby => {
-                if (lobby.gameId in response.data.invitations) {
+                if (response.data.invitations.includes(lobby.id)) {
                     invitedLobbies.push(lobby)
                 }
             });
@@ -69,7 +69,6 @@ export class LobbiesContainer extends React.Component {
             this.setState({
                 invitedLobbies: []
             });
-            return;
         }
     }
 
@@ -92,7 +91,7 @@ export class LobbiesContainer extends React.Component {
                 <p style={{width: "200px"}}>There are no open lobbies. Please create a new one if you want to play.</p>
         }
 
-        if (this.state.openLobbies.count > 0) {
+        if (this.state.invitedLobbies.length > 0) {
             lobbiesComponent =
                 <React.Fragment>
                     {lobbiesComponent}
