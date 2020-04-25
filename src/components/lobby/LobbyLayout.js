@@ -11,12 +11,12 @@ grid-row-gap: 0px;
 
 export const ActionContainer = styled.div`
 grid-area: 1 / 1 / 2 / 2;
-border: 2px solid blue;
 `;
 
 export const UserContainer = styled.div`
 grid-area: 2 / 1 / 3 / 2;
-border: 2px solid red;
+
+margin: 20px;
 
 display: flex;
 flex-direction: row;

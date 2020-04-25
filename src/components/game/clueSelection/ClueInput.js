@@ -3,6 +3,66 @@ import InputField from "../../../views/design/customized-layouts/InputField";
 import Button from "../../../views/design/Button";
 import Green from "../../../views/design/font-families/Green";
 import styled from "styled-components";
+import {api, handleError} from "../../../helpers/api";
+
+
+// The input field to submit a clue.
+export class ClueInput extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            clue: '',
+            placeholder: 'Enter your clue here...'
+        }
+    }
+
+
+    handleInputChange(key, value) {
+        this.setState({[key]: value});
+    }
+
+    async handleClue(clue) {
+
+        try {
+            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            let requestBody = JSON.stringify({ clue: clue });
+            await api.put(`/game/${localStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+        }
+        catch (error) {
+            console.log(`An error occurred when submitting the clue: \n${handleError(error)}`);
+            return;
+        }
+
+        this.props.updateGame();
+    }
+
+
+    render() {
+        let clue = this.state.clue;
+
+        let button = null;
+        if (this.state.clue) {
+            button = (
+                <FlexButton onClick={() => this.handleClue(clue)}>
+                    <Green>Submit</Green>
+                </FlexButton>
+            );
+        }
+
+        return (
+            <div style={{"marginTop": "-5%"}}>
+                <InputClue
+                    placeholder={this.state.placeholder}
+                    onFocus={() => {this.handleInputChange('placeholder', '');}}
+                    onChange={e => {this.handleInputChange('clue', e.target.value);}}
+                />
+                {button}
+            </div>
+        );
+    }
+}
+
 
 const FlexButton = styled(Button)`
   display: flex;
@@ -41,35 +101,3 @@ const InputClue = styled(InputField)`
     text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     background:#F8E7D1;
 `;
-
-// The input field to submit a clue.
-export class ClueInput extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            clue: '',
-            placeholder: 'Enter your clue here...'
-        }
-    }
-
-    handleInputChange(key, value) {
-        // Example: if the key is username, this statement is the equivalent to the following one:
-        // this.setState({'username': value});
-        this.setState({[key]: value});
-    }
-
-    render() {
-        var clue = this.state.clue;
-        return (
-            <div style={{"marginTop": "-5%"}}>
-                <InputClue placeholder={this.state.placeholder}
-                           onFocus={() => this.handleInputChange('placeholder', '')} onChange={e => {
-                    this.handleInputChange('clue', e.target.value);
-                }}/>
-                {this.state.clue ?
-                    <FlexButton onClick={() => this.props.handleClue(clue)}><Green>Submit</Green></FlexButton> : null}
-            </div>
-        );
-    }
-}

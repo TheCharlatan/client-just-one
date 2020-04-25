@@ -13,8 +13,9 @@ import Pink from "../../views/design/font-families/Pink";
 import InviteModal from "./invite/InviteModal";
 import {api} from "../../helpers/api";
 import {ActionContainer, UserContainer} from "./LobbyLayout";
-import UserLayout from "../game/UserLayout";
+
 import {Spinner} from "../../views/design/Spinner";
+import UserLayout from "../game/shared/layouts/UserLayout";
 
 export class Lobby extends React.Component {
 
@@ -129,7 +130,7 @@ export class Lobby extends React.Component {
                 <ChatContainer style={{gridArea: "1 / 1 / 3 / 2"}}>
                     <Chat/>
                 </ChatContainer>
-                <CenterContainer style={{border: "2px solid black",}}>
+                <CenterContainer>
                     <ActionContainer>
                         <FormContainer style={{minHeight: "0"}}>
                             <Heading>
