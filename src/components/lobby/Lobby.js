@@ -12,6 +12,9 @@ import Heading from "../../views/design/customized-layouts/Heading.js";
 import Pink from "../../views/design/font-families/Pink";
 import InviteModal from "./invite/InviteModal";
 import {api} from "../../helpers/api";
+import {ActionContainer, UserContainer} from "./LobbyLayout";
+import UserLayout from "../game/UserLayout";
+import {Spinner} from "../../views/design/Spinner";
 
 export class Lobby extends React.Component {
 
@@ -22,7 +25,9 @@ export class Lobby extends React.Component {
             playerIds: [],
             lobbyModel: null,
             lobbyName: null,
-            hostPlayerId: null
+            hostPlayerId: null,
+            users: [],
+            loaded: false,
         };
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
@@ -49,7 +54,6 @@ export class Lobby extends React.Component {
                 alert("Unexpected error");
                 return;
             }
-            console.log(response.data);
             if (response.data.name)
                 this.setState({
                     lobbyName: response.data.name
@@ -65,15 +69,27 @@ export class Lobby extends React.Component {
             alert(`An error occurred when retrieving lobby players: ${error}`);
             return;
         }
+        // get the users to show them in the lobby
+        try {
+            for (let i=0; i< this.state.playerIds.length; i++) {
+                const responseUser = await api.get(`/user/${this.state.playerIds[i]}`, {headers: {'X-Auth-Token': requestHeader}});
+                //make a new field which indicates if the user is the host or not
+                // because of reuse of the "UserLayout" in game we call this "isActivePlayer"
+                responseUser.data.isActivePlayer = responseUser.data.id === this.state.hostPlayerId;
+                this.state.users[i] = responseUser.data;
+            }
+        } catch (error){
+            alert(`Something went wrong while fetching the users: ${error}`);
+        }
+        this.setState({loaded: true});
     }
 
     async startGame() {
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-        if (this.state.hostPlayerId != localStorage.getItem('userId')) {
+        if (this.state.hostPlayerId !== localStorage.getItem('userId')) {
             alert("Only Lobby player is allowed to start the game.");
             return;
         }
-        console.log(this.state.playerIds);
         if (this.state.playerIds == null || this.state.playerIds.length < 3) {
             alert("not enough players to start the game.")
             return;
@@ -102,6 +118,9 @@ export class Lobby extends React.Component {
     }
 
     render() {
+        if (this.state.loaded === false) {
+            return <Spinner/>
+        }
         return (
             <BaseContainer>
                 <BottomLeftContainer>
@@ -110,29 +129,36 @@ export class Lobby extends React.Component {
                 <ChatContainer style={{gridArea: "1 / 1 / 3 / 2"}}>
                     <Chat/>
                 </ChatContainer>
-                <CenterContainer>
-                    <FormContainer style={{minHeight: "0"}}>
-                        <Heading>
-                            <Pink style={{fontSize: "x-large", fontSizeImportant: "true"}}>
-                                {this.state.lobbyName}
-                            </Pink>
-                        </Heading>
-                    </FormContainer>
-                    <FormContainer
-                        style={{
-                            minHeight: "0",
-                            width: "60%",
-                            widthImportnt: "true",
-                            marginTop: "4em",
-                        }}
-                    >
-                        <Form style={{width: "auto", height: "auto"}}>
-                            <StartGameBtn onClick={() => this.startGame()}></StartGameBtn>
-                            <InviteBtn onClick={() => this.showModal()}></InviteBtn>
-                            <LeaveBtn></LeaveBtn>
-                        </Form>
-                    </FormContainer>
-                    <InviteModal hideModal={this.hideModal} show={this.state.show}/>
+                <CenterContainer style={{border: "2px solid black",}}>
+                    <ActionContainer>
+                        <FormContainer style={{minHeight: "0"}}>
+                            <Heading>
+                                <Pink style={{fontSize: "x-large", fontSizeImportant: "true"}}>
+                                    {this.state.lobbyName}
+                                </Pink>
+                            </Heading>
+                        </FormContainer>
+                        <FormContainer
+                            style={{
+                                minHeight: "0",
+                                width: "60%",
+                                widthImportnt: "true",
+                                marginTop: "4em",
+                            }}
+                        >
+                            <Form style={{width: "auto", height: "auto"}}>
+                                <StartGameBtn onClick={() => this.startGame()}/>
+                                <InviteBtn onClick={() => this.showModal()}/>
+                                <LeaveBtn/>
+                            </Form>
+                        </FormContainer>
+                        <InviteModal hideModal={this.hideModal} show={this.state.show}/>
+                    </ActionContainer>
+                    <UserContainer>
+                        {this.state.users.map((user) => {
+                            return (<UserLayout user={user} key={user.id}/>);
+                        })}
+                    </UserContainer>
                 </CenterContainer>
             </BaseContainer>
         );
