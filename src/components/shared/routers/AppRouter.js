@@ -6,10 +6,12 @@ import Login from "../../login/Login";
 import Lobby from "../../lobby/Lobby";
 import {MainPageGuard} from "../routeProtectors/MainpageGuard";
 import MainPageRouter from "./MainPageRouter";
-import Test from "../../login/Test";
 import Registration from "../../registration/registration";
 import Game from "../../game/Game";
 import {GameOverview} from "../../game/gameEnd/GameOverview";
+import {RegistrationGuard} from "../routeProtectors/RegistrationGuard";
+import {GameGuard} from "../routeProtectors/GameGuard";
+import {LobbyGuard} from "../routeProtectors/LobbyGuard";
 
 /**
  * Main router of your application.
@@ -39,14 +41,18 @@ class AppRouter extends React.Component {
            <Route
               path="/game:pathParam?"
               render={(props) => (
-                  <Game base={"/game/"+props.match.params.id} id={props.match.params.id} />
+                  <GameGuard>
+                        <Game base={"/game/"+props.match.params.id} id={props.match.params.id} />
+                  </GameGuard>
               )}
             />
               <Route
                   path="/registration"
                   exact
                   render={() => (
-                      <Registration />
+                      <RegistrationGuard>
+                            <Registration />
+                      </RegistrationGuard>
                   )}
               />
             <Route
@@ -54,7 +60,7 @@ class AppRouter extends React.Component {
               exact
               render={() => (
                 <LoginGuard>
-                  <Login />
+                    <Login />
                 </LoginGuard>
               )}
             />
@@ -62,20 +68,13 @@ class AppRouter extends React.Component {
               path="/lobby/:pathParam?"
               exact
               render={() => (
-                  <Lobby />
+                  <LobbyGuard>
+                        <Lobby />
+                  </LobbyGuard>
               )}
             />
 
-            <Route
-              path="/test"
-              exact
-              render={() => (
-               
-                  <Test />
-            
-              )}
-            />
-            <Route path="/" exact render={() => <Redirect to={"/game"} />} />
+            <Route path="/" exact render={() => <Redirect to={"/login"} />} />
           </div>
         </Switch>
       </BrowserRouter>

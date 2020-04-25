@@ -11,11 +11,19 @@ import { Redirect } from "react-router-dom";
  * @param props
  */
 export const MainPageGuard = props => {
-    return props.children;
-    /*
+    //First check if the user is inside a game
+    if(localStorage.getItem('gameId')) {
+        return <Redirect to={`/game/${localStorage.getItem('gameId')}`} />;
+    }
+    //Second check if user is inside a lobby
+    if(localStorage.getItem('lobbyId')) {
+        return <Redirect to={`/lobby/${localStorage.getItem('lobbyId')}`} />;
+    }
+    //Third check if the user is logged in
     if (localStorage.getItem("token")) {
         return props.children;
     }
+    //Otherwise redirect to login page
     return <Redirect to={"/login"} />;
-     */
+
 };
