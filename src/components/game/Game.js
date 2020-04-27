@@ -66,6 +66,9 @@ class Game extends React.Component {
         if (this.state.gameModel.gameStatus === "AWAITING_INDEX") {
             if (this.state.gameModel.wordIndex == -1) {
                 this.setFrontendGameStatus("SELECT_INDEX");
+                if (prevState.frontendGameStatus === "ACCEPT_REJECT_WORD") {
+                    alert("The word was rejected."); // Inform all players that the word was rejected.
+                }
             }
             else {
                 this.setFrontendGameStatus("ACCEPT_REJECT_WORD");
