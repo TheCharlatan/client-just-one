@@ -43,7 +43,7 @@ export default class InviteModal extends React.Component {
             responseInvite = await api.get('/user', {headers: {'X-Auth-Token': requestHeader}});
             //TODO check response status
         } catch {
-            console.log("Ooops 1");
+            console.log("Ooops 2");
             return;
         }
         let users = [];
@@ -79,18 +79,18 @@ export default class InviteModal extends React.Component {
                             float: 'right',
                             marginRight: '5px',
                             marginTop: '-5px'
-                        }} src={close}/>
+                        }} src={close} />
                     </Pink>
                 </div>
                 {this.state.users.map((user, index) => {
                     return (
                         <React.Fragment>
-                            <div className="pull-right" obj={user} key={index}
+                            <div className="pull-right" obj={user} key={index} id={user.id}
                                  style={{width: "100%", marginBottom: '5%', marginTop: '2%'}}>
                                 <Label className="modal-label" key={"label"+user.id} style={{height: "45px"}}>
                                     <Blue key={"blue"+user.id}>{user.username}</Blue>
                                 </Label>
-                                <InviteModalBtn key={user.id} id={user.id}></InviteModalBtn>
+                                <InviteModalBtn key={user.id} id={user.id}/>
                             </div>
                         </React.Fragment>);
                 })}

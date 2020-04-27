@@ -2,6 +2,7 @@ import {Button} from "../../../views/design/Button";
 import Green from "../../../views/design/font-families/Green";
 import React from "react";
 import Violet from "../../../views/design/font-families/Violet";
+import {api} from '../../../helpers/api';
 
 export default class InviteModalBtn extends React.Component {
 
@@ -11,15 +12,13 @@ export default class InviteModalBtn extends React.Component {
             enabled : true,
             friendId : this.props.id,
             display : 'invite'
-        }
+        };
         this.inviteFriend = this.inviteFriend.bind(this);
     }
 
     async inviteFriend() {
 //TODO toggle commit
-        console.log(this.state.friendId);
-        /*let requestHeader = null;
-        let response = null;
+        let requestHeader = null;
         const lobbyId = localStorage.getItem("lobbyId");
 
         const requestBody = JSON.stringify({
@@ -27,11 +26,11 @@ export default class InviteModalBtn extends React.Component {
         });
         try {
             requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            response = await api.put(`/user/${this.state.friendId}/invitation`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+            await api.put(`/user/${this.state.friendId}/invitation`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
         } catch {
             console.log("invite friend unexpected error");
             return;
-        }*/
+        }
 
         this.setState({
             enabled: false,

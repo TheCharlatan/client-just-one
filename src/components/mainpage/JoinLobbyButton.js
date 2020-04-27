@@ -18,7 +18,7 @@ function JoinLobbyButton() {
         <FlexButton
             onClick={() => {
                 let lobbiesContainer = document.getElementById("lobbiesContainer");
-                if (lobbiesContainer.style.display == "none") {
+                if (lobbiesContainer.style.display === "none") {
                     lobbiesContainer.style.display = "block";
                 }
                 else {

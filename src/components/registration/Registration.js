@@ -141,14 +141,15 @@ margin-left: 5px;
  * @Class
  */
 class Registration extends React.Component {
+
     /**
      * If you don’t initialize the state and you don’t bind methods, you don’t need to implement a constructor for your React component.
      * The constructor for a React component is called before it is mounted (rendered).
      * In this case the initial state is defined in the constructor. The state is a JS object containing two fields: name and username
      * These fields are then handled in the onChange() methods in the resp. InputFields
      */
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             name: null,
             username: null,
@@ -159,10 +160,10 @@ class Registration extends React.Component {
             country: null,
             image: null,
             showHiddenElement: false,
-
         };
-
+        this.checkPassword = false;
     }
+
     /**
      * HTTP POST request is sent to the backend.
      * If the request is successful, a new user is returned to the front-end
@@ -193,8 +194,6 @@ class Registration extends React.Component {
         }
     }
 
-
-
     /**
      *  Every time the user enters something in the input field, the state gets updated.
      * @param key (the key of the state for identifying the field that needs to be updated)
@@ -209,7 +208,6 @@ class Registration extends React.Component {
     handleChange(key, value) {
         this.setState({[key]: value});
     }
-    checkPassword: boolean;
 
     check() {
 
@@ -241,7 +239,7 @@ class Registration extends React.Component {
     }
 
     chooseProfileImages(value) {
-        var url;
+        let url;
         switch (value) {
             case "lion":
                 url = lion;

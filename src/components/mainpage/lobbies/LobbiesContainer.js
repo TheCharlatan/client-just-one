@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import Yellow from "../../../views/design/font-families/Yellow";
 import {LobbiesList} from "./LobbiesList";
-import {api} from "../../../helpers/api";
+import {api, handleError} from "../../../helpers/api";
 
 
 export class LobbiesContainer extends React.Component {
@@ -26,13 +26,13 @@ export class LobbiesContainer extends React.Component {
             requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             response = await api.get('/lobby', {headers: {'X-Auth-Token': requestHeader}});
         }
-        catch {
-            console.log("Ooops 1");
+        catch (error) {
+            alert(`Could not load open lobbies: \n${handleError(error)}`);
             return;
         }
 
         // TODO: Validate data.
-        if (response.data && response.data.length > 0) {
+        if (response.data !== null && response.data.length > 0) {
             this.setState({
                 openLobbies: response.data
             });
@@ -46,18 +46,17 @@ export class LobbiesContainer extends React.Component {
 
         try {
             requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            // TODO: Replace userId with name of user id (if stored in localStorage).
             response = await api.get(`/user/${localStorage.getItem('userId')}`, {headers: {'X-Auth-Token': requestHeader}});
         }
-        catch {
-            console.log("Ooops 2");
+        catch (error) {
+            alert(`Could not load invitations: \n${handleError(error)}`);
             return;
         }
 
-        if (response.data && response.data.invitations && response.data.invitations.length > 0) {
+        if (response.data !== null && response.data.invitations && response.data.invitations.length > 0) {
             let invitedLobbies = [];
             this.state.openLobbies.forEach(lobby => {
-                if (lobby.gameId in response.data.invitations) {
+                if (response.data.invitations.includes(lobby.id)) {
                     invitedLobbies.push(lobby)
                 }
             });
@@ -69,7 +68,6 @@ export class LobbiesContainer extends React.Component {
             this.setState({
                 invitedLobbies: []
             });
-            return;
         }
     }
 
@@ -92,14 +90,14 @@ export class LobbiesContainer extends React.Component {
                 <p style={{width: "200px"}}>There are no open lobbies. Please create a new one if you want to play.</p>
         }
 
-        if (this.state.openLobbies.count > 0) {
+        if (this.state.invitedLobbies.length > 0) {
             lobbiesComponent =
                 <React.Fragment>
                     {lobbiesComponent}
                     <Label style={{marginTop: "15px"}}>
                         <Yellow>Invited To:</Yellow>
                     </Label>
-                    <LobbiesList lobbies={this.state.invitedLobbies}  history={this.props.history} />
+                    <LobbiesList lobbies={this.state.invitedLobbies} history={this.props.history} />
                 </React.Fragment>;
         }
 

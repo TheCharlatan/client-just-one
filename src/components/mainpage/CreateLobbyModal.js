@@ -6,11 +6,16 @@ import Red from "../../views/design/font-families/Red";
 import Green from "../../views/design/font-families/Green";
 import Violet from "../../views/design/font-families/Violet";
 import {api} from "../../helpers/api";
+import styled from "styled-components";
+import {withRouter} from "react-router-dom";
 
-export default class CreateLobbyModal extends React.Component {
+export class CreateLobbyModal extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      lobbyname: null,
+    }
   }
 
   async createLobby()
@@ -41,7 +46,6 @@ export default class CreateLobbyModal extends React.Component {
     }
     catch {
       console.log("Ooops 2");
-      return;
     }
     localStorage.setItem("lobbyId",response.data.lobbyId);
     this.props.history.push(`/lobby/${response.data.lobbyId}`);
@@ -69,9 +73,9 @@ export default class CreateLobbyModal extends React.Component {
           <Label className="modal-label">
             <Violet>Lobby Name</Violet>
           </Label>
-          <InputField className="modal-input" onChange={e => {
+          <InputFieldCreateLobby className="modal-input" onChange={e => {
             this.handleInputChange("lobbyname", e.target.value);
-          }}></InputField>
+          }}/>
         </div>
         <div className="pull-right" style={{ width: "100%" }}>
           <Button
@@ -80,7 +84,10 @@ export default class CreateLobbyModal extends React.Component {
           >
             <Red>Cancel</Red>
           </Button>
-          <Button style={{ width: "30%", marginRight: "auto" }}>
+          <Button
+              style={{ width: "30%", marginRight: "auto" }}
+              onClick={ () => {this.createLobby();}}
+          >
             <Green>Create</Green>
           </Button>
         </div>
@@ -88,3 +95,16 @@ export default class CreateLobbyModal extends React.Component {
     );
   }
 }
+
+const InputFieldCreateLobby = styled(InputField)`
+font-family: fantasy;
+font-style: normal;
+font-weight: normal;
+font-size: 18px;
+letter-spacing: 0.41em;
+color: #82278E;
+text-stroke: 2px #710070;
+-webkit-text-stroke: 2px #710070;
+`;
+
+export default withRouter(CreateLobbyModal);

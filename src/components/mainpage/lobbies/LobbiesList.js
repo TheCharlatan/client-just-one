@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Label from "../../../views/design/customized-layouts/Label";
 import Red from "../../../views/design/font-families/Red";
 import Button from "../../../views/design/Button";
-import {api} from "../../../helpers/api";
+import {api, handleError} from "../../../helpers/api";
 
 
 export class LobbiesList extends React.Component {
@@ -15,15 +15,14 @@ export class LobbiesList extends React.Component {
     joinLobby = async (lobbyId) => {
         try {
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            // TODO: Replace userId with name of user id (if stored in localStorage).
-            let requestBody = 1;
-            await api.put(`/lobby/${lobbyId}`, requestBody, {headers: {'Authorization': requestHeader}});
+            let requestBody = localStorage.getItem('userId');
+            await api.put(`/lobby/${lobbyId}`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
         }
         catch (error) {
-            alert("Could not join lobby:\nReason: " + error);
+            alert("Could not join lobby:\n" + handleError(error));
             return;
         }
-
+        localStorage.setItem('lobbyId', lobbyId);
         this.props.history.push("/lobby/" + lobbyId);
     };
 
@@ -39,7 +38,8 @@ export class LobbiesList extends React.Component {
                             <Button
                                 style={{width: "160px", height: "38px"}}
                                 key={`button-${lobby.id}`}
-                                onClick={() => {this.joinLobby(lobby.id)}}>
+                                onClick={async () => {await this.joinLobby(lobby.id);}}
+                            >
                                 <Red key={`joinLabel-${lobby.id}`}>Join</Red>
                             </Button>
                             <Label style={{width: "80px"}} key={`playerCountLabel-${lobby.id}`}>
