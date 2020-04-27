@@ -86,12 +86,12 @@ export class Lobby extends React.Component {
 
     async startGame() {
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-        if (this.state.hostPlayerId !== localStorage.getItem('userId')) {
-            alert("Only Lobby player is allowed to start the game.");
+        if (this.state.hostPlayerId != localStorage.getItem('userId')) {
+            alert("Only the lobby host is allowed to start the game.");
             return;
         }
         if (this.state.playerIds == null || this.state.playerIds.length < 3) {
-            alert("not enough players to start the game.")
+            alert("Not enough players to start the game.")
             return;
         }
         try {
