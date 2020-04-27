@@ -11,7 +11,7 @@ import Form from "../../views/design/customized-layouts/Form";
 import Heading from "../../views/design/customized-layouts/Heading.js";
 import Pink from "../../views/design/font-families/Pink";
 import InviteModal from "./invite/InviteModal";
-import {api} from "../../helpers/api";
+import {api, handleError} from "../../helpers/api";
 import {ActionContainer, UserContainer} from "./LobbyLayout";
 
 import {Spinner} from "../../views/design/Spinner";
@@ -98,7 +98,7 @@ export class Lobby extends React.Component {
             const requestBody = JSON.stringify({
                 playerIds: this.state.playerIds
             });
-            const response = await api.post(`/game/`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+            await api.post(`/game/`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
         } catch (error) {
             alert(`An error occurred when starting a new game: ${error}`);
             return;
@@ -109,10 +109,10 @@ export class Lobby extends React.Component {
 
             if (response.data && response.data.gameId) {
                 localStorage.setItem("gameId", response.data.gameId);
-                this.props.history.push(`/game/${response.data.gameId}/`);
+                this.props.history.push(`/game/${response.data.gameId}`);
             }
         } catch (error) {
-            alert(`An error occurred when starting a new game: ${error}`);
+            alert(`An error occurred when starting a new game: ${handleError(error)}`);
             return;
         }
     }
@@ -142,7 +142,7 @@ export class Lobby extends React.Component {
                             style={{
                                 minHeight: "0",
                                 width: "60%",
-                                widthImportnt: "true",
+                                widthImportant: "true",
                                 marginTop: "4em",
                             }}
                         >
