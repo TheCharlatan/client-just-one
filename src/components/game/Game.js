@@ -29,6 +29,7 @@ import {SelectNumberContainer} from "./wordSelection/SelectNumberContainer";
 import {MysteryWordContainer} from "./shared/MysteryWordContainer";
 import {AcceptRejectButtons} from "./wordSelection/AcceptRejectButtons";
 import {FrontendGameStates} from "./shared/FrontendGameStates";
+import {NonInterferingMessageBox} from "./message/NonInterferingMessageBox";
 
 
 // The game component responsible for the conditional rendering.
@@ -47,12 +48,15 @@ class Game extends React.Component {
             updateTimer: null, // Timer to periodically pull the newest game data and update the game state accordingly
             lastTurnEndScreenDate: null // when the last TurnEndScreen was opened
         };
+        this.messageBox = null; // In certain situations a message box is displayed for a few seconds for information purposes.
         this.updateGame = this.updateGame.bind(this);
     }
 
 
     // update the game data, based on this update state
     async updateGame() {
+        this.messageBox = null;
+
         const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
         await this.updateGameData();
 
@@ -67,7 +71,7 @@ class Game extends React.Component {
             if (this.state.gameModel.wordIndex == -1) {
                 this.setFrontendGameStatus("SELECT_INDEX");
                 if (prevState.frontendGameStatus === "ACCEPT_REJECT_WORD") {
-                    alert("The word was rejected."); // Inform all players that the word was rejected.
+                    this.messageBox = <NonInterferingMessageBox message={"The word was rejected."} />; // Inform all players that the word was rejected.
                 }
             }
             else {
@@ -77,6 +81,7 @@ class Game extends React.Component {
 
         if (prevState.gameModel.gameStatus === "AWAITING_INDEX" && this.state.gameModel.gameStatus === "AWAITING_CLUES") {
             this.setFrontendGameStatus("AWAITING_CLUES");
+            this.messageBox = <NonInterferingMessageBox message={"The word was accepted."} />; // Inform all players that the word was accepted.
             // TODO: Start 30s timer.
         }
 
@@ -292,6 +297,7 @@ class Game extends React.Component {
         return (
             // Basic layout that is (nearly) the same in all game states.
             <BaseContainerBody>
+                {this.messageBox}
                 <BaseContainerGame>
                     <GameInfoContainer>
                         <GameInfo>
