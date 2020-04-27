@@ -6,7 +6,7 @@ import Login from "../../login/Login";
 import Lobby from "../../lobby/Lobby";
 import {MainPageGuard} from "../routeProtectors/MainpageGuard";
 import MainPageRouter from "./MainPageRouter";
-import Registration from "../../registration/registration";
+import Registration from "../../registration/Registration";
 import Game from "../../game/Game";
 import {GameOverview} from "../../game/gameEnd/GameOverview";
 import {RegistrationGuard} from "../routeProtectors/RegistrationGuard";
