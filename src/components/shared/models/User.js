@@ -19,6 +19,7 @@ class User {
     this.gameId = null;
     this.lobbyId = null;
     this.isActivePlayer = null;
+    this.image = null;
     Object.assign(this, data);
   }
 }

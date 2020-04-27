@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import Blue from "../../../views/design/font-families/Blue";
 
+import profilePlaceholder from "../../../img/profilePlaceholder.png";
 import dog from "../../../img/dog.png"
 import lion from "../../../img/lion.png"
 import elephant from "../../../img/elephant.png"
@@ -11,7 +12,6 @@ import hippo from "../../../img/hippo.png"
 import penguin from "../../../img/penguin.png"
 import squirrel from "../../../img/squirrel.png"
 import tiger from "../../../img/tiger.png"
-import Label from "../../../views/design/customized-layouts/Label";
 
 
 export class UserStats extends React.Component{
@@ -22,11 +22,40 @@ export class UserStats extends React.Component{
 
     // TODO: Get individual user stats and avatar.
     render() {
+
+        let imageUrl = profilePlaceholder;
+        switch (this.props.user.image) {
+            case "lion":
+                imageUrl = lion;
+                break;
+            case "dog":
+                imageUrl = dog;
+                break;
+            case "elephant":
+                imageUrl = elephant;
+                break;
+            case "giraffe":
+                imageUrl = giraffe;
+                break;
+            case "penguin":
+                imageUrl = penguin;
+                break;
+            case "squirrel":
+                imageUrl = squirrel;
+                break;
+            case "hippo":
+                imageUrl = hippo;
+                break;
+            case "tiger":
+                imageUrl = tiger;
+                break;
+        }
+
         return (
             <div style={{marginBottom: '40px'}}>
                 <div style={{width: '85px'}}>
                     <ImageContainer>
-                        <img src={dog} style={{width: '100%', height: '100%', objectFit: 'object-over'}}/>
+                        <img src={imageUrl} style={{width: '100%', height: '100%', objectFit: 'object-over'}}/>
                     </ImageContainer>
                     <StatsLabel style={{margin: '0px 10px'}}>
                         <Blue style={{fontSize: 16, letterSpacing: '0.1em'}}>
