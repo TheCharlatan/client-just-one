@@ -70,7 +70,7 @@ export class MainPage extends React.Component {
         return (
             <BaseContainer>
                 <TopLeftContainer>
-                    <LogoutButton/>
+                    <LogoutButton history={this.props.history}/>
                 </ TopLeftContainer>
                 <ChatContainer>
                     <Chat/>
