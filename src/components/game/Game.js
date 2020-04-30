@@ -157,7 +157,7 @@ class Game extends React.Component {
                 if (userResponse.data.id == localStorage.getItem('userId')) {
                     this.setState({currentUser: userResponse.data});
                 }
-                if (userResponse.data.id == this.state.gameModel.activePlayer) {
+                if (userResponse.data.id == this.state.gameModel.activePlayerId) {
                     this.setState({activeUser: userResponse.data});
                 }
                 this.state.users[i] = userResponse.data;
@@ -171,7 +171,7 @@ class Game extends React.Component {
 
 
     isActivePlayer(playerId) {
-        return playerId === this.state.gameModel.activePlayer;
+        return playerId === this.state.gameModel.activePlayerId;
     }
 
 
