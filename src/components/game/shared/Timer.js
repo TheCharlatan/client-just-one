@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import Blue from "../../../views/design/font-families/Blue";
 
 
+// Display the remaining time with 0.1s update intervals.
 export class Timer extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            displayTime: this.props.startTime,
+            displayTime: this.props.startTime, // in ms
             timer: null
         };
         this.updateTime = this.updateTime.bind(this);
@@ -16,7 +17,7 @@ export class Timer extends React.Component {
 
     componentDidMount() {
         this.state = {
-            timer: window.setInterval(this.updateTime, 1000)
+            timer: window.setInterval(this.updateTime, 100)
         };
     }
 
@@ -25,9 +26,14 @@ export class Timer extends React.Component {
     }
 
     updateTime() {
-        if (this.state.displayTime >= 0) {
+        if (this.state.displayTime >= 100) {
             this.state = {
-                displayTime: this.state.displayTime - 1
+                displayTime: this.state.displayTime - 100
+            };
+        }
+        else {
+            this.state = {
+                displayTime: 0
             };
         }
     }
@@ -36,7 +42,7 @@ export class Timer extends React.Component {
         return (
             <TimerContainer>
                 <Blue>
-                    {this.state.displayTime} s
+                    {(Math.floor(this.state.displayTime / 100) / 10)} s
                 </Blue>
             </TimerContainer>
         );
