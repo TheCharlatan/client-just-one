@@ -83,7 +83,7 @@ export class MainPage extends React.Component {
                         <Form style={{width: "auto", height: "auto"}}>
                             <CreateLobbyButton onClick={() => this.showModal()}/>
                             <JoinLobbyButton/>
-                            <TutorialButton/>
+                            <TutorialButton history={this.props.history}/>
                         </Form>
                     </FormContainer>
                     <CreateLobbyModal hideModal={this.hideModal} createLobby={this.createLobby} show={this.state.show} />
