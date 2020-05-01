@@ -2,24 +2,42 @@ import React from 'react';
 import styled from "styled-components";
 
 import {withRouter} from "react-router-dom";
-import {api} from "../../../helpers/api";
+import {api, handleError} from "../../../helpers/api";
 
 import {UserStats} from "./UserStats";
 import {TeamStats} from "./TeamStats";
 import Green from "../../../views/design/font-families/Green";
 import FinishButton from "./FinishButton";
+import {Spinner} from "../../../views/design/Spinner";
 
 
 // The end of game overview.
 class GameOverview extends React.Component {
 
+
     constructor(props) {
         super(props);
+        this.state = {
+            redirectToLobbyTimer: null,
+            gameStats: null
+        };
     }
 
 
-    render() {
-        this.timerId = setTimeout(() => {
+    async componentDidMount() {
+
+        try {
+            let gameId = localStorage.getItem("gameId");
+            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            let response = await api.get(`/game/stat/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
+            this.setState({gameStats: response.data});
+        }
+        catch (error) {
+            alert(`Something went wrong while fetching the game data: \n${handleError(error)}`);
+        }
+
+        // setup redirect timer
+        let timer = setTimeout(() => {
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             let requestBody = localStorage.getItem('userId');
             api.delete(`game/${localStorage.getItem('gameId')}`,
@@ -27,6 +45,21 @@ class GameOverview extends React.Component {
                 {headers:{'X-Auth-Token': requestHeader}})
                 .then(r => this.props.history.push(`/lobby/${localStorage.getItem('lobbyId')}`));
         }, 20000);
+
+        this.setState({redirectToLobbyTimer: timer});
+    }
+
+
+    componentWillUnmount() {
+        clearTimeout(this.state.redirectToLobbyTimer);
+    }
+
+
+    render() {
+
+        if (this.state.gameStats === null) {
+            return <Spinner />
+        }
 
         return (
           <React.Fragment>
@@ -58,7 +91,7 @@ class GameOverview extends React.Component {
                     return <UserStats user={user} />
                   })}
               </IndividualStatsContainer>
-              <TeamStats gameModel={this.props.gameModel} />
+              <TeamStats gameStats={this.state.gameStats} />
           </React.Fragment>
         );
     }
