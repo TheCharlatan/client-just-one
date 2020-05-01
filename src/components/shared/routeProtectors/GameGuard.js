@@ -3,11 +3,12 @@ import { Redirect } from "react-router-dom";
 
 
 export const GameGuard = props => {
+  console.log("test");
   //first check if user is in a game
-  if (localStorage.getItem('gameId' && window.location.pathname === `/game/${localStorage.getItem('gameId')}`)){
+  if (localStorage.getItem('gameId') && window.location.pathname === `/game/${localStorage.getItem('gameId')}`){
     return props.children;
   }
-  if (localStorage.getItem('gameId' && window.location.pathname !== `/game/${localStorage.getItem('gameId')}`)){
+  if (localStorage.getItem('gameId') && window.location.pathname !== `/game/${localStorage.getItem('gameId')}`){
     return <Redirect to={`/game/${localStorage.getItem('gameId')}`}/>;
   }
   //Second check if user is in lobby
