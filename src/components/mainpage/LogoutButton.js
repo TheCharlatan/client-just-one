@@ -12,17 +12,28 @@ const FlexButton = styled(Button)`
   background: #FFFFFF;
 `;
 
+async function logout(token, userId) {
+    await api.put(`/user/${userId}/logout`, 0,{headers: {'X-Auth-Token': token}});
+    localStorage.clear();
+}
+
 
 // button above chat component on main page
-function LogoutButton() {
-    return (
-        <FlexButton
-            onClick={() => {
-                // log user out (and redirect to login)
-            }}>
-            <Red>Logout</Red>
-        </FlexButton>
-    );
+export class LogoutButton extends React.Component {
+    render()
+    {
+        return (
+            <FlexButton
+                onClick={() => {
+                    // log user out (and redirect to login)
+                    logout(localStorage.getItem("token"), localStorage.getItem("userId")).then(r => {
+                        this.props.history.push("/login")
+                    });
+                }}>
+                <Red>Logout</Red>
+            </FlexButton>
+        );
+    }
 }
 
 export default LogoutButton;
