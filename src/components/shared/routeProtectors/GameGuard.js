@@ -3,7 +3,6 @@ import { Redirect } from "react-router-dom";
 
 
 export const GameGuard = props => {
-  console.log("test");
   //first check if user is in a game
   if (localStorage.getItem('gameId') && window.location.pathname === `/game/${localStorage.getItem('gameId')}`){
     return props.children;

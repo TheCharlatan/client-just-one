@@ -26,7 +26,7 @@ export class LobbiesContainer extends React.Component {
             requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             response = await api.get('/lobby', {headers: {'X-Auth-Token': requestHeader}});
         }
-        catch {
+        catch (error) {
             alert(`Could not load open lobbies: \n${handleError(error)}`);
             return;
         }
@@ -48,7 +48,7 @@ export class LobbiesContainer extends React.Component {
             requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             response = await api.get(`/user/${localStorage.getItem('userId')}`, {headers: {'X-Auth-Token': requestHeader}});
         }
-        catch {
+        catch (error) {
             alert(`Could not load invitations: \n${handleError(error)}`);
             return;
         }
