@@ -1,7 +1,8 @@
+import React from "react";
 import styled from "styled-components";
 import {Button} from "../../views/design/Button";
-import Pink from "../../views/design/font-families/Pink";
-import React from "react";
+import Violet from "../../views/design/font-families/Violet";
+
 
 const FlexButton = styled(Button)`
   display: flex;
@@ -12,18 +13,18 @@ const FlexButton = styled(Button)`
 
 
 // one of the buttons in the middle part of main page
-class TutorialButton extends React.Component {
+class LeaveButton  extends React.Component {
     render() {
         return (
             <FlexButton
                 onClick={() => {
                     // redirect to tutorial
-                    this.props.history.push("/tutorial");
+                    this.props.history.push("/mainpage");
                 }}>
-                <Pink>Tutorial</Pink>
+                <Violet>Leave</Violet>
             </FlexButton>
         );
     }
 }
 
-export default TutorialButton;
+export default LeaveButton;
