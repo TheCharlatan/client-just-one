@@ -23,7 +23,6 @@ import tiger from "../../img/tiger.png";
 import profilePlaceholder from "../../img/profilePlaceholder.png";
 
 import {Spinner} from "../../views/design/Spinner";
-import {Redirect} from "react-router-dom";
 
 
 
@@ -39,7 +38,7 @@ export class UserProfile extends React.Component {
 
 
     async componentDidMount() {
-        const {userProfileId} = this.props.match.params;
+        const {userProfileId} = this.props.parentProps.match.params;
 
         let userData = null;
 
@@ -120,7 +119,7 @@ export class UserProfile extends React.Component {
                 <ButtonContainer>
                 <EditButton
                     width="50%"
-                    onClick={() => {this.props.history.push(`/user/${localStorage.getItem('userId')}/edit`);}}
+                    onClick={() => {this.props.parentProps.history.push(`/user/${localStorage.getItem('userId')}/edit`);}}
                 >
                     <Red>
                         Edit
@@ -133,7 +132,7 @@ export class UserProfile extends React.Component {
         return (
             <BaseContainer>
                 <Button
-                    onClick={() => {this.props.history.push(`/mainpage`);}}
+                    onClick={() => {this.props.parentProps.history.push(`/mainpage`);}}
                 >
                     <Red>
                         Back
