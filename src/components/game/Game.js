@@ -30,6 +30,7 @@ import {MysteryWordContainer} from "./shared/MysteryWordContainer";
 import {AcceptRejectButtons} from "./wordSelection/AcceptRejectButtons";
 import {FrontendGameStates} from "./shared/FrontendGameStates";
 import {NonInterferingMessageBox} from "./message/NonInterferingMessageBox";
+import {Timer} from "./shared/Timer";
 
 
 // The game component responsible for the conditional rendering.
@@ -53,7 +54,7 @@ class Game extends React.Component {
     }
 
 
-    // update the game data, based on this update state
+    // update the game state based on newest game data
     async updateGame() {
         this.messageBox = null;
 
@@ -153,6 +154,14 @@ class Game extends React.Component {
             return;
         }
 
+        if (this.state.gameModel.timestamp !== null) {
+            let gameModel = this.state.gameModel;
+            gameModel.timestamp = new Date(this.state.gameModel.timestamp);
+            this.state = {
+                gameModel: gameModel
+            }
+        }
+
         // reduce requests by only updating when new round/player has left
         if (this.state.gameModel.round == prevState.gameModel.round && this.state.gameModel.playerIds.length == prevState.gameModel.playerIds.length) {
             this.setState({loaded: true});
@@ -199,8 +208,9 @@ class Game extends React.Component {
         }
 
         // React component(s) that change depending on the game state.
-        let changingElements = null;
+        let timer = null;
         let userElements = null;
+        let changingElements = null;
 
         // no index selected yet
         if (this.state.frontendGameStatus === "SELECT_INDEX") {
@@ -237,6 +247,7 @@ class Game extends React.Component {
             else {
                 changingElements = <ClueInput updateGame={this.updateGame} />
             }
+            timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000}/>
         }
 
         if (this.state.gameModel.gameStatus === "AWAITING_GUESS") {
@@ -251,6 +262,7 @@ class Game extends React.Component {
             else {
                 changingElements = <PleaseWait keyword="Guess is being "/>
             }
+            timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000}/>
         }
 
         if (this.state.gameModel.gameStatus === "TURN_FINISHED") {
@@ -276,7 +288,7 @@ class Game extends React.Component {
                                 key={user.id}
                                 isActivePlayer={this.isActivePlayer(user.id)}
                             />
-                            );
+                        );
                     })}
                 </UserGameContainer>
             );
@@ -298,6 +310,7 @@ class Game extends React.Component {
             // Basic layout that is (nearly) the same in all game states.
             <BaseContainerBody>
                 {this.messageBox}
+                {timer}
                 <BaseContainerGame>
                     <GameInfoContainer>
                         <GameInfo>
