@@ -163,7 +163,7 @@ class Game extends React.Component {
         }
 
         // reduce requests by only updating when new round/player has left
-        if (this.state.gameModel.round == prevState.gameModel.round && this.state.gameModel.playerIds.length == prevState.gameModel.playerIds.length) {
+        if (prevState.gameModel !== null && this.state.gameModel.round == prevState.gameModel.round && this.state.gameModel.playerIds.length == prevState.gameModel.playerIds.length) {
             this.setState({loaded: true});
             return;
         }
