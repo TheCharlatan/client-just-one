@@ -92,7 +92,7 @@ export class MainPage extends React.Component {
                     </div>
                 </CenterContainer>
                 <TopRightContainer>
-                    <ProfileButton />
+                    <ProfileButton history={this.props.history}/>
                 </TopRightContainer>
                 <LeaderboardContainer>
                     <Leaderboard/>

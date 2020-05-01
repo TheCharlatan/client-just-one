@@ -141,10 +141,10 @@ class Game extends React.Component {
         const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
 
         let response = null;
+        let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
 
         try {
             let gameId = localStorage.getItem("gameId");
-            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             response = await api.get(`/game/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
             this.setState({gameModel: response.data, users: []});
         }
