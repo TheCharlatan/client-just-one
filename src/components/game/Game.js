@@ -260,7 +260,13 @@ class Game extends React.Component {
                 );
             }
             else {
-                changingElements = <PleaseWait keyword="Guess is being "/>
+                changingElements =
+                    (
+                        <React.Fragment>
+                            <CluesContainer style={{marginBottom: "5%"}} />
+                            <PleaseWait keyword="Guess is being "/>
+                        </React.Fragment>
+                    );
             }
             timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000}/>
         }
