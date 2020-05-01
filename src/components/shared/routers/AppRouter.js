@@ -12,6 +12,7 @@ import {GameOverview} from "../../game/gameEnd/GameOverview";
 import {RegistrationGuard} from "../routeProtectors/RegistrationGuard";
 import {GameGuard} from "../routeProtectors/GameGuard";
 import {LobbyGuard} from "../routeProtectors/LobbyGuard";
+import {UserProfile} from "../../profile/UserProfile";
 
 /**
  * Main router of your application.
@@ -73,6 +74,8 @@ class AppRouter extends React.Component {
                   </LobbyGuard>
               )}
             />
+
+            <Route path="/user/:userProfileId" exact component={UserProfile}/>
 
             <Route path="/" exact render={() => <Redirect to={"/login"} />} />
           </div>
