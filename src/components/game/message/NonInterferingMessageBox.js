@@ -13,10 +13,10 @@ export class NonInterferingMessageBox extends React.Component {
 
     componentDidMount() {
         // remove itself after 4s
-        setTimeout(() => {
-            let messageBox = document.getElementById('nonInterferingMessageBox');
-            messageBox.parentNode.removeChild(messageBox);
-        }, 4000);
+        //setTimeout(() => {
+            //let messageBox = document.getElementById('nonInterferingMessageBox');
+            //messageBox.parentNode.removeChild(messageBox);
+        //}, 4000);
     }
 
     render() {

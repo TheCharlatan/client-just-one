@@ -51,16 +51,17 @@ function NumberButton(props) {
     return (
         <ButtonWhite
             onClick={async () => {
-                console.log("Clicked " + props.number);
                 try {
+                    let requestBody = JSON.stringify({'wordIndex': props.number});
+                    console.log(requestBody);
                     let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-                    await api.post(`/game/${props.gameId}/number`, props.number, {headers: {'Authorization': requestHeader}});
+                    await api.put(`/game/${props.id}/number`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
                 } catch (error) {
                     alert(`An error occurred when submitting the number: ${error}`);
                     return;
                 }
                 // TODO: Display wait screen.
-                alert("Successfully submitted the number. Please wait.")
+                //alert("Successfully submitted the number. Please wait.")
             }}
         >
             {textElement}
