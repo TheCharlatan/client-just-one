@@ -69,29 +69,26 @@ class Game extends React.Component {
         }
 
         if (this.state.gameModel.gameStatus === "AWAITING_INDEX") {
-            if (this.state.gameModel.wordIndex == -1) {
-                this.setFrontendGameStatus("SELECT_INDEX");
-                if (prevState.gameModel.cardStatus === "USER_REJECTED_WORD") {
-                    this.messageBox = <NonInterferingMessageBox message={"The word was rejected."} />; // Inform all players that the word was rejected.
-                }
-            }
-            else {
-                this.setFrontendGameStatus("ACCEPT_REJECT_WORD");
+            this.setFrontendGameStatus("SELECT_INDEX");
+            if (this.state.gameModel.cardStatus === "USER_REJECTED_WORD") {
+                this.messageBox = <NonInterferingMessageBox message={"The word was rejected."} />; // Inform all players that the word was rejected.
             }
         }
 
-        if (prevState.gameModel.gameStatus === "AWAITING_INDEX" && this.state.gameModel.gameStatus === "AWAITING_CLUES") {
+        if (this.state.gameModel.gameStatus === "ACCEPT_REJECT") {
+            this.setFrontendGameStatus("ACCEPT_REJECT_WORD");
+        }
+
+        if (prevState.gameModel.gameStatus === "ACCEPT_REJECT" && this.state.gameModel.gameStatus === "AWAITING_CLUES") {
             this.setFrontendGameStatus("AWAITING_CLUES");
             this.messageBox = <NonInterferingMessageBox message={"The word was accepted."} />; // Inform all players that the word was accepted.
-            // TODO: Start 30s timer.
         }
 
-        if (prevState.gameModel.gameStatus === FrontendGameStates.AWAITING_CLUES && this.state.gameModel.gameStatus === "AWAITING_GUESS") {
+        if (prevState.gameModel.gameStatus === "AWAITING_CLUES" && this.state.gameModel.gameStatus === "AWAITING_GUESS") {
             this.setFrontendGameStatus("AWAITING_GUESS");
-            // TODO: Start 30s timer.
         }
 
-        if (prevState.gameModel.gameStatus === FrontendGameStates.AWAITING_GUESS && this.state.gameModel.gameStatus === "AWAITING_INDEX") {
+        if (prevState.gameModel.gameStatus === "AWAITING_GUESS" && this.state.gameModel.gameStatus === "AWAITING_INDEX") {
             this.setFrontendGameStatus("TURN_FINISHED");
 
             if (this.state.gameModel.wordsGuessedCorrect > prevState.gameModel.wordsGuessedCorrect) {
@@ -109,7 +106,6 @@ class Game extends React.Component {
 
         if (this.state.gameModel.gameStatus === "GAME_OVER") {
             this.setFrontendGameStatus("GAME_OVER");
-            // TODO: Start timer to move player back to lobby after 20s.
         }
     }
 
@@ -126,7 +122,7 @@ class Game extends React.Component {
     async componentDidMount() {
         await this.updateGameData();
         this.setState({
-            updateTimer: setInterval(() => this.updateGame(), 20000)
+            updateTimer: setInterval(() => this.updateGame(), 500)
         });
     }
 
@@ -139,7 +135,6 @@ class Game extends React.Component {
     // TODO: Get gameId, userId (currently assumed it is in localStorage).
     async updateGameData() {
         const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
-        console.log(this.state);
 
         let response = null;
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
@@ -164,7 +159,7 @@ class Game extends React.Component {
 
         // reduce requests by only updating when new round/player has left
         if (prevState.gameModel !== null && this.state.gameModel.round == prevState.gameModel.round && this.state.gameModel.playerIds.length == prevState.gameModel.playerIds.length) {
-            this.setState({loaded: true});
+            this.setState({loaded: true, users: prevState.users});
             return;
         }
 
