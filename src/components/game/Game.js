@@ -47,7 +47,7 @@ class Game extends React.Component {
             activeUser: null,
             frontendGameStatus: "SELECT_INDEX", // frontend status to allow more fine-grained control, uses ./shared/FrontendGameStates
             updateTimer: null, // Timer to periodically pull the newest game data and update the game state accordingly
-            lastTurnEndScreenDate: null // when the last TurnEndScreen was opened
+            lastTurnEndScreenDate: null, // when the last TurnEndScreen was opened
         };
         this.messageBox = null; // In certain situations a message box is displayed for a few seconds for information purposes.
         this.updateGame = this.updateGame.bind(this);
@@ -72,7 +72,7 @@ class Game extends React.Component {
             if (this.state.gameModel.wordIndex == -1) {
                 this.setFrontendGameStatus("SELECT_INDEX");
                 if (prevState.gameModel.cardStatus === "USER_REJECTED_WORD") {
-                    this.messageBox = <NonInterferingMessageBox message={"The word was rejected."} />; // Inform all players that the word was rejected.
+                    this.messageBox = <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was rejected."} />; // Inform all players that the word was rejected.
                 }
             }
             else {
@@ -80,9 +80,14 @@ class Game extends React.Component {
             }
         }
 
-        if (prevState.gameModel.gameStatus === "AWAITING_INDEX" && this.state.gameModel.gameStatus === "AWAITING_CLUES") {
+
+        if (this.state.gameModel.gameStatus === "ACCEPT_REJECT" && this.state.gameModel.countAccept.includes(parseInt(localStorage.getItem('userId')))) {
+            this.setFrontendGameStatus("AWAITING_ACCEPT_REJECT");
+        }
+
+        if (prevState.gameModel.gameStatus === "ACCEPT_REJECT" && this.state.gameModel.gameStatus === "AWAITING_CLUES") {
             this.setFrontendGameStatus("AWAITING_CLUES");
-            this.messageBox = <NonInterferingMessageBox message={"The word was accepted."} />; // Inform all players that the word was accepted.
+            this.messageBox = <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was accepted."} />; // Inform all players that the word was accepted.
             // TODO: Start 30s timer.
         }
 
@@ -126,7 +131,7 @@ class Game extends React.Component {
     async componentDidMount() {
         await this.updateGameData();
         this.setState({
-            updateTimer: setInterval(() => this.updateGame(), 20000)
+            updateTimer: setInterval(() => this.updateGame(), 200)
         });
     }
 
@@ -139,7 +144,7 @@ class Game extends React.Component {
     // TODO: Get gameId, userId (currently assumed it is in localStorage).
     async updateGameData() {
         const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
-        console.log(this.state);
+
 
         let response = null;
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
@@ -243,6 +248,11 @@ class Game extends React.Component {
                     </React.Fragment>
                 );
             }
+        }
+
+
+        if (this.state.frontendGameStatus === "AWAITING_ACCEPT_REJECT") {
+            changingElements = <PleaseWait keyword={"Not all confirmations/rejections "} />
         }
 
         if (this.state.gameModel.gameStatus === "AWAITING_CLUES") {
