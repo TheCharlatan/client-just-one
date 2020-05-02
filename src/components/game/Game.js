@@ -47,7 +47,7 @@ class Game extends React.Component {
             activeUser: null,
             frontendGameStatus: "SELECT_INDEX", // frontend status to allow more fine-grained control, uses ./shared/FrontendGameStates
             updateTimer: null, // Timer to periodically pull the newest game data and update the game state accordingly
-            lastTurnEndScreenDate: null // when the last TurnEndScreen was opened
+            lastTurnEndScreenDate: null, // when the last TurnEndScreen was opened
         };
         this.messageBox = null; // In certain situations a message box is displayed for a few seconds for information purposes.
         this.updateGame = this.updateGame.bind(this);
@@ -71,27 +71,28 @@ class Game extends React.Component {
         if (this.state.gameModel.gameStatus === "AWAITING_INDEX") {
             if (this.state.gameModel.wordIndex == -1) {
                 this.setFrontendGameStatus("SELECT_INDEX");
-                if (prevState.frontendGameStatus === "ACCEPT_REJECT_WORD") {
-                    this.messageBox = <NonInterferingMessageBox message={"The word was rejected."} />; // Inform all players that the word was rejected.
+                if (prevState.gameModel.cardStatus === "USER_REJECTED_WORD") {
+                    this.messageBox = <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was rejected."} />; // Inform all players that the word was rejected.
                 }
             }
-            else {
-                this.setFrontendGameStatus("ACCEPT_REJECT_WORD");
-            }
         }
 
-        if (prevState.gameModel.gameStatus === "AWAITING_INDEX" && this.state.gameModel.gameStatus === "AWAITING_CLUES") {
+
+        if (this.state.gameModel.gameStatus === "ACCEPT_REJECT" && this.state.gameModel.countAccept.includes(parseInt(localStorage.getItem('userId')))) {
+            this.setFrontendGameStatus("AWAITING_ACCEPT_REJECT");
+        }
+
+        if (prevState.gameModel.gameStatus === "ACCEPT_REJECT" && this.state.gameModel.gameStatus === "AWAITING_CLUES") {
             this.setFrontendGameStatus("AWAITING_CLUES");
-            this.messageBox = <NonInterferingMessageBox message={"The word was accepted."} />; // Inform all players that the word was accepted.
+            this.messageBox = <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was accepted."} />; // Inform all players that the word was accepted.
             // TODO: Start 30s timer.
         }
 
-        if (prevState.gameModel.gameStatus === FrontendGameStates.AWAITING_CLUES && this.state.gameModel.gameStatus === "AWAITING_GUESS") {
+        if (prevState.gameModel.gameStatus === "AWAITING_CLUES" && this.state.gameModel.gameStatus === "AWAITING_GUESS") {
             this.setFrontendGameStatus("AWAITING_GUESS");
-            // TODO: Start 30s timer.
         }
 
-        if (prevState.gameModel.gameStatus === FrontendGameStates.AWAITING_GUESS && this.state.gameModel.gameStatus === "AWAITING_INDEX") {
+        if (prevState.gameModel.gameStatus === "AWAITING_GUESS" && this.state.gameModel.gameStatus === "AWAITING_INDEX") {
             this.setFrontendGameStatus("TURN_FINISHED");
 
             if (this.state.gameModel.wordsGuessedCorrect > prevState.gameModel.wordsGuessedCorrect) {
@@ -109,7 +110,6 @@ class Game extends React.Component {
 
         if (this.state.gameModel.gameStatus === "GAME_OVER") {
             this.setFrontendGameStatus("GAME_OVER");
-            // TODO: Start timer to move player back to lobby after 20s.
         }
     }
 
@@ -126,7 +126,7 @@ class Game extends React.Component {
     async componentDidMount() {
         await this.updateGameData();
         this.setState({
-            updateTimer: setInterval(() => this.updateGame(), 500)
+            updateTimer: setInterval(() => this.updateGame(), 200)
         });
     }
 
@@ -140,9 +140,9 @@ class Game extends React.Component {
     async updateGameData() {
         const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
 
+
         let response = null;
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-
         try {
             let gameId = localStorage.getItem("gameId");
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
@@ -164,12 +164,14 @@ class Game extends React.Component {
 
         // reduce requests by only updating when new round/player has left
         if (prevState.gameModel !== null && this.state.gameModel.round == prevState.gameModel.round && this.state.gameModel.playerIds.length == prevState.gameModel.playerIds.length) {
-            this.setState({loaded: true});
+            this.setState({loaded: true, users: prevState.users});
             return;
         }
 
         try {
+            let users = new Array();
             for (let i=0; i<response.data.playerIds.length; i++) {
+
                 let userResponse = await api.get('/user/' + response.data.playerIds[i], {headers: {'X-Auth-Token': requestHeader}});
                 if (userResponse.data.id == localStorage.getItem('userId')) {
                     this.setState({currentUser: userResponse.data});
@@ -177,10 +179,13 @@ class Game extends React.Component {
                 if (userResponse.data.id == this.state.gameModel.activePlayerId) {
                     this.setState({activeUser: userResponse.data});
                 }
-                this.state.users[i] = userResponse.data;
+
+                users.push(userResponse.data);
             }
-            this.setState({loaded: true});
+
+            this.setState({loaded: true, users: users});
         }
+
         catch (error) {
             alert(`Something went wrong while fetching the user data: \n${handleError(error)}`);
         }
@@ -188,7 +193,7 @@ class Game extends React.Component {
 
 
     isActivePlayer(playerId) {
-        return playerId === this.state.gameModel.activePlayerId;
+        return playerId === this.state.gameModel.activePlayer;
     }
 
 
@@ -213,7 +218,7 @@ class Game extends React.Component {
         let changingElements = null;
 
         // no index selected yet
-        if (this.state.frontendGameStatus === "SELECT_INDEX") {
+        if (this.state.gameModel.gameStatus === "AWAITING_INDEX") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
                 changingElements = <SelectNumberContainer gameId={this.state.gameModel.id} /> // active player can select number
             }
@@ -223,7 +228,7 @@ class Game extends React.Component {
         }
 
         // index selected, but not confirmed
-        if (this.state.frontendGameStatus === "ACCEPT_REJECT_WORD") {
+        if (this.state.gameModel.gameStatus === "ACCEPT_REJECT") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
                 changingElements = <PleaseWait keyword={"Not all confirmations/rejections "} />
             }
@@ -240,12 +245,22 @@ class Game extends React.Component {
             }
         }
 
+
+        if (this.state.frontendGameStatus === "AWAITING_ACCEPT_REJECT") {
+            changingElements = <PleaseWait keyword={"Not all confirmations/rejections "} />
+        }
+
         if (this.state.gameModel.gameStatus === "AWAITING_CLUES") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
                 changingElements = <PleaseWait keyword="Clues are being "/>
             }
             else {
-                changingElements = <ClueInput updateGame={this.updateGame} />
+                changingElements = (
+                    <React.Fragment>
+                        <ClueInput updateGame={this.updateGame} />
+                        <MysteryWordContainer mysteryWord={this.state.gameModel.words[this.state.gameModel.wordIndex]} />
+                    </React.Fragment>
+                );
             }
             timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000}/>
         }
@@ -255,7 +270,7 @@ class Game extends React.Component {
                 changingElements = (
                     <React.Fragment>
                         <CluesContainer style={{marginBottom: "5%"}} />
-                        <GuessInput updateGame={this.updateGame} />
+                        <GuessInput updateGame={this.updateGame} gameModel={this.state.gameModel} />
                     </React.Fragment>
                 );
             }
