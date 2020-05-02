@@ -169,7 +169,9 @@ class Game extends React.Component {
         }
 
         try {
+            let users = new Array();
             for (let i=0; i<response.data.playerIds.length; i++) {
+
                 let userResponse = await api.get('/user/' + response.data.playerIds[i], {headers: {'X-Auth-Token': requestHeader}});
                 if (userResponse.data.id == localStorage.getItem('userId')) {
                     this.setState({currentUser: userResponse.data});
@@ -177,12 +179,13 @@ class Game extends React.Component {
                 if (userResponse.data.id == this.state.gameModel.activePlayerId) {
                     this.setState({activeUser: userResponse.data});
                 }
-                this.state.users.push(userResponse.data);
-                console.log(this.state.users);
-            }
-            this.setState({loaded: true});
 
+                users.push(userResponse.data);
+            }
+
+            this.setState({loaded: true, users: users});
         }
+
         catch (error) {
             alert(`Something went wrong while fetching the user data: \n${handleError(error)}`);
         }
