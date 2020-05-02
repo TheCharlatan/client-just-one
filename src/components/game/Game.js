@@ -126,7 +126,7 @@ class Game extends React.Component {
     async componentDidMount() {
         await this.updateGameData();
         this.setState({
-            updateTimer: setInterval(() => this.updateGame(), 500)
+            updateTimer: setInterval(() => this.updateGame(), 200000)
         });
     }
 
@@ -139,6 +139,7 @@ class Game extends React.Component {
     // TODO: Get gameId, userId (currently assumed it is in localStorage).
     async updateGameData() {
         const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
+        console.log(prevState);
 
         let response = null;
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
@@ -188,7 +189,7 @@ class Game extends React.Component {
 
 
     isActivePlayer(playerId) {
-        return playerId === this.state.gameModel.activePlayerId;
+        return playerId === this.state.gameModel.activePlayer;
     }
 
 
