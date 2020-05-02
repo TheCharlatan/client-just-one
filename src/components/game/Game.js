@@ -141,12 +141,14 @@ class Game extends React.Component {
         const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
 
         let response = null;
+        let responseTimestamp = null;
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
 
         try {
             let gameId = localStorage.getItem("gameId");
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             response = await api.get(`/game/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
+            responseTimestamp = response.data.timestamp; // save timestamp before (incorrect) automatic conversion
             this.setState({gameModel: response.data, users: []});
         }
         catch (error) {
@@ -155,8 +157,13 @@ class Game extends React.Component {
         }
 
         if (this.state.gameModel.timestamp !== null) {
+            let timestamp = new Date();
+            let [hours, minutes, seconds] = responseTimestamp.split(":");
+            timestamp.setHours(hours);
+            timestamp.setMinutes(minutes);
+            timestamp.setSeconds(seconds);
             let gameModel = this.state.gameModel;
-            gameModel.timestamp = new Date(this.state.gameModel.timestamp);
+            gameModel.timestamp = timestamp;
             this.state = {
                 gameModel: gameModel
             }
