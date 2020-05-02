@@ -75,9 +75,6 @@ class Game extends React.Component {
                     this.messageBox = <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was rejected."} />; // Inform all players that the word was rejected.
                 }
             }
-            else {
-                this.setFrontendGameStatus("ACCEPT_REJECT_WORD");
-            }
         }
 
 
@@ -91,12 +88,11 @@ class Game extends React.Component {
             // TODO: Start 30s timer.
         }
 
-        if (prevState.gameModel.gameStatus === FrontendGameStates.AWAITING_CLUES && this.state.gameModel.gameStatus === "AWAITING_GUESS") {
+        if (prevState.gameModel.gameStatus === "AWAITING_CLUES" && this.state.gameModel.gameStatus === "AWAITING_GUESS") {
             this.setFrontendGameStatus("AWAITING_GUESS");
-            // TODO: Start 30s timer.
         }
 
-        if (prevState.gameModel.gameStatus === FrontendGameStates.AWAITING_GUESS && this.state.gameModel.gameStatus === "AWAITING_INDEX") {
+        if (prevState.gameModel.gameStatus === "AWAITING_GUESS" && this.state.gameModel.gameStatus === "AWAITING_INDEX") {
             this.setFrontendGameStatus("TURN_FINISHED");
 
             if (this.state.gameModel.wordsGuessedCorrect > prevState.gameModel.wordsGuessedCorrect) {
@@ -114,7 +110,6 @@ class Game extends React.Component {
 
         if (this.state.gameModel.gameStatus === "GAME_OVER") {
             this.setFrontendGameStatus("GAME_OVER");
-            // TODO: Start timer to move player back to lobby after 20s.
         }
     }
 
@@ -169,7 +164,7 @@ class Game extends React.Component {
 
         // reduce requests by only updating when new round/player has left
         if (prevState.gameModel !== null && this.state.gameModel.round == prevState.gameModel.round && this.state.gameModel.playerIds.length == prevState.gameModel.playerIds.length) {
-            this.setState({loaded: true});
+            this.setState({loaded: true, users: prevState.users});
             return;
         }
 
