@@ -61,7 +61,7 @@ function NumberButton(props) {
                     return;
                 }
                 // TODO: Display wait screen.
-                alert("Successfully submitted the number. Please wait.")
+                //alert("Successfully submitted the number. Please wait.")
             }}
         >
             {textElement}

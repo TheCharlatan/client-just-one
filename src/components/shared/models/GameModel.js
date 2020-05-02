@@ -15,6 +15,7 @@ class GameModel {
         this.wordsGuessedWrong = null;
         this.cardStackCount = null;
         this.cardGuessedCount = null;
+        this.cardStatus = null;
 
         Object.assign(this, data);
     }

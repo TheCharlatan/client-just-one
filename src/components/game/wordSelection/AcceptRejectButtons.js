@@ -15,7 +15,7 @@ export function AcceptRejectButtons(props) {
                         try {
                             let requestBody = JSON.stringify({ wordIndex: props.wordIndex});
                             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-                            await api.put(`game/${localStorage.getItem('gameId')}/number`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+                            await api.put(`game/${localStorage.getItem('gameId')}/accept`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
                         }
                         catch (error) {
                             alert(`Something went wrong: \n${handleError(error)}`);

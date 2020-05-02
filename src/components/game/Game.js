@@ -71,7 +71,7 @@ class Game extends React.Component {
         if (this.state.gameModel.gameStatus === "AWAITING_INDEX") {
             if (this.state.gameModel.wordIndex == -1) {
                 this.setFrontendGameStatus("SELECT_INDEX");
-                if (prevState.frontendGameStatus === "ACCEPT_REJECT_WORD") {
+                if (prevState.gameModel.cardStatus === "USER_REJECTED_WORD") {
                     this.messageBox = <NonInterferingMessageBox message={"The word was rejected."} />; // Inform all players that the word was rejected.
                 }
             }
@@ -126,7 +126,7 @@ class Game extends React.Component {
     async componentDidMount() {
         await this.updateGameData();
         this.setState({
-            updateTimer: setInterval(() => this.updateGame(), 200000)
+            updateTimer: setInterval(() => this.updateGame(), 20000)
         });
     }
 
@@ -139,11 +139,10 @@ class Game extends React.Component {
     // TODO: Get gameId, userId (currently assumed it is in localStorage).
     async updateGameData() {
         const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
-        console.log(prevState);
+        console.log(this.state);
 
         let response = null;
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-
         try {
             let gameId = localStorage.getItem("gameId");
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
@@ -178,9 +177,11 @@ class Game extends React.Component {
                 if (userResponse.data.id == this.state.gameModel.activePlayerId) {
                     this.setState({activeUser: userResponse.data});
                 }
-                this.state.users[i] = userResponse.data;
+                this.state.users.push(userResponse.data);
+                console.log(this.state.users);
             }
             this.setState({loaded: true});
+
         }
         catch (error) {
             alert(`Something went wrong while fetching the user data: \n${handleError(error)}`);
@@ -214,7 +215,7 @@ class Game extends React.Component {
         let changingElements = null;
 
         // no index selected yet
-        if (this.state.frontendGameStatus === "SELECT_INDEX") {
+        if (this.state.gameModel.gameStatus === "AWAITING_INDEX") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
                 changingElements = <SelectNumberContainer gameId={this.state.gameModel.id} /> // active player can select number
             }
@@ -224,7 +225,7 @@ class Game extends React.Component {
         }
 
         // index selected, but not confirmed
-        if (this.state.frontendGameStatus === "ACCEPT_REJECT_WORD") {
+        if (this.state.gameModel.gameStatus === "ACCEPT_REJECT") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
                 changingElements = <PleaseWait keyword={"Not all confirmations/rejections "} />
             }
@@ -246,7 +247,12 @@ class Game extends React.Component {
                 changingElements = <PleaseWait keyword="Clues are being "/>
             }
             else {
-                changingElements = <ClueInput updateGame={this.updateGame} />
+                changingElements = (
+                    <React.Fragment>
+                        <ClueInput updateGame={this.updateGame} />
+                        <MysteryWordContainer mysteryWord={this.state.gameModel.words[this.state.gameModel.wordIndex]} />
+                    </React.Fragment>
+                );
             }
             timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000}/>
         }
@@ -256,7 +262,7 @@ class Game extends React.Component {
                 changingElements = (
                     <React.Fragment>
                         <CluesContainer style={{marginBottom: "5%"}} />
-                        <GuessInput updateGame={this.updateGame} />
+                        <GuessInput updateGame={this.updateGame} gameModel={this.state.gameModel} />
                     </React.Fragment>
                 );
             }

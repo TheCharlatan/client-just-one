@@ -57,7 +57,7 @@ export class GuessInput extends React.Component {
 
         const requestBody = JSON.stringify({
             guess: guess,
-            wordIndex: this.gameModel.wordIndex
+            wordIndex: this.props.gameModel.wordIndex
         });
 
         try {
