@@ -16,9 +16,10 @@ export class Timer extends React.Component {
     }
 
     componentDidMount() {
-        this.state = {
+        this.setState ({
+            displayTime: this.props.startTime,
             timer: window.setInterval(this.updateTime, 100)
-        };
+        });
     }
 
     componentWillUnmount() {
@@ -26,15 +27,15 @@ export class Timer extends React.Component {
     }
 
     updateTime() {
-        if (this.state.displayTime >= 100) {
-            this.state = {
+        if (this.state.displayTime > 100) {
+            this.setState({
                 displayTime: this.state.displayTime - 100
-            };
+            });
         }
         else {
-            this.state = {
+            this.setState({
                 displayTime: 0
-            };
+            });
         }
     }
 
@@ -42,7 +43,7 @@ export class Timer extends React.Component {
         return (
             <TimerContainer>
                 <Blue>
-                    {(Math.floor(this.state.displayTime / 100) / 10)} s
+                    {Math.floor(this.state.displayTime / 100) / 10} s
                 </Blue>
             </TimerContainer>
         );

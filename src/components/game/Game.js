@@ -155,11 +155,13 @@ class Game extends React.Component {
 
 
         let response = null;
+        let responseTimestamp = null;
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
         try {
             let gameId = localStorage.getItem("gameId");
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             response = await api.get(`/game/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
+            responseTimestamp = response.data.timestamp; // save timestamp before (incorrect) automatic conversion
             this.setState({gameModel: response.data, users: []});
         }
         catch (error) {
@@ -168,10 +170,14 @@ class Game extends React.Component {
         }
 
         if (this.state.gameModel.timestamp !== null) {
+            let timestamp = new Date();
+            let [hours, minutes, seconds] = responseTimestamp.split(":");
+            timestamp.setHours(hours);
+            timestamp.setMinutes(minutes);
+            timestamp.setSeconds(seconds);
             let gameModel = this.state.gameModel;
-            //gameModel.timestamp = new Date(this.state.gameModel.timestamp);
-            var todayDate = new Date().toISOString().slice(0,10);
-            gameModel.timestamp = Date.parse(todayDate+"T"+"03:00:00");
+            gameModel.timestamp = timestamp;
+            gameModel.timestamp = timestamp;
             this.state = {
                 gameModel: gameModel
             }
@@ -179,7 +185,6 @@ class Game extends React.Component {
 
         // reduce requests by only updating when new round/player has left
         if (prevState.gameModel !== null && this.state.gameModel.round == prevState.gameModel.round && this.state.gameModel.playerIds.length == prevState.gameModel.playerIds.length) {
-            //alert(this.state.gameModel.gameStatus);
             this.setState({loaded: true, users: prevState.users});
             return;
         }
@@ -190,6 +195,7 @@ class Game extends React.Component {
         try {
             let users = new Array();
             for (let i=0; i<response.data.playerIds.length; i++) {
+
                 let userResponse = await api.get('/user/' + response.data.playerIds[i], {headers: {'X-Auth-Token': requestHeader}});
                 if (userResponse.data.id == localStorage.getItem('userId')) {
                     this.setState({currentUser: userResponse.data});
@@ -280,7 +286,7 @@ class Game extends React.Component {
                     </React.Fragment>
                 );
             }
-            timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 60000}/>
+            timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000}/>
         }
 
         if (this.state.gameModel.gameStatus === "AWAITING_GUESS") {
