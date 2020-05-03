@@ -20,10 +20,9 @@ flex-direction: column;
 
 align-items: center;
 justify-content: center;
-
 `;
 
-const UserNameContainer = styled.div`
+const UserNameContainer = styled.button`
 width: 100%;
 height: 37px;
 
@@ -39,14 +38,13 @@ const UserName = styled(FontBasic)`
 font-size: 14px;
 color: #82278E;
 
-
 mix-blend-mode: darken;
 text-stroke: 1px #710070;
 -webkit-text-stroke: 1px #710070;
 text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
 
-const UserProfilePicture = styled.div`
+const UserProfilePicture = styled.button`
 width: 120px;
 height: 125px;
 background-image: url(${props => props.image ? props.image : profilePlaceholder});
@@ -76,10 +74,10 @@ background: ${props => props.isHost ? 'radial-gradient(81.05% 81.05% at 50% 50%,
 `;
 
 
-const UserLayoutLobby = ({user}) => {
+const UserLayoutLobby = (props) => {
 
-    var url;
-    switch (user.image) {
+    let url;
+    switch (props.user.image) {
         case "lion":
             url = lion;
             break;
@@ -109,11 +107,20 @@ const UserLayoutLobby = ({user}) => {
     }
 
     return (
-        <ActivePlayer isHost={user.isHost}>
+        <ActivePlayer isHost={props.user.isHost}>
             <UserContainer>
-                <UserProfilePicture image={url}/>
-                <UserNameContainer>
-                    <UserName> {user.username} </UserName>
+                <UserProfilePicture
+                    image={url}
+                    onClick={() => {
+                        props.history.push(`/user/${props.user.id}`);
+                    }}
+                />
+                <UserNameContainer
+                    onClick={() => {
+                        props.history.push(`/user/${props.user.id}`);
+                    }}
+                >
+                    <UserName> {props.user.username} </UserName>
                 </UserNameContainer>
             </UserContainer>
         </ActivePlayer>

@@ -146,7 +146,6 @@ class Game extends React.Component {
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
         try {
             let gameId = localStorage.getItem("gameId");
-            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             response = await api.get(`/game/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
             responseTimestamp = response.data.timestamp; // save timestamp before (incorrect) automatic conversion
             this.setState({gameModel: response.data, users: []});

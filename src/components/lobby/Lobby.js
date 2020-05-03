@@ -199,7 +199,7 @@ export class Lobby extends React.Component {
                     </ActionContainer>
                     <UserContainer>
                         {this.state.users.map((user) => {
-                            return (<UserLayoutLobby user={user} key={user.id}/>);
+                            return (<UserLayoutLobby user={user} key={user.id} history={this.props.history}/>);
                         })}
                     </UserContainer>
                 </CenterContainer>

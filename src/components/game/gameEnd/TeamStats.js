@@ -22,7 +22,7 @@ export class TeamStats extends React.Component{
                 </Label>
                 <Label style={{background: 'white'}}>
                     <Blue style={{letterSpacing: '0.1em'}}>
-                        {this.props.gameModel.wordsGuessedCorrect}
+                        {this.props.gameStats.wordsGuessedCorrect}
                     </Blue>
                 </Label>
                 <Label style={{background: '#F8E7D1'}}>
@@ -44,7 +44,7 @@ export class TeamStats extends React.Component{
                 </Label>
                 <Label style={{background: 'white'}}>
                     <Blue style={{letterSpacing: '0.1em'}}>
-                        {this.props.gameModel.wordsGuessedWrong}
+                        {this.props.gameStats.wordsGuessedWrong}
                     </Blue>
                 </Label>
                 <Label style={{background: '#F8E7D1'}}>
@@ -76,7 +76,7 @@ export class TeamStats extends React.Component{
                 </Label>
                 <Label style={{background: 'white'}}>
                     <Blue style={{letterSpacing: '0.1em'}}>
-                        {this.props.gameModel.timeStamp}
+                        xx
                     </Blue>
                 </Label>
             </StatsRow>

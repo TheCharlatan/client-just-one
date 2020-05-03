@@ -14,11 +14,12 @@ const FlexButton = styled(Button)`
 
 
 // button below chat component on main page
-function ChatButton() {
+function ChatButton(props) {
     return (
         <FlexButton
             onClick={() => {
-                // redirect to own profile
+                let userId = localStorage.getItem("userId");
+                props.history.push(`/user/${userId}`);
             }}>
             <Violet>Profile</Violet>
         </FlexButton>
