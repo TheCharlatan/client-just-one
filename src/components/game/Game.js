@@ -78,8 +78,7 @@ class Game extends React.Component {
         if (this.state.gameModel.gameStatus === "ACCEPT_REJECT") {
             if (this.state.gameModel.countAccept.includes(parseInt(localStorage.getItem('userId')))) {
                 this.setFrontendGameStatus("THIS_USER_ACCEPTED_WORD");
-            }
-            else {
+            }else {
                 this.setFrontendGameStatus("ACCEPT_REJECT_WORD");
             }
         }
@@ -207,7 +206,7 @@ class Game extends React.Component {
 
 
     render() {
-        console.log(this.state);
+
         // delay until all the information is loaded
         if (!this.state.loaded) {
             return <Spinner />
@@ -273,7 +272,7 @@ class Game extends React.Component {
                     </React.Fragment>
                 );
             }
-            timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000}/>
+            timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000} key={"CluesTimer"}/>
         }
 
         if (this.state.frontendGameStatus == "AWAITING_GUESS") {
@@ -293,7 +292,7 @@ class Game extends React.Component {
                     </React.Fragment>
                 );
             }
-            timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000}/>
+            timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000} key={"GuessTimer"}/>
         }
 
         if (this.state.frontendGameStatus == "TURN_FINISHED") {
