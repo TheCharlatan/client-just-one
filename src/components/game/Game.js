@@ -156,7 +156,10 @@ class Game extends React.Component {
             alert(`Something went wrong while fetching the game data: \n${handleError(error)}`);
             return;
         }
-
+        
+        console.log("Automatically parsed timestamp: " + this.state.gameModel.timestamp);
+        console.log("Raw data timestamp: " + responseTimestamp);
+        
         if (this.state.gameModel.timestamp !== null) {
             let timestamp = new Date();
             let [hours, minutes, seconds] = responseTimestamp.split(":");
