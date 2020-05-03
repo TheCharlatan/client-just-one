@@ -78,7 +78,7 @@ class Game extends React.Component {
         if (this.state.gameModel.gameStatus === "ACCEPT_REJECT") {
             if (this.state.gameModel.countAccept.includes(parseInt(localStorage.getItem('userId')))) {
                 this.setFrontendGameStatus("THIS_USER_ACCEPTED_WORD");
-            }else {
+            } else {
                 this.setFrontendGameStatus("ACCEPT_REJECT_WORD");
             }
         }
@@ -105,7 +105,7 @@ class Game extends React.Component {
                 this.setState({ guessCorrect: 'wrong' });
             }
             else {
-                this.setState({ guessCorrect: 'skipped' }); // TODO: Currently skipped is counted as wrong on server side (status from 66. commit).
+                this.setState({ guessCorrect: 'skipped' });
             }
 
             this.setState({ lastTurnEndScreenDate: Date.now() });
@@ -156,6 +156,9 @@ class Game extends React.Component {
             alert(`Something went wrong while fetching the game data: \n${handleError(error)}`);
             return;
         }
+
+        console.log("Automatically parsed timestamp: " + this.state.gameModel.timestamp);
+        console.log("Raw data timestamp: " + responseTimestamp);
 
         if (this.state.gameModel.timestamp !== null) {
             let timestamp = new Date();
