@@ -29,10 +29,12 @@ export class Lobby extends React.Component {
             hostPlayerId: null,
             users: [],
             loaded: false,
+            updateTimer: null,
         };
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
         this.startGame = this.startGame.bind(this);
+        this.updateLobby = this.updateLobby.bind(this);
     }
 
     showModal() {
@@ -82,6 +84,7 @@ export class Lobby extends React.Component {
             alert(`Something went wrong while fetching the users: ${error}`);
         }
         this.setState({loaded: true});
+        this.setState({updateTimer: setInterval(() => this.updateLobby(), 500)})
     }
 
     async startGame() {
@@ -103,9 +106,13 @@ export class Lobby extends React.Component {
             alert(`An error occurred when starting a new game: ${error}`);
             return;
         }
+    }
+
+    async updateLobby() {
+        let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
 
         try {
-            const response = await api.get(`/user/${localStorage.getItem("userId")}`, {headers: {'X-Auth-Token': requestHeader}});
+            const response = await api.get(`/user/${localStorage.getItem('userId')}`, {headers: {'X-Auth-Token': requestHeader}});
 
             if (response.data && response.data.gameId) {
                 localStorage.setItem("gameId", response.data.gameId);
@@ -113,14 +120,50 @@ export class Lobby extends React.Component {
             }
         } catch (error) {
             alert(`An error occurred when starting a new game: ${handleError(error)}`);
+
+        }
+
+
+        try {
+            const response = await api.get(`/lobby/${localStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
+            if (response.data == null) {
+                alert("Unexpected error");
+                return;
+            }
+            if (response.data.playerIds && response.data.playerIds.length > 0) {
+                this.setState({
+                    playerIds: response.data.playerIds
+                })
+            }
+        } catch (error) {
+            alert(`An error occurred when retrieving lobby players: ${error}`);
             return;
         }
+        // get the users to show them in the lobby
+        try {
+            for (let i=0; i< this.state.playerIds.length; i++) {
+                const responseUser = await api.get(`/user/${this.state.playerIds[i]}`, {headers: {'X-Auth-Token': requestHeader}});
+                //make a new field which indicates if the user is the host or not
+                responseUser.data.isHost = responseUser.data.id === this.state.hostPlayerId;
+                this.state.users[i] = responseUser.data;
+            }
+        } catch (error){
+            alert(`Something went wrong while fetching the users: ${error}`);
+        }
+        //this.setState({updateTimer: setInterval(() => this.updateLobby(), 500)})
+
+
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.updateTimer);
     }
 
     render() {
         if (this.state.loaded === false) {
             return <Spinner/>
         }
+
         return (
             <BaseContainer>
                 <BottomLeftContainer>

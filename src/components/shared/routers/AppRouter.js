@@ -12,6 +12,7 @@ import {GameGuard} from "../routeProtectors/GameGuard";
 import {LobbyGuard} from "../routeProtectors/LobbyGuard";
 import {ProfileGuard} from "../routeProtectors/ProfileGuard";
 import {UserProfile} from "../../profile/UserProfile";
+import Tutorial from "../../Tutorial/Tutorial";
 
 /**
  * Main router of your application.
@@ -36,6 +37,15 @@ class AppRouter extends React.Component {
                       </MainPageGuard>
                   )}
               />
+
+              <Route
+                  path="/tutorial"
+                  render={() => (
+                      <MainPageGuard>
+                          <Tutorial />
+                      </MainPageGuard>
+                  )}
+               />
 
 
            <Route

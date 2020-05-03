@@ -4,6 +4,7 @@ class GameModel {
         this.playerIds = null; // list of players in the game
         this.round = null;
         this.gameStatus = null; // game status: AWAITING_INDEX, AWAITING_CLUES, AWAITING_GUESS, GAME_OVER, DISPLAY_RESULTS
+        this.cardStatus = null;
         this.words = null; // list of words
         this.wordIndex = null;  // index of chosen word
         this.score = null;
@@ -15,6 +16,8 @@ class GameModel {
         this.wordsGuessedWrong = null;
         this.cardStackCount = null;
         this.cardGuessedCount = null;
+        this.cardStatus = null;
+        this.countAccept = null;
 
         Object.assign(this, data);
     }
