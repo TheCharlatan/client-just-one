@@ -65,22 +65,7 @@ export class UserStats extends React.Component{
                 </div>
                 <StatsLabel>
                     <Blue style={{fontSize: 16, letterSpacing: '0.1em'}}>
-                        x
-                    </Blue>
-                </StatsLabel>
-                <StatsLabel>
-                    <Blue style={{fontSize: 16, letterSpacing: '0.1em'}}>
-                        x
-                    </Blue>
-                </StatsLabel>
-                <StatsLabel>
-                    <Blue style={{fontSize: 16, letterSpacing: '0.1em'}}>
-                        x:xx
-                    </Blue>
-                </StatsLabel>
-                <StatsLabel>
-                    <Blue style={{fontSize: 16, letterSpacing: '0.1em'}}>
-                        xx
+                        {this.props.gameStats.scorePlayerWise[this.props.user.id]}
                     </Blue>
                 </StatsLabel>
             </div>
@@ -110,3 +95,40 @@ box-sizing: border-box;
 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 text-align:center;
 `;
+
+
+/*
+// Code for all stats -> similar change with GameOverview.
+<div style={{marginBottom: '40px'}}>
+                <div style={{width: '85px'}}>
+                    <ImageContainer>
+                        <img src={imageUrl} style={{width: '100%', height: '100%', objectFit: 'object-over'}}/>
+                    </ImageContainer>
+                    <StatsLabel style={{margin: '0px 10px'}}>
+                        <Blue style={{fontSize: 16, letterSpacing: '0.1em'}}>
+                            {this.props.user.username}
+                        </Blue>
+                    </StatsLabel>
+                </div>
+                <StatsLabel>
+                    <Blue style={{fontSize: 16, letterSpacing: '0.1em'}}>
+                        x
+                    </Blue>
+                </StatsLabel>
+                <StatsLabel>
+                    <Blue style={{fontSize: 16, letterSpacing: '0.1em'}}>
+                        x
+                    </Blue>
+                </StatsLabel>
+                <StatsLabel>
+                    <Blue style={{fontSize: 16, letterSpacing: '0.1em'}}>
+                        x:xx
+                    </Blue>
+                </StatsLabel>
+                <StatsLabel>
+                    <Blue style={{fontSize: 16, letterSpacing: '0.1em'}}>
+                        xx
+                    </Blue>
+                </StatsLabel>
+            </div>
+ */
