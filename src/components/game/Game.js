@@ -64,37 +64,41 @@ class Game extends React.Component {
         // TODO: Player has left (new number of players is lower than in prevState.gameModel) -> reset state.
 
         // display the TurnEndScreen for at least 5s
-        if (prevState.frontendGameStatus === FrontendGameStates.TURN_FINISHED && Date.now() - this.state.lastTurnEndScreenDate <= 5000) {
+        if (prevState.frontendGameStatus == "TURN_FINISHED" && Date.now() - this.state.lastTurnEndScreenDate <= 5000) {
             return;
         }
 
         if (this.state.gameModel.gameStatus === "AWAITING_INDEX") {
-            if (this.state.gameModel.wordIndex == -1) {
-                this.setFrontendGameStatus("SELECT_INDEX");
-                if (prevState.gameModel.cardStatus === "USER_REJECTED_WORD") {
-                    this.messageBox = <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was rejected."} />; // Inform all players that the word was rejected.
-                }
+            this.setFrontendGameStatus("SELECT_INDEX");
+            if (this.state.gameModel.cardStatus === "USER_REJECTED_WORD") {
+                this.messageBox = <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was rejected."} />; // Inform all players that the word was rejected.
             }
         }
 
-
-        if (this.state.gameModel.gameStatus === "ACCEPT_REJECT" && this.state.gameModel.countAccept.includes(parseInt(localStorage.getItem('userId')))) {
-            this.setFrontendGameStatus("AWAITING_ACCEPT_REJECT");
+        if (this.state.gameModel.gameStatus === "ACCEPT_REJECT") {
+            if (this.state.gameModel.countAccept.includes(parseInt(localStorage.getItem('userId')))) {
+                this.setFrontendGameStatus("THIS_USER_ACCEPTED_WORD");
+            }
+            else {
+                this.setFrontendGameStatus("ACCEPT_REJECT_WORD");
+            }
         }
 
-        if (prevState.gameModel.gameStatus === "ACCEPT_REJECT" && this.state.gameModel.gameStatus === "AWAITING_CLUES") {
+        if (this.state.gameModel.gameStatus === "AWAITING_CLUES") {
             this.setFrontendGameStatus("AWAITING_CLUES");
-            this.messageBox = <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was accepted."} />; // Inform all players that the word was accepted.
-            // TODO: Start 30s timer.
+            if (prevState.gameModel.gameStatus === "ACCEPT_REJECT") {
+                this.messageBox = <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was accepted."} />; // Inform all players that the word was accepted.
+            }
         }
 
-        if (prevState.gameModel.gameStatus === "AWAITING_CLUES" && this.state.gameModel.gameStatus === "AWAITING_GUESS") {
+        if (this.state.gameModel.gameStatus === "AWAITING_GUESS") {
             this.setFrontendGameStatus("AWAITING_GUESS");
         }
 
-        if (prevState.gameModel.gameStatus === "AWAITING_GUESS" && this.state.gameModel.gameStatus === "AWAITING_INDEX") {
+        if ((prevState.gameModel.gameStatus === "AWAITING_GUESS" || prevState.gameModel.gameStatus === "AWAITING_GUESS") && this.state.gameModel.gameStatus === "AWAITING_INDEX") {
             this.setFrontendGameStatus("TURN_FINISHED");
 
+            // TODO: Screen for no valid clues.
             if (this.state.gameModel.wordsGuessedCorrect > prevState.gameModel.wordsGuessedCorrect) {
                 this.setState({ guessCorrect: 'correct' });
             }
@@ -136,19 +140,18 @@ class Game extends React.Component {
     }
 
 
-    // TODO: Get gameId, userId (currently assumed it is in localStorage).
     async updateGameData() {
         const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
-
 
         let response = null;
         let responseTimestamp = null;
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+
         try {
             let gameId = localStorage.getItem("gameId");
             response = await api.get(`/game/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
             responseTimestamp = response.data.timestamp; // save timestamp before (incorrect) automatic conversion
-            this.setState({gameModel: response.data, users: []});
+            this.setState({gameModel: response.data});
         }
         catch (error) {
             alert(`Something went wrong while fetching the game data: \n${handleError(error)}`);
@@ -163,14 +166,14 @@ class Game extends React.Component {
             timestamp.setSeconds(seconds);
             let gameModel = this.state.gameModel;
             gameModel.timestamp = timestamp;
-            this.state = {
+            this.setState( {
                 gameModel: gameModel
-            }
+            });
         }
 
         // reduce requests by only updating when new round/player has left
         if (prevState.gameModel !== null && this.state.gameModel.round == prevState.gameModel.round && this.state.gameModel.playerIds.length == prevState.gameModel.playerIds.length) {
-            this.setState({loaded: true, users: prevState.users});
+            this.setState({loaded: true});
             return;
         }
 
@@ -182,7 +185,7 @@ class Game extends React.Component {
                 if (userResponse.data.id == localStorage.getItem('userId')) {
                     this.setState({currentUser: userResponse.data});
                 }
-                if (userResponse.data.id == this.state.gameModel.activePlayerId) {
+                if (userResponse.data.id == this.state.gameModel.activePlayer) {
                     this.setState({activeUser: userResponse.data});
                 }
 
@@ -204,7 +207,7 @@ class Game extends React.Component {
 
 
     render() {
-
+        console.log(this.state);
         // delay until all the information is loaded
         if (!this.state.loaded) {
             return <Spinner />
@@ -233,15 +236,17 @@ class Game extends React.Component {
             }
         }
 
-        // index selected, but not confirmed
-        if (this.state.gameModel.gameStatus === "ACCEPT_REJECT") {
+        // index selected, but not confirmed by all
+        if (this.state.frontendGameStatus === "ACCEPT_REJECT_WORD") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
                 changingElements = <PleaseWait keyword={"Not all confirmations/rejections "} />
             }
             else {
                 changingElements = (
                     <React.Fragment>
-                        <MysteryWordContainer mysteryWord={this.state.gameModel.words[this.state.gameModel.wordIndex]} />
+                        <MysteryWordContainer
+                            mysteryWord={this.state.gameModel.words[this.state.gameModel.wordIndex]}
+                        />
                         <AcceptRejectButtons
                             gameId={this.state.gameModel.gameId}
                             wordIndex={this.state.gameModel.wordIndex}
@@ -251,12 +256,12 @@ class Game extends React.Component {
             }
         }
 
-
-        if (this.state.frontendGameStatus === "AWAITING_ACCEPT_REJECT") {
-            changingElements = <PleaseWait keyword={"Not all confirmations/rejections "} />
+        // index selected and confirmed by current user
+        if (this.state.frontendGameStatus === "THIS_USER_ACCEPTED_WORD") {
+            changingElements = <PleaseWait keyword={"You already accepted, but not all others have the confirmation/rejection "} />
         }
 
-        if (this.state.gameModel.gameStatus === "AWAITING_CLUES") {
+        if (this.state.frontendGameStatus == "AWAITING_CLUES") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
                 changingElements = <PleaseWait keyword="Clues are being "/>
             }
@@ -271,7 +276,7 @@ class Game extends React.Component {
             timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000}/>
         }
 
-        if (this.state.gameModel.gameStatus === "AWAITING_GUESS") {
+        if (this.state.frontendGameStatus == "AWAITING_GUESS") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
                 changingElements = (
                     <React.Fragment>
@@ -281,18 +286,17 @@ class Game extends React.Component {
                 );
             }
             else {
-                changingElements =
-                    (
-                        <React.Fragment>
-                            <CluesContainer style={{marginBottom: "5%"}} />
-                            <PleaseWait keyword="Guess is being "/>
-                        </React.Fragment>
-                    );
+                changingElements = (
+                    <React.Fragment>
+                        <CluesContainer style={{marginBottom: "5%"}} />
+                        <PleaseWait keyword="Guess is being "/>
+                    </React.Fragment>
+                );
             }
             timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000}/>
         }
 
-        if (this.state.gameModel.gameStatus === "TURN_FINISHED") {
+        if (this.state.frontendGameStatus == "TURN_FINISHED") {
             changingElements = (
                 <TurnEndScreen
                     correct={this.state.guessCorrect}
@@ -301,11 +305,12 @@ class Game extends React.Component {
             );
         }
 
-
-        if ((this.state.gameModel.gameStatus == "AWAITING_CLUES" && this.isActivePlayer(this.state.currentUser.id)) ||
-            (this.state.gameModel.gameStatus == "AWAITING_INDEX" && !this.isActivePlayer(this.state.currentUser.id)) ||
+        // TODO: Sometimes overlapped by info messages -> fix formatting?
+        if ((this.state.frontendGameStatus == "SELECT_INDEX" && !this.isActivePlayer(this.state.currentUser.id)) ||
+            (this.state.frontendGameStatus == "ACCEPT_REJECT_WORD" && this.isActivePlayer(this.state.currentUser.id)) ||
+            (this.state.gameModel.gameStatus == "AWAITING_CLUES" && this.isActivePlayer(this.state.currentUser.id)) ||
             (this.state.gameModel.gameStatus == "AWAITING_GUESS" && !this.isActivePlayer(this.state.currentUser.id)) ||
-            (this.state.gameModel.gameStatus == "TURN_ENDS")) {
+            (this.state.frontendGameStatus == "TURN_FINISHED")) {
             userElements = (
                 <UserGameContainer>
                     {this.state.users.map((user) => {
@@ -320,7 +325,9 @@ class Game extends React.Component {
                 </UserGameContainer>
             );
         }
-        else if (!this.state.gameModel.gameStatus == "AWAITING_GUESS" || !this.isActivePlayer(this.state.currentUser.id)) {
+
+        /*
+        else {
             userElements = (
                 <UserGameContainer style={{marginTop: "5%"}}>
                     <UserLayout
@@ -331,7 +338,7 @@ class Game extends React.Component {
                 </UserGameContainer>
             );
         }
-
+        */
 
         return (
             // Basic layout that is (nearly) the same in all game states.
