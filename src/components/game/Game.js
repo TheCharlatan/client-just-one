@@ -51,6 +51,22 @@ class Game extends React.Component {
         };
         this.messageBox = null; // In certain situations a message box is displayed for a few seconds for information purposes.
         this.updateGame = this.updateGame.bind(this);
+        this.startRound = this.startRound.bind(this);
+    }
+
+    async startRound()
+    {
+
+        try {
+            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            let requestBody = JSON.stringify({});
+            await api.put(`/game/${localStorage.getItem('gameId')}/turn`, requestBody,{headers: {'X-Auth-Token': requestHeader}});
+        }
+        catch (error) {
+            console.log(`An error occurred when submitting the clue: \n${handleError(error)}`);
+            return;
+        }
+        this.updateGame();
     }
 
 
@@ -62,11 +78,6 @@ class Game extends React.Component {
         await this.updateGameData();
 
         // TODO: Player has left (new number of players is lower than in prevState.gameModel) -> reset state.
-
-        // display the TurnEndScreen for at least 5s
-        if (prevState.frontendGameStatus === FrontendGameStates.TURN_FINISHED && Date.now() - this.state.lastTurnEndScreenDate <= 5000) {
-            return;
-        }
 
         if (this.state.gameModel.gameStatus === "AWAITING_INDEX") {
             if (this.state.gameModel.wordIndex == -1) {
@@ -92,9 +103,9 @@ class Game extends React.Component {
             this.setFrontendGameStatus("AWAITING_GUESS");
         }
 
-        if (prevState.gameModel.gameStatus === "AWAITING_GUESS" && this.state.gameModel.gameStatus === "AWAITING_INDEX") {
-            this.setFrontendGameStatus("TURN_FINISHED");
+        if (prevState.gameModel.gameStatus === "AWAITING_GUESS" && this.state.gameModel.gameStatus === "TURN_ENDS") {
 
+            this.setFrontendGameStatus("TURN_FINISHED");
             if (this.state.gameModel.wordsGuessedCorrect > prevState.gameModel.wordsGuessedCorrect) {
                 this.setState({ guessCorrect: 'correct' });
             }
@@ -104,11 +115,13 @@ class Game extends React.Component {
             else {
                 this.setState({ guessCorrect: 'skipped' }); // TODO: Currently skipped is counted as wrong on server side (status from 66. commit).
             }
-
             this.setState({ lastTurnEndScreenDate: Date.now() });
+            setTimeout(() => {
+                this.startRound() ;
+            }, 5000);
         }
 
-        if (this.state.gameModel.gameStatus === "GAME_OVER") {
+        if (prevState.gameModel.gameStatus === "TURN_ENDS" && this.state.gameModel.gameStatus === "GAME_OVER") {
             this.setFrontendGameStatus("GAME_OVER");
         }
     }
@@ -156,7 +169,9 @@ class Game extends React.Component {
 
         if (this.state.gameModel.timestamp !== null) {
             let gameModel = this.state.gameModel;
-            gameModel.timestamp = new Date(this.state.gameModel.timestamp);
+            //gameModel.timestamp = new Date(this.state.gameModel.timestamp);
+            var todayDate = new Date().toISOString().slice(0,10);
+            gameModel.timestamp = Date.parse(todayDate+"T"+"03:00:00");
             this.state = {
                 gameModel: gameModel
             }
@@ -164,19 +179,22 @@ class Game extends React.Component {
 
         // reduce requests by only updating when new round/player has left
         if (prevState.gameModel !== null && this.state.gameModel.round == prevState.gameModel.round && this.state.gameModel.playerIds.length == prevState.gameModel.playerIds.length) {
+            //alert(this.state.gameModel.gameStatus);
             this.setState({loaded: true, users: prevState.users});
             return;
+        }
+        else{
+            this.state.loaded = false;
         }
 
         try {
             let users = new Array();
             for (let i=0; i<response.data.playerIds.length; i++) {
-
                 let userResponse = await api.get('/user/' + response.data.playerIds[i], {headers: {'X-Auth-Token': requestHeader}});
                 if (userResponse.data.id == localStorage.getItem('userId')) {
                     this.setState({currentUser: userResponse.data});
                 }
-                if (userResponse.data.id == this.state.gameModel.activePlayerId) {
+                if (userResponse.data.id == this.state.gameModel.activePlayer) {
                     this.setState({activeUser: userResponse.data});
                 }
 
@@ -262,7 +280,7 @@ class Game extends React.Component {
                     </React.Fragment>
                 );
             }
-            timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000}/>
+            timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 60000}/>
         }
 
         if (this.state.gameModel.gameStatus === "AWAITING_GUESS") {
@@ -286,7 +304,7 @@ class Game extends React.Component {
             timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000}/>
         }
 
-        if (this.state.gameModel.gameStatus === "TURN_FINISHED") {
+        if (this.state.gameModel.gameStatus === "TURN_ENDS") {
             changingElements = (
                 <TurnEndScreen
                     correct={this.state.guessCorrect}
@@ -294,7 +312,6 @@ class Game extends React.Component {
                 />
             );
         }
-
 
         if ((this.state.gameModel.gameStatus == "AWAITING_CLUES" && this.isActivePlayer(this.state.currentUser.id)) ||
             (this.state.gameModel.gameStatus == "AWAITING_INDEX" && !this.isActivePlayer(this.state.currentUser.id)) ||

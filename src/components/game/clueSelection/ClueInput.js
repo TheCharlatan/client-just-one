@@ -33,7 +33,7 @@ export class ClueInput extends React.Component {
             console.log(`An error occurred when submitting the clue: \n${handleError(error)}`);
             return;
         }
-
+        this.setState({"clue":null});
         this.props.updateGame();
     }
 
@@ -51,7 +51,7 @@ export class ClueInput extends React.Component {
         }
 
         return (
-            <div style={{"marginTop": "-5%"}}>
+            <div style={{"marginTop": "2%", marginBottom :"5%"}}>
                 <InputClue
                     placeholder={this.state.placeholder}
                     onFocus={() => {this.handleInputChange('placeholder', '');}}
