@@ -22,17 +22,7 @@ export class TeamStats extends React.Component{
                 </Label>
                 <Label style={{background: 'white'}}>
                     <Blue style={{letterSpacing: '0.1em'}}>
-                        {this.props.gameModel.wordsGuessedCorrect}
-                    </Blue>
-                </Label>
-                <Label style={{background: '#F8E7D1'}}>
-                    <Green style={{letterSpacing: '0.1em'}}>
-                        Time For Clues
-                    </Green>
-                </Label>
-                <Label style={{background: 'white'}}>
-                    <Blue style={{letterSpacing: '0.1em'}}>
-                        x:xx
+                        {this.props.gameStats.wordsGuessedCorrect}
                     </Blue>
                 </Label>
             </StatsRow>
@@ -44,17 +34,7 @@ export class TeamStats extends React.Component{
                 </Label>
                 <Label style={{background: 'white'}}>
                     <Blue style={{letterSpacing: '0.1em'}}>
-                        {this.props.gameModel.wordsGuessedWrong}
-                    </Blue>
-                </Label>
-                <Label style={{background: '#F8E7D1'}}>
-                    <Green style={{letterSpacing: '0.1em'}}>
-                        Time For Guesses
-                    </Green>
-                </Label>
-                <Label style={{background: 'white'}}>
-                    <Blue style={{letterSpacing: '0.1em'}}>
-                        x:xx
+                        {this.props.gameStats.wordsGuessedWrong}
                     </Blue>
                 </Label>
             </StatsRow>
@@ -66,17 +46,7 @@ export class TeamStats extends React.Component{
                 </Label>
                 <Label style={{background: 'white'}}>
                     <Blue style={{letterSpacing: '0.1em'}}>
-                        xx
-                    </Blue>
-                </Label>
-                <Label style={{background: '#F8E7D1'}}>
-                    <Green style={{letterSpacing: '0.1em'}}>
-                        Total Time
-                    </Green>
-                </Label>
-                <Label style={{background: 'white'}}>
-                    <Blue style={{letterSpacing: '0.1em'}}>
-                        {this.props.gameModel.timeStamp}
+                        {13 - this.props.gameStats.wordsGuessedCorrect - this.props.gameStats.wordsGuessedWrong}
                     </Blue>
                 </Label>
             </StatsRow>
@@ -99,8 +69,81 @@ text-align: center;
 
 
 const StatsRow = styled.div`
-margin: 0px 50px;
+margin: 0px 200px;
 display: flex;
 flexDirection: row;
 justify-content: space-between;
 `;
+
+
+/*
+// Code for all stats (including times).
+<React.Fragment>
+            <StatsRow>
+                <Label style={{background: '#F8E7D1'}}>
+                    <Green style={{letterSpacing: '0.1em'}}>
+                        Correct
+                    </Green>
+                </Label>
+                <Label style={{background: 'white'}}>
+                    <Blue style={{letterSpacing: '0.1em'}}>
+                        {this.props.gameStats.wordsGuessedCorrect}
+                    </Blue>
+                </Label>
+                <Label style={{background: '#F8E7D1'}}>
+                    <Green style={{letterSpacing: '0.1em'}}>
+                        Time For Clues
+                    </Green>
+                </Label>
+                <Label style={{background: 'white'}}>
+                    <Blue style={{letterSpacing: '0.1em'}}>
+                        x:xx
+                    </Blue>
+                </Label>
+            </StatsRow>
+            <StatsRow>
+                <Label style={{background: '#F8E7D1'}}>
+                    <Green style={{letterSpacing: '0.1em'}}>
+                        Incorrect
+                    </Green>
+                </Label>
+                <Label style={{background: 'white'}}>
+                    <Blue style={{letterSpacing: '0.1em'}}>
+                        {this.props.gameStats.wordsGuessedWrong}
+                    </Blue>
+                </Label>
+                <Label style={{background: '#F8E7D1'}}>
+                    <Green style={{letterSpacing: '0.1em'}}>
+                        Time For Guesses
+                    </Green>
+                </Label>
+                <Label style={{background: 'white'}}>
+                    <Blue style={{letterSpacing: '0.1em'}}>
+                        x:xx
+                    </Blue>
+                </Label>
+            </StatsRow>
+            <StatsRow>
+                <Label style={{background: '#F8E7D1'}}>
+                    <Green style={{letterSpacing: '0.1em'}}>
+                        Skipped
+                    </Green>
+                </Label>
+                <Label style={{background: 'white'}}>
+                    <Blue style={{letterSpacing: '0.1em'}}>
+                        {13 - this.props.gameStats.wordsGuessedCorrect - this.props.gameStats.wordsGuessedWrong}
+                    </Blue>
+                </Label>
+                <Label style={{background: '#F8E7D1'}}>
+                    <Green style={{letterSpacing: '0.1em'}}>
+                        Total Time
+                    </Green>
+                </Label>
+                <Label style={{background: 'white'}}>
+                    <Blue style={{letterSpacing: '0.1em'}}>
+                        xx
+                    </Blue>
+                </Label>
+            </StatsRow>
+            </React.Fragment>
+ */

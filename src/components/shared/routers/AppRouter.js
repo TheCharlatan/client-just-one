@@ -1,6 +1,5 @@
 import React from "react";
 import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
-import GameRouter from "./GameRouter";
 import {LoginGuard} from "../routeProtectors/LoginGuard";
 import Login from "../../login/Login";
 import Lobby from "../../lobby/Lobby";
@@ -8,10 +7,11 @@ import {MainPageGuard} from "../routeProtectors/MainpageGuard";
 import MainPageRouter from "./MainPageRouter";
 import Registration from "../../registration/Registration";
 import Game from "../../game/Game";
-import {GameOverview} from "../../game/gameEnd/GameOverview";
 import {RegistrationGuard} from "../routeProtectors/RegistrationGuard";
 import {GameGuard} from "../routeProtectors/GameGuard";
 import {LobbyGuard} from "../routeProtectors/LobbyGuard";
+import {ProfileGuard} from "../routeProtectors/ProfileGuard";
+import {UserProfile} from "../../profile/UserProfile";
 import Tutorial from "../../Tutorial/Tutorial";
 
 /**
@@ -82,6 +82,16 @@ class AppRouter extends React.Component {
                         <Lobby />
                   </LobbyGuard>
               )}
+            />
+
+            <Route
+                path="/user/:userProfileId"
+                exact
+                render={(parentProps) =>
+                    <ProfileGuard>
+                        <UserProfile parentProps={parentProps}/>
+                    </ProfileGuard>
+                }
             />
 
             <Route path="/" exact render={() => <Redirect to={"/login"} />} />
