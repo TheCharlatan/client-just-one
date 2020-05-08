@@ -14,7 +14,6 @@ export class LeaderboardControls extends React.Component {
     }
 
     render() {
-
         return (
             <ControlsContainer>
                 <HiddenButton onClick={() => {this.props.orderFunction()}}>
@@ -27,12 +26,12 @@ export class LeaderboardControls extends React.Component {
                         </svg>
                     </div>
                 </HiddenButton>
-                <HiddenButton>
+                <HiddenButton onClick={() => {this.props.scrollToLeaderFunction()}}>
                     <Green>
                         Leader
                     </Green>
                 </HiddenButton>
-                <HiddenButton>
+                <HiddenButton onClick={() => {this.props.scrollToCurrentUserFunction()}}>
                     <Green>
                         Me
                     </Green>
