@@ -98,6 +98,7 @@ class Game extends React.Component {
             this.setFrontendGameStatus("TURN_FINISHED");
 
             // TODO: Screen for no valid clues.
+          
             if (this.state.gameModel.wordsGuessedCorrect > prevState.gameModel.wordsGuessedCorrect) {
                 this.setState({ guessCorrect: 'correct' });
             }
@@ -107,7 +108,6 @@ class Game extends React.Component {
             else {
                 this.setState({ guessCorrect: 'skipped' }); // TODO: Currently skipped is counted as wrong on server side (status from 66. commit).
             }
-
             this.setState({ lastTurnEndScreenDate: Date.now() });
         }
 
@@ -168,7 +168,7 @@ class Game extends React.Component {
             timestamp.setSeconds(seconds);
             let gameModel = this.state.gameModel;
             gameModel.timestamp = timestamp;
-            this.setState( {
+            this.setState({
                 gameModel: gameModel
             });
         }

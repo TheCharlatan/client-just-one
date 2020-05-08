@@ -18,13 +18,13 @@ export class TurnEndScreen extends React.Component {
         let message = null;
 
         if (this.props.correct == "correct") {
-            message = <Red>Hurray! {this.props.activeUser.name} guessed correctly.</Red>
+            message = <Red>Hurray! {this.props.activeUser.username} guessed correctly.</Red>
         }
         else if (this.props.correct == "wrong") {
-            message = <Blue>Ohh, {this.props.activeUser.name} guessed wrong.</Blue>
+            message = <Blue>Ohh, {this.props.activeUser.username} guessed wrong.</Blue>
         }
         else {
-            message = <Yellow>{this.props.activeUser.name} skipped the guess.</Yellow>
+            message = <Yellow>{this.props.activeUser.username} skipped the guess.</Yellow>
         }
 
         return (
