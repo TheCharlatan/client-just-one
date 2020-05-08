@@ -4,7 +4,7 @@ import {api, handleError} from "../../../helpers/api";
 import {Spinner} from "../../../views/design/Spinner";
 import {LeaderboardUserElement} from "./LeaderboardUserElement";
 import {LeaderboardThisUserElement} from "./LeaderboardThisUserElement";
-
+import {LeaderboardControls} from "./LeaderboardControls";
 
 
 class Leaderboard extends React.Component {
@@ -13,8 +13,10 @@ class Leaderboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            leaderboardData: []
+            leaderboardData: [],
+            orderedDescending: true
         }
+        this.orderLeaderboard = this.orderLeaderboard.bind(this);
     }
 
 
@@ -34,11 +36,23 @@ class Leaderboard extends React.Component {
     }
 
 
+    orderLeaderboard() {
+        let leaderboardCopy = this.state.leaderboardData;
+        if (!this.state.orderedDescending) {
+            leaderboardCopy.sort((user1, user2) => {return user2.score - user1.score;});
+        }
+        else {
+            leaderboardCopy.sort((user1, user2) => {return user1.score - user2.score;});
+        }
+        this.setState({leaderboardData: leaderboardCopy, orderedDescending: !this.state.orderedDescending});
+    }
+
+
     render() {
 
         return (
             <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-                <LeaderboardUsers>
+                <LeaderboardUsers style={{flex: 1, minHeight: '200px'}}>
                     {this.state.leaderboardData.map((user) => {
                         if (user.id == localStorage.getItem('userId')) {
                             return  <LeaderboardThisUserElement user={user} history={this.props.history}/>
@@ -46,9 +60,9 @@ class Leaderboard extends React.Component {
                         return <LeaderboardUserElement user={user} history={this.props.history}/>
                     })}
                 </LeaderboardUsers>
-                <LeaderboardControls>
-                    Placeholder
-                </LeaderboardControls>
+                <LeaderboardControls
+                    orderFunction={this.orderLeaderboard}
+                />
             </div>
         );
     }
@@ -66,7 +80,4 @@ border: 13px solid #DDC18E;
 boxSizing: border-box;
 boxShadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 overflow: auto;
-`;
-
-const LeaderboardControls = styled('div')`
 `;
