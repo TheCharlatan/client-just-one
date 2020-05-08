@@ -51,22 +51,6 @@ class Game extends React.Component {
         };
         this.messageBox = null; // In certain situations a message box is displayed for a few seconds for information purposes.
         this.updateGame = this.updateGame.bind(this);
-        this.startRound = this.startRound.bind(this);
-    }
-
-    async startRound()
-    {
-
-        try {
-            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            let requestBody = JSON.stringify({});
-            await api.put(`/game/${localStorage.getItem('gameId')}/turn`, requestBody,{headers: {'X-Auth-Token': requestHeader}});
-        }
-        catch (error) {
-            console.log(`An error occurred when submitting the clue: \n${handleError(error)}`);
-            return;
-        }
-        this.updateGame();
     }
 
 
@@ -125,12 +109,9 @@ class Game extends React.Component {
                 this.setState({ guessCorrect: 'skipped' }); // TODO: Currently skipped is counted as wrong on server side (status from 66. commit).
             }
             this.setState({ lastTurnEndScreenDate: Date.now() });
-            setTimeout(() => {
-                this.startRound() ;
-            }, 5000);
         }
 
-        if (prevState.gameModel.gameStatus === "TURN_ENDS" && this.state.gameModel.gameStatus === "GAME_OVER") {
+        if (this.state.gameModel.gameStatus === "GAME_OVER") {
             this.setFrontendGameStatus("GAME_OVER");
         }
     }
@@ -196,9 +177,6 @@ class Game extends React.Component {
         if (prevState.gameModel !== null && this.state.gameModel.round == prevState.gameModel.round && this.state.gameModel.playerIds.length == prevState.gameModel.playerIds.length) {
             this.setState({loaded: true});
             return;
-        }
-        else{
-            this.state.loaded = false;
         }
 
         try {
