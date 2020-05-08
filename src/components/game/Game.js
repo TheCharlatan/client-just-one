@@ -47,7 +47,7 @@ class Game extends React.Component {
             activeUser: null,
             frontendGameStatus: "SELECT_INDEX", // frontend status to allow more fine-grained control, uses ./shared/FrontendGameStates
             updateTimer: null, // Timer to periodically pull the newest game data and update the game state accordingly
-            lastTurnEndScreenDate: null, // when the last TurnEndScreen was opened
+            lastTurnEndScreenDate: 0, // when the last TurnEndScreen was opened
         };
         this.messageBox = null; // In certain situations a message box is displayed for a few seconds for information purposes.
         this.updateGame = this.updateGame.bind(this);
@@ -78,7 +78,7 @@ class Game extends React.Component {
         if (this.state.gameModel.gameStatus === "ACCEPT_REJECT") {
             if (this.state.gameModel.countAccept.includes(parseInt(localStorage.getItem('userId')))) {
                 this.setFrontendGameStatus("THIS_USER_ACCEPTED_WORD");
-            }else {
+            } else {
                 this.setFrontendGameStatus("ACCEPT_REJECT_WORD");
             }
         }
@@ -156,9 +156,6 @@ class Game extends React.Component {
             alert(`Something went wrong while fetching the game data: \n${handleError(error)}`);
             return;
         }
-        
-        console.log("Automatically parsed timestamp: " + this.state.gameModel.timestamp);
-        console.log("Raw data timestamp: " + responseTimestamp);
         
         if (this.state.gameModel.timestamp !== null) {
             let timestamp = new Date();
@@ -270,7 +267,7 @@ class Game extends React.Component {
             else {
                 changingElements = (
                     <React.Fragment>
-                        <ClueInput updateGame={this.updateGame} />
+                        <ClueInput updateGame={this.updateGame} twoCluesInput={this.state.users.length == 3} />
                         <MysteryWordContainer mysteryWord={this.state.gameModel.words[this.state.gameModel.wordIndex]} />
                     </React.Fragment>
                 );
