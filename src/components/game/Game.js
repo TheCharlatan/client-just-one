@@ -31,6 +31,7 @@ import {AcceptRejectButtons} from "./wordSelection/AcceptRejectButtons";
 import {FrontendGameStates} from "./shared/FrontendGameStates";
 import {NonInterferingMessageBox} from "./message/NonInterferingMessageBox";
 import {Timer} from "./shared/Timer";
+import AlertModal from "./shared/AlertModal";
 
 
 // The game component responsible for the conditional rendering.
@@ -48,11 +49,26 @@ class Game extends React.Component {
             frontendGameStatus: "SELECT_INDEX", // frontend status to allow more fine-grained control, uses ./shared/FrontendGameStates
             updateTimer: null, // Timer to periodically pull the newest game data and update the game state accordingly
             lastTurnEndScreenDate: null, // when the last TurnEndScreen was opened
+            show: false // modal window for alert when player closes the browser unexpectedly.
         };
         this.messageBox = null; // In certain situations a message box is displayed for a few seconds for information purposes.
         this.updateGame = this.updateGame.bind(this);
+        this.alert = null;
     }
 
+    //show the alert window
+    showModal() {
+        this.setState({
+            show: true,
+        });
+    }
+
+    //hide the alert window
+    hideModal() {
+        this.setState({
+            show: false,
+        });
+    }
 
     // update the game state based on newest game data
     async updateGame() {
@@ -62,6 +78,30 @@ class Game extends React.Component {
         await this.updateGameData();
 
         // TODO: Player has left (new number of players is lower than in prevState.gameModel) -> reset state.
+        if( prevState.gameModel.playerIds.length !== this.state.gameModel.playerIds.length )
+        {
+            var leftPlayerUserName = null;
+            // loop through previous array
+            for(var j = 0; j < prevState.state.gameModel.playerIds.length; j++) {
+                // look for same thing in new array
+                if (this.state.gameModel.playerIds.indexOf(prevState.gameModel.playerIds[j]) == -1)
+                    leftPlayerUserName = prevState.gameModel.playerIds[j].username;
+            }
+            if(this.state.gameModel.playerIds.length >=  3)
+            {
+                this.alert=(
+                    <AlertModal hideModal={this.hideModal} show={this.state.show}  message_1={`${leftPlayerUserName} left unexpectedly. `} message_2={`Game will continue in few seconds.`}/>
+                );
+                //todo let other players continue
+            }
+            else{
+                this.alert=(
+                    <AlertModal hideModal={this.hideModal} show={this.state.show} message_1={`${leftPlayerUserName} left unexpectedly. `} message_2={`Unfortunately game cannot be continued only with 2 players.. You will be redirected to the game overview soon`}/>
+                );
+            }
+            this.showModal();
+            setTimeout(function() { this.alert = null}, 5000);
+        }
 
         // display the TurnEndScreen for at least 5s
         if (prevState.frontendGameStatus == "TURN_FINISHED" && Date.now() - this.state.lastTurnEndScreenDate <= 5000) {
@@ -348,6 +388,7 @@ class Game extends React.Component {
                 {this.messageBox}
                 {timer}
                 <BaseContainerGame>
+                    {this.alert}
                     <GameInfoContainer>
                         <GameInfo>
                             <GameInfoLabel>

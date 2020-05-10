@@ -37,8 +37,8 @@ body::after{
   box-sizing: border-box;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   /* needed styles for the overlay */
-  z-index: 10; /* keep on top of other elements on the page */
-  outline: 9999px solid rgba(0,0,0,0.5);
+  z-index: 20; /* keep on top of other elements on the page */
+  outline: 9999px solid rgba(0,0,0,0.6);
 }
 
 .pull-right {
