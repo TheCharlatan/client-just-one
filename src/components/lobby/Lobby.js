@@ -112,7 +112,7 @@ export class Lobby extends React.Component {
     leaveLobby = async () => {
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
         await api.delete(`lobby/${localStorage.getItem('lobbyId')}`,
-            {headers: {'X-Auth-Token': requestHeader}, data: localStorage.getItem('userId')})
+            {headers: {'X-Auth-Token': requestHeader}, data: localStorage.getItem('userId'), params:{browserClose:false}})
             .then(r => {
                 localStorage.removeItem("lobbyId");
                 this.props.history.push(`/mainpage`);
