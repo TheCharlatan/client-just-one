@@ -4,6 +4,7 @@ import {Button} from "../../../views/design/Button";
 import Red from "../../../views/design/font-families/Red";
 import {api} from "../../../helpers/api";
 import {withRouter} from "react-router-dom";
+import LeaveBtn from "../../lobby/LeaveBtn";
 
 const FlexButton = styled(Button)`
   display: flex;
@@ -13,20 +14,25 @@ const FlexButton = styled(Button)`
 `;
 
 
-class FinishButton extends React.Component {
+class LeaveButton extends React.Component {
     constructor(props) {
         super(props);
     }
-    async leaveGame() {
+
+    leaveGame = async () => {
+        this.props.clearTimer();
         try {
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            let requestBody = localStorage.getItem('userId');
+            let requestBody =
+                JSON.stringify({
+                    'userId': localStorage.getItem("userId"),
+                    'browserClose':false,
+                    'lobbyId':localStorage.getItem("lobbyId")
+                });
             let gameId = localStorage.getItem('gameId');
             localStorage.removeItem("gameId");
-            await api.delete(`game/${gameId}`, {headers:{'X-Auth-Token': requestHeader}, data:requestBody});
-            clearTimeout(this.props.timerId);
-        }
-        catch {
+            await api.delete(`game/user/${gameId}`,  {headers: {'X-Auth-Token': requestHeader}, data: requestBody});
+        } catch {
             console.log("fail");
         }
     }
@@ -35,12 +41,12 @@ class FinishButton extends React.Component {
         return (
             <FlexButton
                 onClick={() => {
-                    this.leaveGame().then(r => this.props.history.push(`/lobby/${localStorage.getItem('lobbyId')}`));
+                    this.leaveGame().then(this.props.history.push(`/lobby/${localStorage.getItem('lobbyId')}`));
                 }}
             >
-                <Red>Finish</Red>
+                <Red>Leave Game</Red>
             </FlexButton>
         );
     }
 }
-export default withRouter (FinishButton);
+export default withRouter (LeaveButton);

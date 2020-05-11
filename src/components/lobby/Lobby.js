@@ -130,7 +130,7 @@ export class Lobby extends React.Component {
             const response = await api.get(`/user/${localStorage.getItem('userId')}`, {headers: {'X-Auth-Token': requestHeader}});
 
             if (response.data && response.data.gameId) {
-                localStorage.removeItem("lobbyId", response.data.gameId);
+                localStorage.setItem("gameId", response.data.gameId);
                 this.props.history.push(`/game/${response.data.gameId}`);
             }
         } catch (error) {
