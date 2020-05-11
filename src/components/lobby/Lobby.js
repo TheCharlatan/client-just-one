@@ -34,7 +34,7 @@ export class Lobby extends React.Component {
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
         this.startGame = this.startGame.bind(this);
-        this.updateLobby = this.updateLobby.bind(this);
+        this.updateLobby = this.updateLobby.bind(this); // TODO: Stop when player joins game.
         this.leaveLobby = this.leaveLobby.bind(this);
     }
 

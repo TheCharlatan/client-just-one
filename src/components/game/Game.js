@@ -83,21 +83,32 @@ class Game extends React.Component {
         if( prevState.gameModel.playerIds.length !== this.state.gameModel.playerIds.length )
         {
             clearInterval(this.updateTimer);
-            var leftPlayerUserId = null;
-            leftPlayerUserId = prevState.gameModel.playerIds.filter(n=>!this.state.gameModel.playerIds.includes(n))
-            if(leftPlayerUserId.length == 0)
-                return ;
+
+            let leftPlayerUserId = prevState.gameModel.playerIds.filter(n=>!this.state.gameModel.playerIds.includes(n))
+
+            if (leftPlayerUserId.length == 0) {
+                return;
+            }
+
             this.showModal();
 
-            if(this.state.gameModel.playerIds.length >=  3)
+            if (this.state.gameModel.playerIds.length >=  3)
             {
-                this.alert=(
-                    <AlertModal show={this.state.show}  message_1={`${leftPlayerUserId} left unexpectedly. `} message_2={`Game will continue in few seconds.`}/>
+                this.alert = (
+                    <AlertModal
+                        show={this.state.show}
+                        message_1={`${leftPlayerUserId} left unexpectedly. `}
+                        message_2={`The game will continue in a few seconds.`}
+                    />
                 );
             }
-            else{
+            else {
                 this.alert=(
-                    <AlertModal show={this.state.show} message_1={`${leftPlayerUserId} left unexpectedly. `} message_2={`Unfortunately game cannot be continued only with 2 players.. You will be redirected to the game overview soon`}/>
+                    <AlertModal
+                        show={this.state.show}
+                        message_1={`${leftPlayerUserId} left unexpectedly. `}
+                        message_2={`Unfortunately the game cannot be continued only with 2 players. You will be redirected to the game overview soon.`}
+                    />
                 );
             }
 
@@ -107,7 +118,7 @@ class Game extends React.Component {
                 this.setState({
                     updateTimer: setInterval(() => this.updateGame(), 200)
                 });
-            }, 120000);
+            }, 10000);
         }
 
         // display the TurnEndScreen for at least 5s
@@ -208,9 +219,6 @@ class Game extends React.Component {
             return;
         }
         
-        console.log("Automatically parsed timestamp: " + this.state.gameModel.timestamp);
-        console.log("Raw data timestamp: " + responseTimestamp);
-        
         if (this.state.gameModel.timestamp !== null) {
             let timestamp = new Date();
             let [hours, minutes, seconds] = responseTimestamp.split(":");
@@ -272,7 +280,7 @@ class Game extends React.Component {
         }
 
         // game has ended -> use separate screen
-        if (this.state.gameModel.gameStatus === "GAME_OVER" && !this.state.show) {
+        if (this.state.gameModel.gameStatus === "GAME_OVER") {
             return <GameOverview
                 gameModel={this.state.gameModel}
                 users={this.state.users}

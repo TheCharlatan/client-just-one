@@ -4,7 +4,6 @@ import {Button} from "../../../views/design/Button";
 import Red from "../../../views/design/font-families/Red";
 import {api} from "../../../helpers/api";
 import {withRouter} from "react-router-dom";
-import LeaveBtn from "../../lobby/LeaveBtn";
 
 const FlexButton = styled(Button)`
   display: flex;
@@ -15,11 +14,12 @@ const FlexButton = styled(Button)`
 
 
 class LeaveButton extends React.Component {
+
     constructor(props) {
         super(props);
     }
 
-    leaveGame = async () => {
+    async leaveGame() {
         this.props.clearTimer();
         try {
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
@@ -40,8 +40,9 @@ class LeaveButton extends React.Component {
     render() {
         return (
             <FlexButton
-                onClick={() => {
-                    this.leaveGame().then(this.props.history.push(`/lobby/${localStorage.getItem('lobbyId')}`));
+                onClick={async () => {
+                    await this.leaveGame();
+                    this.props.history.push(`/lobby/${localStorage.getItem('lobbyId')}`);
                 }}
             >
                 <Red>Leave Game</Red>
