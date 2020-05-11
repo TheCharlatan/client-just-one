@@ -73,7 +73,7 @@ export class MainPage extends React.Component {
                     <LogoutButton history={this.props.history}/>
                 </ TopLeftContainer>
                 <ChatContainer>
-                    <Chat/>
+                    <Chat chatEndpoint={'/chat'}/>
                 </ChatContainer>
                 <BottomLeftContainer>
                     <ChatButton/>
