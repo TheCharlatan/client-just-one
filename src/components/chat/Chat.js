@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {ChatMessage} from "./ChatMessage";
 import {api, handleError} from "../../helpers/api";
 import {Spinner} from "../../views/design/Spinner";
+import {ChatInput} from "./ChatInput";
 
 
 
@@ -75,9 +76,7 @@ class Chat extends React.Component {
                     <ChatMessage message={'Test'}/>
                     <ChatMessage message={'Test'}/>
                 </ChatMessages>
-                <div>
-                    TextInput
-                </div>
+                <ChatInput />
             </div>
         );
     }
