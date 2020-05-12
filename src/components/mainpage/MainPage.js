@@ -11,7 +11,7 @@ import {
 
 import { withRouter } from 'react-router-dom';
 import Chat from "../chat/Chat";
-import Leaderboard from "../leaderboard/Leaderboard";
+import Leaderboard from "./leaderboard/Leaderboard";
 import FormContainer from "../../views/design/customized-layouts/FormContainer";
 import Form from "../../views/design/customized-layouts/Form";
 import CreateLobbyButton from "./CreateLobbyButton"
@@ -95,7 +95,7 @@ export class MainPage extends React.Component {
                     <ProfileButton history={this.props.history}/>
                 </TopRightContainer>
                 <LeaderboardContainer>
-                    <Leaderboard/>
+                    <Leaderboard history={this.props.history}/>
                 </LeaderboardContainer>
             </BaseContainer>
         );

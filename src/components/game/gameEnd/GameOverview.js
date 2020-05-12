@@ -40,9 +40,10 @@ class GameOverview extends React.Component {
         let timer = setTimeout(() => {
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             let requestBody = localStorage.getItem('userId');
-            api.delete(`game/${localStorage.getItem('gameId')}`,
-                requestBody,
-                {headers:{'X-Auth-Token': requestHeader}})
+            let gameId = localStorage.getItem('gameId');
+            localStorage.removeItem("gameId");
+            api.delete(`game/${gameId}`,
+                {headers:{'X-Auth-Token': requestHeader},data:requestBody})
                 .then(r => this.props.history.push(`/lobby/${localStorage.getItem('lobbyId')}`));
         }, 20000);
 
