@@ -8,7 +8,8 @@ import {
     CardStacksContainer,
     ChangeElementContainer,
     GameInfoContainer,
-    UserGameContainer
+    GameUserLeftContainer,
+    GameUserRightContainer
 } from "./shared/layouts/GameLayout"
 import {GameInfo, GameInfoLabel, Info, InfoLabel} from "./shared/layouts/GameInfoStyle";
 import UserLayout from "./shared/layouts/UserLayout";
@@ -391,15 +392,24 @@ class Game extends React.Component {
             );
         }
 
-        // TODO: Sometimes overlapped by info messages -> fix formatting?
-        if ((this.state.frontendGameStatus == "SELECT_INDEX" && !this.isActivePlayer(this.state.currentUser.id)) ||
-            (this.state.frontendGameStatus == "ACCEPT_REJECT_WORD" && this.isActivePlayer(this.state.currentUser.id)) ||
-            (this.state.gameModel.gameStatus == "AWAITING_CLUES" && this.isActivePlayer(this.state.currentUser.id)) ||
-            (this.state.gameModel.gameStatus == "AWAITING_GUESS" && !this.isActivePlayer(this.state.currentUser.id)) ||
-            (this.state.frontendGameStatus == "TURN_FINISHED")) {
-            userElements = (
-                <UserGameContainer>
-                    {this.state.users.map((user) => {
+
+        // Code to display the users on left and right part of the game.
+        let usersOnLeft = [];
+        let usersOnRight = [];
+
+        for (let counter = 0; counter < this.state.users.length; ++counter) {
+            if (counter == 1 || counter == 3) { // less space on right -> display less users there
+                usersOnRight.push(this.state.users[counter]);
+            }
+            else {
+                usersOnLeft.push(this.state.users[counter])
+            }
+        }
+
+        userElements = (
+            <React.Fragment>
+                <GameUserLeftContainer>
+                    {usersOnLeft.map((user) => {
                         return (
                             <UserLayout
                                 user={user}
@@ -408,31 +418,29 @@ class Game extends React.Component {
                             />
                         );
                     })}
-                </UserGameContainer>
-            );
-        }
+                </GameUserLeftContainer>
+                <GameUserRightContainer>
+                    {usersOnRight.map((user) => {
+                        return (
+                            <UserLayout
+                                user={user}
+                                key={user.id}
+                                isActivePlayer={this.isActivePlayer(user.id)}
+                            />
+                        );
+                    })}
+                </GameUserRightContainer>
+            </React.Fragment>
+        );
 
-        /*
-        else {
-            userElements = (
-                <UserGameContainer style={{marginTop: "5%"}}>
-                    <UserLayout
-                        user={this.state.currentUser}
-                        key={this.state.currentUser.id}
-                        isActivePlayer={this.isActivePlayer(this.state.currentUser)}
-                    />
-                </UserGameContainer>
-            );
-        }
-        */
 
         return (
             // Basic layout that is (nearly) the same in all game states.
             <BaseContainerBody>
-                <LeaveButton clearTimer={this.clearTimer}/>
-                {this.state.messageBox}
-                {timer}
                 <BaseContainerGame>
+                    <LeaveButton clearTimer={this.clearTimer}/>
+                    {this.state.messageBox}
+                    {timer}
                     {this.alert}
                     <GameInfoContainer>
                         <GameInfo>
