@@ -72,6 +72,7 @@ class Game extends React.Component {
             show: false,
         });
     }
+
     // update the game state based on newest game data
     async updateGame() {
         this.messageBox = null;
@@ -200,7 +201,7 @@ class Game extends React.Component {
     async updateGameData() {
         if(!localStorage.getItem("gameId"))
         {
-            return
+            return;
         }
         const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
 
@@ -223,7 +224,7 @@ class Game extends React.Component {
             let timestamp = new Date();
             let [hours, minutes, seconds] = responseTimestamp.split(":");
             timestamp.setHours(hours);
-            timestamp.setMinutes(minutes + timestamp.getTimezoneOffset()); // assumes the responseTimestamp is in UTC
+            timestamp.setMinutes(parseInt(minutes) + (new Date().getTimezoneOffset())); // assumes the responseTimestamp is in UTC
             timestamp.setSeconds(seconds);
             let gameModel = this.state.gameModel;
             gameModel.timestamp = timestamp;
@@ -231,6 +232,8 @@ class Game extends React.Component {
                 gameModel: gameModel
             });
         }
+
+        console.log('responseTimestamp: ' + responseTimestamp + ', converted: ' + this.state.gameModel.timestamp);
 
         // reduce requests by only updating when new round/player has left
         if (prevState.gameModel !== null && this.state.gameModel.round == prevState.gameModel.round && this.state.gameModel.playerIds.length == prevState.gameModel.playerIds.length) {
@@ -339,7 +342,16 @@ class Game extends React.Component {
                     </React.Fragment>
                 );
             }
-            timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000} key={"CluesTimer"}/>
+            timer = <Timer
+                startTime={this.state.gameModel.timestamp - Date.now() + 30000}
+                onTimerFinished={() => {
+                    // TODO: Handle two clues (3 players total).
+                    let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+                    let requestBody = JSON.stringify({ clue: null });
+                    api.put(`/game/${localStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+                }}
+                key={"CluesTimer"}
+            />
         }
 
         if (this.state.frontendGameStatus == "AWAITING_GUESS") {
@@ -359,7 +371,16 @@ class Game extends React.Component {
                     </React.Fragment>
                 );
             }
-            timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000} key={"GuessTimer"}/>
+            timer = <Timer
+                startTime={this.state.gameModel.timestamp - Date.now() + 30000}
+                onTimerFinished={() => {
+                    // TODO: Handle two clues (3 players total).
+                    let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+                    let requestBody = JSON.stringify({ guess: null, wordIndex: this.props.gameModel.wordIndex});
+                    api.put(`/game/${localStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+                }}
+                key={"GuessTimer"}
+            />
         }
 
         if (this.state.frontendGameStatus == "TURN_FINISHED") {
