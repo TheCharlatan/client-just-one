@@ -50,9 +50,9 @@ class Game extends React.Component {
             frontendGameStatus: "SELECT_INDEX", // frontend status to allow more fine-grained control, uses ./shared/FrontendGameStates
             updateTimer: null, // Timer to periodically pull the newest game data and update the game state accordingly
             lastTurnEndScreenDate: null, // when the last TurnEndScreen was opened
-            show: false // modal window for alert when player closes the browser unexpectedly.
+            show: false, // modal window for alert when player closes the browser unexpectedly.
+            messageBox: null // In certain situations a message box is displayed for a few seconds for information purposes.
         };
-        this.messageBox = null; // In certain situations a message box is displayed for a few seconds for information purposes.
         this.updateGame = this.updateGame.bind(this);
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
@@ -75,13 +75,14 @@ class Game extends React.Component {
 
     // update the game state based on newest game data
     async updateGame() {
-        this.messageBox = null;
 
         const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
         await this.updateGameData();
 
+        this.setState({messageBox: null});
+
         // TODO: Player has left (new number of players is lower than in prevState.gameModel) -> reset state.
-        if( prevState.gameModel.playerIds.length !== this.state.gameModel.playerIds.length )
+        if (prevState.gameModel.playerIds.length !== this.state.gameModel.playerIds.length)
         {
             clearInterval(this.updateTimer);
 
@@ -130,7 +131,7 @@ class Game extends React.Component {
         if (this.state.gameModel.gameStatus === "AWAITING_INDEX") {
             this.setFrontendGameStatus("SELECT_INDEX");
             if (this.state.gameModel.cardStatus === "USER_REJECTED_WORD") {
-                this.messageBox = <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was rejected."} />; // Inform all players that the word was rejected.
+                this.setState({messageBox: <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was rejected."} />}); // Inform all players that the word was rejected.
             }
         }
 
@@ -145,7 +146,7 @@ class Game extends React.Component {
         if (this.state.gameModel.gameStatus === "AWAITING_CLUES") {
             this.setFrontendGameStatus("AWAITING_CLUES");
             if (prevState.gameModel.gameStatus === "ACCEPT_REJECT") {
-                this.messageBox = <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was accepted."} />; // Inform all players that the word was accepted.
+                this.setState({messageBox: <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was accepted."} />}); // Inform all players that the word was accepted.
             }
         }
 
@@ -232,8 +233,6 @@ class Game extends React.Component {
                 gameModel: gameModel
             });
         }
-
-        console.log('responseTimestamp: ' + responseTimestamp + ', converted: ' + this.state.gameModel.timestamp);
 
         // reduce requests by only updating when new round/player has left
         if (prevState.gameModel !== null && this.state.gameModel.round == prevState.gameModel.round && this.state.gameModel.playerIds.length == prevState.gameModel.playerIds.length) {
@@ -431,7 +430,7 @@ class Game extends React.Component {
             // Basic layout that is (nearly) the same in all game states.
             <BaseContainerBody>
                 <LeaveButton clearTimer={this.clearTimer}/>
-                {this.messageBox}
+                {this.state.messageBox}
                 {timer}
                 <BaseContainerGame>
                     {this.alert}
