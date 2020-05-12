@@ -14,12 +14,26 @@ class Chat extends React.Component {
         super(props);
         this.state = {
             messages: [],
-            loaded: false
+            loaded: false,
+            loadMessagesTimer: null
         }
+        this.loadChatMessages = this.loadChatMessages.bind(this);
     }
 
 
     async componentDidMount() {
+        await this.loadChatMessages();
+
+        let timer = setInterval(this.loadChatMessages, 1000);
+        this.setState({loadMessagesTimer: timer});
+
+        // scroll to bottom of chat
+        let chatElement = document.getElementById('chatMessagesContainer');
+        chatElement.scrollTop = chatElement.scrollHeight;
+    }
+
+
+    async loadChatMessages() {
         try {
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             let response = await api.get(`${this.props.chatEndpoint}`, {headers: {'X-Auth-Token': requestHeader}});
@@ -43,40 +57,12 @@ class Chat extends React.Component {
 
         return (
             <div style={{display: 'flex', flexDirection: 'column', height: "100%", background: "#FFFFFF",  border: "8px solid #DDC18E", borderTop: "none", borderBottom: "none"}}>
-                <ChatMessages style={{flex: 1, minHeight: '200px'}}>
+                <ChatMessages id={'chatMessagesContainer'}>
                     {this.state.messages.map((messageObject) => {
                         return <ChatMessage message={messageObject.message} username={messageObject.username}/>
                     })}
-                    <ChatMessage message={'TestTestTestTestTestTest TestTestTestTestTestTestTestTest'}/>
-                    <ChatMessage message={'Test'} username={'user'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'TestTestTestTestTestTest TestTestTestTestTestTestTestTest'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'TestTestTestTestTestTest TestTestTestTestTestTestTestTest'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'TestTestTestTestTestTest TestTestTestTestTestTestTestTest'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'TestTestTestTestTestTest TestTestTestTestTestTestTestTest'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'TestTestTestTestTestTest TestTestTestTestTestTestTestTest'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'TestTestTestTestTestTest TestTestTestTestTestTestTestTest'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'Test'}/>
-                    <ChatMessage message={'Test'}/>
                 </ChatMessages>
-                <ChatInput />
+                <ChatInput chatEndpoint={this.props.chatEndpoint}/>
             </div>
         );
     }
@@ -88,8 +74,9 @@ export default Chat;
 
 
 const ChatMessages = styled('div')`
-margin-bottom: auto;
+flex: 1;
 flex-direction: column;
+margin-bottom: auto;
 background: white;
 border: 13px solid #DDC18E;
 boxSizing: border-box;

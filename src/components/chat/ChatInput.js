@@ -1,23 +1,23 @@
 import React from 'react';
 import {api, handleError} from "../../helpers/api";
 import styled from "styled-components";
-import InputField from "../../views/design/customized-layouts/InputField";
 import {Button} from "../../views/design/Button";
 
 
-export function ChatInput(chatEndpoint) {
+export function ChatInput(props) {
     return (
-        <div>
-            <input
-                style={{border: '4px solid #F8E7D1', boxSizing: 'border-box', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}
-                placeholder={'...'}
+        <div style={{display: 'flex', flexDirection: 'row'}}>
+            <textarea
+                style={{flex: 1, border: '4px solid #F8E7D1', boxSizing: 'border-box', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'}}
+                placeholder={'Enter your chat message...'}
                 id={'chatInput'}
-            />
+            >
+            </textarea>
             <SubmitButton
                 onClick={
                     async () => {
                         let message = document.getElementById('chatInput').value;
-                        await submitMessage(chatEndpoint, message);
+                        await submitMessage(props.chatEndpoint, message);
                     }
                 }
             >
@@ -39,6 +39,7 @@ async function submitMessage(chatEndpoint, message) {
     try {
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
         await api.put(`${chatEndpoint}`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+        document.getElementById('chatInput').value = ''; // clear message after successful submission
     }
     catch (error) {
         alert(`An error occurred when retrieving chat messages: ${handleError(error)}`);
