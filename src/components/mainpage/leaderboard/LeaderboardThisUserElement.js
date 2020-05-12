@@ -30,7 +30,7 @@ const UserElement = styled('div')`
 display: flex;
 flexDirection: row;
 background: #F8E7D1;
-border: 6px solid #DDC18E;
+border: 6px solid rgba(240, 0, 0, 0.8);
 boxSizing: border-box;
 boxShadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
