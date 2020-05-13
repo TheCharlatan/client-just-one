@@ -30,6 +30,7 @@ export class Lobby extends React.Component {
             users: [],
             loaded: false,
             updateTimer: null,
+            asyncCounter: 0,
         };
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
@@ -85,7 +86,9 @@ export class Lobby extends React.Component {
             alert(`Something went wrong while fetching the users: ${error}`);
         }
         this.setState({loaded: true});
-        this.setState({updateTimer: setInterval(() => this.updateLobby(), 500)})
+        api.post(`/lobbypoll/${localStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
+        this.updateLobby()
+        this.setState({updateTimer: setInterval(() => this.updateLobby(), 1000)})
     }
 
     async startGame() {
@@ -111,6 +114,9 @@ export class Lobby extends React.Component {
 
     leaveLobby = async () => {
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+        api.delete(`lobby/${localStorage.getItem('lobbyId')}`,
+            {headers: {'X-Auth-Token': localStorage.getItem('token')}})
+
         await api.delete(`lobby/${localStorage.getItem('lobbyId')}`,
             {headers: {'X-Auth-Token': requestHeader}, data: localStorage.getItem('userId'), params:{browserClose:false}})
             .then(r => {
@@ -121,6 +127,13 @@ export class Lobby extends React.Component {
     }
 
     async updateLobby() {
+        // This asyncCounter makes sure there is only one asynchronous instance of this function running at a time.
+        // It is in effect a function mutex
+        if(this.state.asyncCounter > 0) {
+            return;
+        }
+        // set the asyncCounter, don't forget to reset in the return scenarios.
+        this.setState({asyncCounter: 1});
         if(!localStorage.getItem("lobbyId")){
             return;
         }
@@ -135,14 +148,13 @@ export class Lobby extends React.Component {
             }
         } catch (error) {
             alert(`An error occurred when starting a new game: ${handleError(error)}`);
-
         }
 
-
         try {
-            const response = await api.get(`/lobby/${localStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
+            const response = await api.get(`/lobbypoll/${localStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
             if (response.data == null) {
-                alert("Unexpected error");
+                this.setState({asyncCounter: 0});
+                this.updateLobby();
                 return;
             }
             if (response.data.playerIds && response.data.playerIds.length > 0) {
@@ -151,23 +163,26 @@ export class Lobby extends React.Component {
                 })
             }
         } catch (error) {
-            alert(`An error occurred when retrieving lobby players: ${error}`);
+            // just continue, this is usually the timeout error. Serious errors (like the server being down) are caught by the other api calls in this function)
+            this.setState({asyncCounter: 0});
+            this.updateLobby();
             return;
         }
         // get the users to show them in the lobby
         try {
+            let users = []
             for (let i = 0; i < this.state.playerIds.length; i++) {
                 const responseUser = await api.get(`/user/${this.state.playerIds[i]}`, {headers: {'X-Auth-Token': requestHeader}});
                 //make a new field which indicates if the user is the host or not
                 responseUser.data.isHost = responseUser.data.id === this.state.hostPlayerId;
-                this.state.users[i] = responseUser.data;
+                users.push(responseUser.data)
+                //this.state.users[i] = responseUser.data;
             }
+            this.setState({users: users})
         } catch (error) {
             alert(`Something went wrong while fetching the users: ${error}`);
         }
-        //this.setState({updateTimer: setInterval(() => this.updateLobby(), 500)})
-
-
+        this.setState({asyncCounter: 0});
     }
 
     componentWillUnmount() {
