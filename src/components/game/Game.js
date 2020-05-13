@@ -50,7 +50,9 @@ class Game extends React.Component {
             frontendGameStatus: "SELECT_INDEX", // frontend status to allow more fine-grained control, uses ./shared/FrontendGameStates
             updateTimer: null, // Timer to periodically pull the newest game data and update the game state accordingly
             lastTurnEndScreenDate: null, // when the last TurnEndScreen was opened
-            show: false // modal window for alert when player closes the browser unexpectedly.
+            show: false, // modal window for alert when player closes the browser unexpectedly.
+            asyncCounter: 0, // function mutex for updateGame
+            setup: false //tracks if the data has been fetched at least once
         };
         this.messageBox = null; // In certain situations a message box is displayed for a few seconds for information purposes.
         this.updateGame = this.updateGame.bind(this);
@@ -74,6 +76,10 @@ class Game extends React.Component {
     }
     // update the game state based on newest game data
     async updateGame() {
+        if (this.state.asyncCounter > 0) {
+            return
+        }
+        this.setState({asyncCounter: 1})
         this.messageBox = null;
 
         const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
@@ -115,9 +121,9 @@ class Game extends React.Component {
             setTimeout(() => {
                 this.hideModal();
                 this.alert = null;
-                this.setState({
-                    updateTimer: setInterval(() => this.updateGame(), 200)
-                });
+                //this.setState({
+                //    updateTimer: setInterval(() => this.updateGame(), 200)
+                //});
             }, 10000);
         }
 
@@ -185,6 +191,8 @@ class Game extends React.Component {
 
 
     async componentDidMount() {
+        let requestHeader = localStorage.getItem('token');
+        await api.post(`/gamepoll/${localStorage.getItem('gameId')}`);
         await this.updateGameData();
         this.setState({
             updateTimer: setInterval(() => this.updateGame(), 200)
@@ -193,11 +201,18 @@ class Game extends React.Component {
 
 
     componentWillUnmount() {
+        let requestHeader = localStorage.getItem('token');
         clearInterval(this.updateTimer);
+        api.delete(`/gamepoll/${localStorage.getItem('gameId')}`, {headers: {'X-Auth-Token': requestHeader}});
     }
 
 
     async updateGameData() {
+        if (this.state.asyncCounter > 0) {
+            return
+        }
+        this.setState({asyncCounter: 1})
+
         if(!localStorage.getItem("gameId"))
         {
             return
@@ -208,16 +223,26 @@ class Game extends React.Component {
         let responseTimestamp = null;
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
 
+
         try {
             let gameId = localStorage.getItem("gameId");
-            response = await api.get(`/game/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
+            if (this.state.setup) {
+                response = await api.get(`/gamepoll/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
+            } else {
+                response = await api.get(`/game/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
+                this.setState({setup: true})
+            }
+
             responseTimestamp = response.data.timestamp; // save timestamp before (incorrect) automatic conversion
             this.setState({gameModel: response.data});
         }
         catch (error) {
-            alert(`Something went wrong while fetching the game data: \n${handleError(error)}`);
+            //alert(`Something went wrong while fetching the game data: \n${handleError(error)}`);
+            this.setState({asyncCounter: 0});
+            this.updateGameData();
             return;
         }
+        this.setState({asyncCounter: 0});
         
         if (this.state.gameModel.timestamp !== null) {
             let timestamp = new Date();
