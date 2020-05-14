@@ -20,6 +20,7 @@ import toBinary from "./toBinary";
 const FormContainerLogin = styled(FormContainer)`
 margin-top: 20%;
 height: 315px;
+line-height: 0px;
 
 `;
 
@@ -30,9 +31,9 @@ const FormLogin = styled(Form)`
 `;
 
 const InputFieldLogin = styled(InputField)`
-font-family: fantasy;
+font-family: helvetica;
 font-style: normal;
-font-weight: normal;
+font-weight: 900;
 font-size: 18px;
 letter-spacing: 0.41em;
 color: #FF369D;
@@ -40,9 +41,9 @@ text-stroke: 2px #DE1E80;
 -webkit-text-stroke: 2px #DE1E80;
 
 &::placeholder {
-    font-family: fantasy;
+    font-family: helvetica;
     font-style: normal;
-    font-weight: normal;
+    font-weight: 900;
     font-size: 18px;
     letter-spacing: 0.41em;
     color: #FF369D;

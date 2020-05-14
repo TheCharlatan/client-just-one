@@ -28,6 +28,10 @@ height: 37px;
 
 text-align:center;
 
+display: flex;
+align-items: center;
+justify-content: center;
+
 background: #FFFFFF;
 border: 5px solid #DDC18E;
 box-sizing: border-box;

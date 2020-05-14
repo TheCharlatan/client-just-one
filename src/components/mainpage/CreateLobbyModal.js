@@ -70,7 +70,7 @@ export class CreateLobbyModal extends React.Component {
     return (
       <div className="modal" >
         <div className="pull-right" style={{ width: "100%" }}>
-          <Label className="modal-label">
+          <Label className="modal-label" style={{width: "auto", lineHeight: "0px"}}>
             <Violet>Lobby Name</Violet>
           </Label>
           <InputFieldCreateLobby className="modal-input" onChange={e => {
@@ -97,14 +97,16 @@ export class CreateLobbyModal extends React.Component {
 }
 
 const InputFieldCreateLobby = styled(InputField)`
-font-family: fantasy;
+font-family: helvetica;
 font-style: normal;
-font-weight: normal;
+font-weight: 900;
 font-size: 18px;
 letter-spacing: 0.41em;
 color: #82278E;
 text-stroke: 2px #710070;
 -webkit-text-stroke: 2px #710070;
+
+text-transform: uppercase;
 `;
 
 export default withRouter(CreateLobbyModal);

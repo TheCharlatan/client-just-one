@@ -17,11 +17,12 @@ export class PleaseWait extends React.Component {
             <FormContainer
                 style={{
                     minHeight: "0",
-                    width: "100%"
+                    width: "60%",
+                    marginTop: "15%",
                 }}
             >
-                <Form style={{ width: "auto", height: "auto" ,borderWidth:"3px", marginTop:"10%"}}>
-                    <Green>Please Wait. {this.props.keyword} entered.</Green>
+                <Form style={{ width: "auto", height: "auto" ,borderWidth:"3px"}}>
+                    <Green> Please Wait. {this.props.keyword} entered. </Green>
                 </Form>
             </FormContainer>
         );

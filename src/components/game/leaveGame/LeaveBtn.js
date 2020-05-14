@@ -7,9 +7,11 @@ import {withRouter} from "react-router-dom";
 
 const FlexButton = styled(Button)`
   display: flex;
+  align-items: center;
   justify-content: center;
   margin: 10px;
   width: 267px;
+  
 `;
 
 

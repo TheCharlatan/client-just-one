@@ -86,7 +86,7 @@ export default class InviteModal extends React.Component {
                     return (
                         <React.Fragment>
                             <div className="pull-right" obj={user} key={index} id={user.id}
-                                 style={{width: "100%", marginBottom: '5%', marginTop: '2%'}}>
+                                 style={{width: "100%", marginBottom: '5%', marginTop: '2%', lineHeight: "0px"}}>
                                 <Label className="modal-label" key={"label"+user.id} style={{height: "45px"}}>
                                     <Blue key={"blue"+user.id}>{user.username}</Blue>
                                 </Label>

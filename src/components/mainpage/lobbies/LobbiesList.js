@@ -65,6 +65,7 @@ justify-content: center;
   
 background: #F8E7D1;
 box-sizing: border-box;
+line-height: 0px;
 `;
 
 let LobbyContainer = styled.div`
