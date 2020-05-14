@@ -27,8 +27,8 @@ class GameOverview extends React.Component {
     async componentDidMount() {
 
         try {
-            let gameId = localStorage.getItem("gameId");
-            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            let gameId = sessionStorage.getItem("gameId");
+            let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             let response = await api.get(`/game/stat/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
             this.setState({gameStats: response.data});
         }
@@ -38,13 +38,13 @@ class GameOverview extends React.Component {
 
         // setup redirect timer
         let timer = setTimeout(() => {
-            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            let requestBody = localStorage.getItem('userId');
-            let gameId = localStorage.getItem('gameId');
-            localStorage.removeItem("gameId");
+            let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
+            let requestBody = sessionStorage.getItem('userId');
+            let gameId = sessionStorage.getItem('gameId');
+            sessionStorage.removeItem("gameId");
             api.delete(`game/${gameId}`,
                 {headers:{'X-Auth-Token': requestHeader},data:requestBody})
-                .then(r => this.props.history.push(`/lobby/${localStorage.getItem('lobbyId')}`));
+                .then(r => this.props.history.push(`/lobby/${sessionStorage.getItem('lobbyId')}`));
         }, 20000);
 
         this.setState({redirectToLobbyTimer: timer});

@@ -20,7 +20,7 @@ export class CreateLobbyModal extends React.Component {
 
   async createLobby()
   {
-    const userId = localStorage.getItem('userId');
+    const userId = sessionStorage.getItem('userId');
     const requestBody = JSON.stringify({
       name: this.state.lobbyname,
       hostPlayerId : userId
@@ -29,7 +29,7 @@ export class CreateLobbyModal extends React.Component {
     let response = null;
 
     try {
-      requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+      requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
       response = await api.post('/lobby', requestBody, {headers: {'X-Auth-Token': requestHeader}});
       if(response.status)
       this.props.hideModal();
@@ -40,14 +40,14 @@ export class CreateLobbyModal extends React.Component {
     }
 
     try {
-      requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-      // TODO: Replace userId with name of user id (if stored in localStorage).
-      response = await api.get(`/user/${localStorage.getItem('userId')}`, {headers: {'X-Auth-Token': requestHeader}});
+      requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
+      // TODO: Replace userId with name of user id (if stored in sessionStorage).
+      response = await api.get(`/user/${sessionStorage.getItem('userId')}`, {headers: {'X-Auth-Token': requestHeader}});
     }
     catch {
       console.log("Ooops 2");
     }
-    localStorage.setItem("lobbyId",response.data.lobbyId);
+    sessionStorage.setItem("lobbyId",response.data.lobbyId);
     this.props.history.push(`/lobby/${response.data.lobbyId}`);
   }
 

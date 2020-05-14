@@ -25,9 +25,9 @@ export class ClueInput extends React.Component {
     async handleClue(clue) {
 
         try {
-            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             let requestBody = JSON.stringify({ clue: clue });
-            await api.put(`/game/${localStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+            await api.put(`/game/${sessionStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
         }
         catch (error) {
             console.log(`An error occurred when submitting the clue: \n${handleError(error)}`);

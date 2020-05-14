@@ -60,7 +60,7 @@ class Leaderboard extends React.Component {
     async componentDidMount() {
 
         try {
-            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             let response = await api.get(`/user/scoreboard`, {headers: {'X-Auth-Token': requestHeader}});
             this.setState({
                 leaderboardUsers: response.data
@@ -95,7 +95,7 @@ class Leaderboard extends React.Component {
     }
 
     scrollLeaderboardToCurrentUser() {
-        let index = this.state.leaderboardUsers.findIndex((user) => {return user.id == localStorage.getItem('userId')});
+        let index = this.state.leaderboardUsers.findIndex((user) => {return user.id == sessionStorage.getItem('userId')});
         this.scrollLeaderboardToPosition(index);
     }
 
@@ -114,7 +114,7 @@ class Leaderboard extends React.Component {
             <div style={{display: 'flex', flexDirection: 'column', height: '100%'}} id={'leaderboard'}>
                 <LeaderboardUsers style={{flex: 1, minHeight: '200px'}} id={'leaderboardUsers'}>
                     {this.state.leaderboardUsers.map((user) => {
-                        if (user.id == localStorage.getItem('userId')) {
+                        if (user.id == sessionStorage.getItem('userId')) {
                             return  <LeaderboardThisUserElement user={user} history={this.props.history}/>
                         }
                         return <LeaderboardUserElement user={user} history={this.props.history}/>

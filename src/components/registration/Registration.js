@@ -172,7 +172,7 @@ class Registration extends React.Component {
     /**
      * HTTP POST request is sent to the backend.
      * If the request is successful, a new user is returned to the front-end
-     * and its token is stored in the localStorage.
+     * and its token is stored in the sessionStorage.
      */
     async register() {
         try {

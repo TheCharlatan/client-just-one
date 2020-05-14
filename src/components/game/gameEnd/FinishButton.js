@@ -19,10 +19,10 @@ class FinishButton extends React.Component {
     }
     async leaveGame() {
         try {
-            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            let requestBody = localStorage.getItem('userId');
-            let gameId = localStorage.getItem('gameId');
-            localStorage.removeItem("gameId");
+            let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
+            let requestBody = sessionStorage.getItem('userId');
+            let gameId = sessionStorage.getItem('gameId');
+            sessionStorage.removeItem("gameId");
             await api.delete(`game/${gameId}`, {headers:{'X-Auth-Token': requestHeader}, data:requestBody});
             clearTimeout(this.props.timerId);
         }
@@ -35,7 +35,7 @@ class FinishButton extends React.Component {
         return (
             <FlexButton
                 onClick={() => {
-                    this.leaveGame().then(r => this.props.history.push(`/lobby/${localStorage.getItem('lobbyId')}`));
+                    this.leaveGame().then(r => this.props.history.push(`/lobby/${sessionStorage.getItem('lobbyId')}`));
                 }}
             >
                 <Red>Finish</Red>

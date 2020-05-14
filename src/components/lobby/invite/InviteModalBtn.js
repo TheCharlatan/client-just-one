@@ -19,13 +19,13 @@ export default class InviteModalBtn extends React.Component {
     async inviteFriend() {
 //TODO toggle commit
         let requestHeader = null;
-        const lobbyId = localStorage.getItem("lobbyId");
+        const lobbyId = sessionStorage.getItem("lobbyId");
 
         const requestBody = JSON.stringify({
             invitation:lobbyId
         });
         try {
-            requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             await api.put(`/user/${this.state.friendId}/invitation`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
         } catch {
             console.log("invite friend unexpected error");

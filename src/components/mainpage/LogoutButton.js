@@ -14,7 +14,7 @@ const FlexButton = styled(Button)`
 
 async function logout(token, userId) {
     await api.put(`/user/${userId}/logout`, 0,{headers: {'X-Auth-Token': token}});
-    localStorage.clear();
+    sessionStorage.clear();
 }
 
 
@@ -26,7 +26,7 @@ export class LogoutButton extends React.Component {
             <FlexButton
                 onClick={() => {
                     // log user out (and redirect to login)
-                    logout(localStorage.getItem("token"), localStorage.getItem("userId")).then(r => {
+                    logout(sessionStorage.getItem("token"), sessionStorage.getItem("userId")).then(r => {
                         this.props.history.push("/login")
                     });
                 }}>

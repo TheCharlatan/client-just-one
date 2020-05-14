@@ -93,7 +93,7 @@ class Login extends React.Component {
   /**
    * HTTP POST request is sent to the backend.
    * If the request is successful, a new user is returned to the front-end
-   * and its token is stored in the localStorage.
+   * and its token is stored in the sessionStorage.
    */
   async login() {
     try {
@@ -106,10 +106,10 @@ class Login extends React.Component {
       // Get the returned user and update a new object.
       const token = new Token(response.data);
       
-
+      
       // Store the token into the local storage.
-      localStorage.setItem('token', token.token);
-      localStorage.setItem('userId', token.id);
+      sessionStorage.setItem('token', token.token);
+      sessionStorage.setItem('userId', token.id);
 
       // Login successfully worked --> navigate to the route /game in the GameRouter
       this.props.history.push(`/mainpage`);

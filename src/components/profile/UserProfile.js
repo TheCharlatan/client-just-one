@@ -43,7 +43,7 @@ export class UserProfile extends React.Component {
         let userData = null;
 
         try {
-            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             let response = await api.get(`/user/${userProfileId}`, {headers: {'X-Auth-Token': requestHeader}});
             userData = response.data;
         }
@@ -114,12 +114,12 @@ export class UserProfile extends React.Component {
         }
 
         let button = null;
-        if (localStorage.getItem("userId") == this.state.userData.id) {
+        if (sessionStorage.getItem("userId") == this.state.userData.id) {
             button = (
                 <ButtonContainer>
                 <EditButton
                     width="50%"
-                    onClick={() => {this.props.parentProps.history.push(`/user/${localStorage.getItem('userId')}/edit`);}}
+                    onClick={() => {this.props.parentProps.history.push(`/user/${sessionStorage.getItem('userId')}/edit`);}}
                 >
                     <Red>
                         Edit
