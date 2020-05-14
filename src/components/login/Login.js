@@ -39,6 +39,7 @@ letter-spacing: 0.41em;
 color: #FF369D;
 text-stroke: 2px #DE1E80;
 -webkit-text-stroke: 2px #DE1E80;
+text-transform: uppercase;
 
 &::placeholder {
     font-family: helvetica;
@@ -106,7 +107,7 @@ class Login extends React.Component {
       // Get the returned user and update a new object.
       const token = new Token(response.data);
       
-      
+
       // Store the token into the local storage.
       sessionStorage.setItem('token', token.token);
       sessionStorage.setItem('userId', token.id);

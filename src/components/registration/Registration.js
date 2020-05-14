@@ -64,6 +64,7 @@ text-stroke: 2px #006AAE;
 -webkit-text-stroke: 2px #006AAE;
 text-transform: uppercase;
 
+line-height: normal;
 
 &::placeholder {
     font-family: helvetica;
