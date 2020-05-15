@@ -32,13 +32,24 @@ export function ChatInput(props) {
 
 async function submitMessage(chatEndpoint, message) {
 
+    let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+    let username = ''
+    try {
+        let response = await api.get(`user` + '/' + localStorage.getItem('userId'), {headers: {'X-Auth-Token': requestHeader}});
+        username = response.data.username
+    }
+    catch (error) {
+        alert(`An error occurred when retrieving the user name: ${handleError(error)}`);
+    }
+
     let requestBody = JSON.stringify({
+        username: username,
         message: message
     });
 
     try {
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-        await api.put(`${chatEndpoint}`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+        await api.post(`chat/${chatEndpoint}`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
         document.getElementById('chatInput').value = ''; // clear message after successful submission
     }
     catch (error) {

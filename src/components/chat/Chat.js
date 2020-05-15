@@ -15,28 +15,17 @@ class Chat extends React.Component {
         this.state = {
             messages: [],
             loaded: false,
-            loadMessagesTimer: null
+            loadMessagesTimer: null,
+            asyncLock: false
         }
         this.loadChatMessages = this.loadChatMessages.bind(this);
     }
 
 
     async componentDidMount() {
-        await this.loadChatMessages();
-
-        let timer = setInterval(this.loadChatMessages, 1000);
-        this.setState({loadMessagesTimer: timer});
-
-        // scroll to bottom of chat
-        let chatElement = document.getElementById('chatMessagesContainer');
-        chatElement.scrollTop = chatElement.scrollHeight;
-    }
-
-
-    async loadChatMessages() {
-        try {
+         try {
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            let response = await api.get(`${this.props.chatEndpoint}`, {headers: {'X-Auth-Token': requestHeader}});
+            let response = await api.get(`chat/${this.props.chatEndpoint}`, {headers: {'X-Auth-Token': requestHeader}});
             this.setState({
                 messages: response.data,
                 loaded: true
@@ -46,6 +35,36 @@ class Chat extends React.Component {
             alert(`An error occurred when retrieving chat messages: ${handleError(error)}`);
             return;
         }
+       
+        // scroll to bottom of chat
+        let chatElement = document.getElementById('chatMessagesContainer');
+        chatElement.scrollTop = chatElement.scrollHeight;
+
+       await api.post(`chatpoll/${this.props.chatEndpoint}`);
+       let timer = setInterval(this.loadChatMessages, 1000);
+       this.setState({loadMessagesTimer: timer});
+    }
+
+
+    async loadChatMessages() {
+        if (this.state.asyncLock) {
+            return
+        }
+        this.setState({asyncLock: true})
+        try {
+            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            let response = await api.get(`chatpoll/${this.props.chatEndpoint}`, {headers: {'X-Auth-Token': requestHeader}});
+            this.setState({
+                messages: response.data,
+                loaded: true
+            });
+        }
+        catch (error) {
+            this.setState({asyncLock: false})
+            this.loadChatMessages()
+            return;
+        }
+        this.setState({asyncLock: false})
     }
 
 
