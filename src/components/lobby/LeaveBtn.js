@@ -14,12 +14,10 @@ const FlexButton = styled(Button)`
 
 
 // one of the buttons in the middle part of lobby page
-function LeaveBtn() {
+function LeaveBtn(props) {
     return (
         <FlexButton
-            onClick={() => {
-                // leave lobby
-            }}>
+            onClick={props.onClick}>
             <Red>Leave</Red>
         </FlexButton>
     );

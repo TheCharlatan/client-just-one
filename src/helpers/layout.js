@@ -18,7 +18,7 @@ grid-column-gap: 0px;
 grid-row-gap: 0px;
 
   min-width: 100vw;
-  min-height: 100vh;
+  height: 100vh; // needs set height for leaderboard
 `;
 
 /*Chat container on the left side of the grid*/

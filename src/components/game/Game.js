@@ -31,6 +31,8 @@ import {AcceptRejectButtons} from "./wordSelection/AcceptRejectButtons";
 import {FrontendGameStates} from "./shared/FrontendGameStates";
 import {NonInterferingMessageBox} from "./message/NonInterferingMessageBox";
 import {Timer} from "./shared/Timer";
+import AlertModal from "./shared/AlertModal";
+import LeaveButton from "./leaveGame/LeaveBtn";
 
 
 // The game component responsible for the conditional rendering.
@@ -47,13 +49,29 @@ class Game extends React.Component {
             activeUser: null,
             frontendGameStatus: "SELECT_INDEX", // frontend status to allow more fine-grained control, uses ./shared/FrontendGameStates
             updateTimer: null, // Timer to periodically pull the newest game data and update the game state accordingly
-            lastTurnEndScreenDate: 0, // when the last TurnEndScreen was opened
+            lastTurnEndScreenDate: null, // when the last TurnEndScreen was opened
+            show: false // modal window for alert when player closes the browser unexpectedly.
         };
         this.messageBox = null; // In certain situations a message box is displayed for a few seconds for information purposes.
         this.updateGame = this.updateGame.bind(this);
+        this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
+        this.clearTimer = this.clearTimer.bind(this);
+        this.alert = null;
     }
 
+    //show the alert window
+    showModal() {
+        this.setState({
+            show: true,
+        });
+    }
 
+    hideModal() {
+        this.setState({
+            show: false,
+        });
+    }
     // update the game state based on newest game data
     async updateGame() {
         this.messageBox = null;
@@ -62,6 +80,46 @@ class Game extends React.Component {
         await this.updateGameData();
 
         // TODO: Player has left (new number of players is lower than in prevState.gameModel) -> reset state.
+        if( prevState.gameModel.playerIds.length !== this.state.gameModel.playerIds.length )
+        {
+            clearInterval(this.updateTimer);
+
+            let leftPlayerUserId = prevState.gameModel.playerIds.filter(n=>!this.state.gameModel.playerIds.includes(n))
+
+            if (leftPlayerUserId.length == 0) {
+                return;
+            }
+
+            this.showModal();
+
+            if (this.state.gameModel.playerIds.length >=  3)
+            {
+                this.alert = (
+                    <AlertModal
+                        show={this.state.show}
+                        message_1={`${leftPlayerUserId} left unexpectedly. `}
+                        message_2={`The game will continue in a few seconds.`}
+                    />
+                );
+            }
+            else {
+                this.alert=(
+                    <AlertModal
+                        show={this.state.show}
+                        message_1={`${leftPlayerUserId} left unexpectedly. `}
+                        message_2={`Unfortunately the game cannot be continued only with 2 players. You will be redirected to the game overview soon.`}
+                    />
+                );
+            }
+
+            setTimeout(() => {
+                this.hideModal();
+                this.alert = null;
+                this.setState({
+                    updateTimer: setInterval(() => this.updateGame(), 200)
+                });
+            }, 10000);
+        }
 
         // display the TurnEndScreen for at least 5s
         if (prevState.frontendGameStatus == "TURN_FINISHED" && Date.now() - this.state.lastTurnEndScreenDate <= 5000) {
@@ -140,6 +198,10 @@ class Game extends React.Component {
 
 
     async updateGameData() {
+        if(!localStorage.getItem("gameId"))
+        {
+            return
+        }
         const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
 
         let response = null;
@@ -201,7 +263,12 @@ class Game extends React.Component {
 
 
     isActivePlayer(playerId) {
-        return playerId === this.state.gameModel.activePlayer;
+            return playerId === this.state.gameModel.activePlayer;
+    }
+
+    clearTimer()
+    {
+        clearInterval(this.updateTimer);
     }
 
 
@@ -342,9 +409,11 @@ class Game extends React.Component {
         return (
             // Basic layout that is (nearly) the same in all game states.
             <BaseContainerBody>
+                <LeaveButton clearTimer={this.clearTimer}/>
                 {this.messageBox}
                 {timer}
                 <BaseContainerGame>
+                    {this.alert}
                     <GameInfoContainer>
                         <GameInfo>
                             <GameInfoLabel>

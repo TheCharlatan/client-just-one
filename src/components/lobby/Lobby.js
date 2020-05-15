@@ -34,7 +34,8 @@ export class Lobby extends React.Component {
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
         this.startGame = this.startGame.bind(this);
-        this.updateLobby = this.updateLobby.bind(this);
+        this.updateLobby = this.updateLobby.bind(this); // TODO: Stop when player joins game.
+        this.leaveLobby = this.leaveLobby.bind(this);
     }
 
     showModal() {
@@ -74,13 +75,13 @@ export class Lobby extends React.Component {
         }
         // get the users to show them in the lobby
         try {
-            for (let i=0; i< this.state.playerIds.length; i++) {
+            for (let i = 0; i < this.state.playerIds.length; i++) {
                 const responseUser = await api.get(`/user/${this.state.playerIds[i]}`, {headers: {'X-Auth-Token': requestHeader}});
                 //make a new field which indicates if the user is the host or not
                 responseUser.data.isHost = responseUser.data.id === this.state.hostPlayerId;
                 this.state.users[i] = responseUser.data;
             }
-        } catch (error){
+        } catch (error) {
             alert(`Something went wrong while fetching the users: ${error}`);
         }
         this.setState({loaded: true});
@@ -108,7 +109,21 @@ export class Lobby extends React.Component {
         }
     }
 
+    leaveLobby = async () => {
+        let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+        await api.delete(`lobby/${localStorage.getItem('lobbyId')}`,
+            {headers: {'X-Auth-Token': requestHeader}, data: localStorage.getItem('userId'), params:{browserClose:false}})
+            .then(r => {
+                localStorage.removeItem("lobbyId");
+                this.props.history.push(`/mainpage`);
+
+            });
+    }
+
     async updateLobby() {
+        if(!localStorage.getItem("lobbyId")){
+            return;
+        }
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
 
         try {
@@ -141,13 +156,13 @@ export class Lobby extends React.Component {
         }
         // get the users to show them in the lobby
         try {
-            for (let i=0; i< this.state.playerIds.length; i++) {
+            for (let i = 0; i < this.state.playerIds.length; i++) {
                 const responseUser = await api.get(`/user/${this.state.playerIds[i]}`, {headers: {'X-Auth-Token': requestHeader}});
                 //make a new field which indicates if the user is the host or not
                 responseUser.data.isHost = responseUser.data.id === this.state.hostPlayerId;
                 this.state.users[i] = responseUser.data;
             }
-        } catch (error){
+        } catch (error) {
             alert(`Something went wrong while fetching the users: ${error}`);
         }
         //this.setState({updateTimer: setInterval(() => this.updateLobby(), 500)})
@@ -192,7 +207,7 @@ export class Lobby extends React.Component {
                             <Form style={{width: "auto", height: "auto"}}>
                                 <StartGameBtn onClick={() => this.startGame()}/>
                                 <InviteBtn onClick={() => this.showModal()}/>
-                                <LeaveBtn/>
+                                <LeaveBtn onClick={() => this.leaveLobby()}/>
                             </Form>
                         </FormContainer>
                         <InviteModal hideModal={this.hideModal} show={this.state.show}/>
