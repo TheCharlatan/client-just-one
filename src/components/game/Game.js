@@ -399,6 +399,7 @@ class Game extends React.Component {
                 <TurnEndScreen
                     correct={this.state.guessCorrect}
                     activeUser={this.state.activeUser}
+                    mysteryWord={this.state.gameModel.words[this.state.gameModel.wordIndex]}
                 />
             );
         }
