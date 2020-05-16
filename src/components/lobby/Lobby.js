@@ -199,7 +199,7 @@ export class Lobby extends React.Component {
                     <ChatButton/>
                 </BottomLeftContainer>
                 <ChatContainer style={{gridArea: "1 / 1 / 3 / 2"}}>
-                    <Chat/>
+                    <Chat chatEndpoint={`/lobby/${localStorage.getItem('lobbyId')}/chat`}/>
                 </ChatContainer>
                 <CenterContainer>
                     <ActionContainer>
