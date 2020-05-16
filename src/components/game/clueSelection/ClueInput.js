@@ -29,14 +29,14 @@ export class ClueInput extends React.Component {
     async handleClues(clue1, clue2) {
 
         try {
-            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             if (clue1 !== this.state.placeholder1 && clue1 !== "" && !this.state.clue1Submitted) {
                 let requestBody = JSON.stringify({ clue: clue1 });
-                await api.put(`/game/${localStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+                await api.put(`/game/${sessionStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
             }
             if (clue2 !== this.state.placeholder2 && clue1 !== "" && !this.state.clue2Submitted) {
                 let requestBody = JSON.stringify({ clue: clue2 });
-                await api.put(`/game/${localStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+                await api.put(`/game/${sessionStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
             }
         }
         catch (error) {

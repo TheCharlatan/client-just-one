@@ -65,13 +65,13 @@ export class UserProfile extends React.Component {
 
     async saveModifiedUser() {
         try {
-            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            await api.put(`/user/${localStorage.getItem('userId')}/edit`, this.state.userData, {headers: {'X-Auth-Token': requestHeader}});
+            let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
+            await api.put(`/user/${sessionStorage.getItem('userId')}/edit`, this.state.userData, {headers: {'X-Auth-Token': requestHeader}});
         } catch (error) {
             console.log(`An error occurred when submitting the clue: \n${handleError(error)}`);
             return;
         }
-        this.loadUserData(localStorage.getItem('userId'));
+        this.loadUserData(sessionStorage.getItem('userId'));
         console.log(this.state.userData);
     }
 
@@ -174,14 +174,14 @@ export class UserProfile extends React.Component {
 
         let button = null;
           
-        if (localStorage.getItem("userId") == this.state.userData.id) {
+        if (sessionStorage.getItem("userId") == this.state.userData.id) {
             if (this.state.edit === true) {
                 button = (
                     <ButtonContainer>
                         <FormButton
                             width="50%"
                             onClick={() => {
-                                this.props.parentProps.history.push(`/user/${localStorage.getItem('userId')}/`);
+                                this.props.parentProps.history.push(`/user/${sessionStorage.getItem('userId')}/`);
                             }}
                         >
                             <Red>
@@ -191,7 +191,7 @@ export class UserProfile extends React.Component {
                         <FormButton
                             width="50%"
                             onClick={() => {
-                                this.saveModifiedUser().then(r => this.props.parentProps.history.push(`/user/${localStorage.getItem('userId')}/`));
+                                this.saveModifiedUser().then(r => this.props.parentProps.history.push(`/user/${sessionStorage.getItem('userId')}/`));
                             }}
                         >
                             <Red>
@@ -205,7 +205,7 @@ export class UserProfile extends React.Component {
                         <FormButton
                             width="50%"
                             onClick={() => {
-                                this.props.parentProps.history.push(`/user/${localStorage.getItem('userId')}/edit`);
+                                this.props.parentProps.history.push(`/user/${sessionStorage.getItem('userId')}/edit`);
                             }}
                         >
                             <Red>
