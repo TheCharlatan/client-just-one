@@ -129,6 +129,17 @@ class Login extends React.Component {
     // this.setState({'username': value});
     this.setState({ [key]: value });
   }
+    // add key press event listener
+    handleKeyPress = (event) => {
+        if(event.key === 'Enter'){
+            if(!this.state.username || !this.state.password)
+            {
+                return;
+            }
+            console.log('enter press here! ')
+            this.login();
+        }
+    }
 
   /**
    * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
@@ -137,10 +148,16 @@ class Login extends React.Component {
    * You may call setState() immediately in componentDidMount().
    * It will trigger an extra rendering, but it will happen before the browser updates the screen.
    */
-  componentDidMount() {}
+  componentDidMount() {
+      document.addEventListener("keydown", this.handleKeyPress, false);
+  }
+
+  componentWillUnmount() {
+      document.removeEventListener("keydown", this.handleKeyPress, false);
+  }
 
 
-  render() {
+    render() {
     return (
         <BaseContainer>
             <CenterContainer>

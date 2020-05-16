@@ -6,6 +6,7 @@ This file contains the general and shared style of your application.
 body {
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 body::after{
@@ -78,4 +79,42 @@ button {
 * {
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 250px;
+  background-color: #F8E7D1;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 1px;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  top: -5%;
+  left: 105%;
+  margin-left: -60px;
+}
+
+.tooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  right: 100%; /* To the left of the tooltip */
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent #F8E7D1 transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }

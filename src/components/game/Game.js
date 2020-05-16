@@ -337,7 +337,7 @@ class Game extends React.Component {
             else {
                 changingElements = (
                     <React.Fragment>
-                        <ClueInput updateGame={this.updateGame} />
+                        <ClueInput updateGame={this.updateGame} twoCluesInput={this.state.users.length == 3} />
                         <MysteryWordContainer mysteryWord={this.state.gameModel.words[this.state.gameModel.wordIndex]} />
                     </React.Fragment>
                 );

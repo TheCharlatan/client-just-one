@@ -33,6 +33,8 @@ import hippo from "../../img/hippo.png"
 import penguin from "../../img/penguin.png"
 import squirrel from "../../img/squirrel.png"
 import tiger from "../../img/tiger.png"
+import Green from "../../views/design/font-families/Green";
+import Red from "../../views/design/font-families/Red";
 
 
 const FormRegistration = styled(Form)`
@@ -130,10 +132,31 @@ const Select = styled.select`
   }
 `;
 
-const Message = styled.span`
+const Message = styled.div`
+float:left;
 height: 38px;
 margin-left: 5px;
 margin-top: 2px;
+display:none;
+width:fit-content;
+padding:1%;
+/* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  left: 105%;
+  margin-left: -60px;
+  background-color: #F8E7D1;
+    &:after {
+    content: " ";
+  position: absolute;
+  top: 50%;
+  right: 100%; /* To the left of the tooltip */
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent #F8E7D1 transparent transparent;
+   
+  } 
 `;
 
 
@@ -166,6 +189,7 @@ class Registration extends React.Component {
             country: null,
             image: null,
             showHiddenElement: false,
+            message : null
         };
         this.checkPassword = false;
     }
@@ -186,7 +210,6 @@ class Registration extends React.Component {
                 country: this.state.country,
                 image: this.state.image,
             });
-
             /**
              * only register the user but after success go back to the login window
              */
@@ -197,6 +220,19 @@ class Registration extends React.Component {
             this.props.history.push(`/login`);
         } catch (error) {
             alert(`Something went wrong during the registration: \n${handleError(error)}`);
+        }
+    }
+
+
+
+    handleKeyPress = (event) => {
+        if(event.key === 'Enter'){
+            if(!this.state.username || !this.state.password || !this.state.repeat_password || this.checkPassword === false)
+            {
+                return;
+            }
+            console.log('enter press here! ')
+            this.register();
         }
     }
 
@@ -216,19 +252,18 @@ class Registration extends React.Component {
     }
 
     check() {
-
-        if(document.getElementById('password').value ===
+        if(document.getElementById('password').value === '' && document.getElementById('confirm_password').value=== '')
+        {
+            this.setState({message:null});
+        }
+        else if(document.getElementById('password').value ===
             document.getElementById('confirm_password').value) {
-            document.getElementById('message').style.color = 'green';
-            document.getElementById('message').innerHTML = 'matching';
+            this.setState({message:true});
             this.checkPassword = true;
-
         }
         else {
-            document.getElementById('message').style.color = 'red';
-            document.getElementById('message').innerHTML = 'not matching';
+            this.setState({message:false});
             this.checkPassword = false;
-
         }
     }
 
@@ -287,9 +322,27 @@ class Registration extends React.Component {
      * You may call setState() immediately in componentDidMount().
      * It will trigger an extra rendering, but it will happen before the browser updates the screen.
      */
-    componentDidMount() {}
+    componentDidMount() {
+        document.addEventListener("keydown", this.handleKeyPress, false);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener("keydown", this.handleKeyPress, false);
+    }
 
     render() {
+        let message;
+        if(this.state.message === true)
+        {
+            message = (<React.Fragment><Green>Matching</Green></React.Fragment>);
+        }
+        else if(this.state.message === false)
+        {
+            message = (<React.Fragment><Red>Not Matching</Red></React.Fragment>);
+        }
+        else{
+            message = null;
+        }
         return (
             <BaseContainer>
                 <ChooseImageContainer id={"hiddenProfileImages"}>
@@ -369,7 +422,7 @@ class Registration extends React.Component {
                                 }}
                             />
                         </FormRegistration>
-                        <FormRegistration>
+                        <FormRegistration className="tooltip">
                             <LabelRegistration>
                                 <Blue>repeat password</Blue>
                             </LabelRegistration>
@@ -382,7 +435,7 @@ class Registration extends React.Component {
                                     this.check();
                                 }}
                             />
-                            <Message id='message'> </Message>
+                            <Message id='message' style={{display: this.state.message === true || this.state.message === false ? 'block' : 'none'}}>{message}</Message>
                         </FormRegistration>
                         <FormRegistration>
                             <LabelRegistration>

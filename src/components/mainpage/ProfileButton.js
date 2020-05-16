@@ -10,6 +10,11 @@ const FlexButton = styled(Button)`
   display: flex;
   justify-content: center;
   background: #FFFFFF;
+  &:hover {
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.4);
+  transform: translateY(-0.25em);
+  cursor:pointer;
+}
 `;
 
 
@@ -21,7 +26,7 @@ function ChatButton(props) {
                 let userId = sessionStorage.getItem("userId");
                 props.history.push(`/user/${userId}`);
             }}>
-            <Violet>Profile</Violet>
+            <Violet>My Profile</Violet>
         </FlexButton>
     );
 }
