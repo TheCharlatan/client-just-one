@@ -344,11 +344,18 @@ class Game extends React.Component {
             }
             timer = <Timer
                 startTime={this.state.gameModel.timestamp - Date.now() + 30000}
-                onTimerFinished={() => {
-                    // TODO: Handle two clues (3 players total).
+                onTimerFinished={async () => {
                     let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
                     let requestBody = JSON.stringify({ clue: null });
-                    api.put(`/game/${sessionStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+                    try {
+                        await api.put(`/game/${sessionStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+                        if (this.state.gameModel.playerIds.length == 3) {
+                            await api.put(`/game/${sessionStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+                        }
+                    }
+                    catch (error) {
+                        console.log(`An error occurred when submitting the guess: \n${handleError(error)}`);
+                    }
                 }}
                 key={"CluesTimer"}
             />
@@ -373,11 +380,15 @@ class Game extends React.Component {
             }
             timer = <Timer
                 startTime={this.state.gameModel.timestamp - Date.now() + 30000}
-                onTimerFinished={() => {
-                    // TODO: Handle two clues (3 players total).
+                onTimerFinished={async () => {
                     let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
                     let requestBody = JSON.stringify({ guess: null, wordIndex: this.props.gameModel.wordIndex});
-                    api.put(`/game/${sessionStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+                    try {
+                        await api.put(`/game/${sessionStorage.getItem('gameId')}/guess`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+                    }
+                    catch (error) {
+                        console.log(`An error occurred when submitting the guess: \n${handleError(error)}`);
+                    }
                 }}
                 key={"GuessTimer"}
             />
