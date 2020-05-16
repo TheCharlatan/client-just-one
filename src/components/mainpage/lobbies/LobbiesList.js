@@ -14,15 +14,15 @@ export class LobbiesList extends React.Component {
 
     joinLobby = async (lobbyId) => {
         try {
-            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            let requestBody = localStorage.getItem('userId');
+            let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
+            let requestBody = sessionStorage.getItem('userId');
             await api.put(`/lobby/${lobbyId}`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
         }
         catch (error) {
             alert("Could not join lobby:\n" + handleError(error));
             return;
         }
-        localStorage.setItem('lobbyId', lobbyId);
+        sessionStorage.setItem('lobbyId', lobbyId);
         this.props.history.push("/lobby/" + lobbyId);
     };
 
@@ -65,6 +65,7 @@ justify-content: center;
   
 background: #F8E7D1;
 box-sizing: border-box;
+line-height: 0px;
 `;
 
 let LobbyContainer = styled.div`

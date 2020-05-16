@@ -8,7 +8,8 @@ import {
     CardStacksContainer,
     ChangeElementContainer,
     GameInfoContainer,
-    UserGameContainer
+    GameUserLeftContainer,
+    GameUserRightContainer
 } from "./shared/layouts/GameLayout"
 import {GameInfo, GameInfoLabel, Info, InfoLabel} from "./shared/layouts/GameInfoStyle";
 import UserLayout from "./shared/layouts/UserLayout";
@@ -50,9 +51,9 @@ class Game extends React.Component {
             frontendGameStatus: "SELECT_INDEX", // frontend status to allow more fine-grained control, uses ./shared/FrontendGameStates
             updateTimer: null, // Timer to periodically pull the newest game data and update the game state accordingly
             lastTurnEndScreenDate: null, // when the last TurnEndScreen was opened
-            show: false // modal window for alert when player closes the browser unexpectedly.
+            show: false, // modal window for alert when player closes the browser unexpectedly.
+            messageBox: null // In certain situations a message box is displayed for a few seconds for information purposes.
         };
-        this.messageBox = null; // In certain situations a message box is displayed for a few seconds for information purposes.
         this.updateGame = this.updateGame.bind(this);
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
@@ -72,15 +73,17 @@ class Game extends React.Component {
             show: false,
         });
     }
+
     // update the game state based on newest game data
     async updateGame() {
-        this.messageBox = null;
 
         const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
         await this.updateGameData();
 
+        this.setState({messageBox: null});
+
         // TODO: Player has left (new number of players is lower than in prevState.gameModel) -> reset state.
-        if( prevState.gameModel.playerIds.length !== this.state.gameModel.playerIds.length )
+        if (prevState.gameModel.playerIds.length !== this.state.gameModel.playerIds.length)
         {
             clearInterval(this.updateTimer);
 
@@ -129,12 +132,12 @@ class Game extends React.Component {
         if (this.state.gameModel.gameStatus === "AWAITING_INDEX") {
             this.setFrontendGameStatus("SELECT_INDEX");
             if (this.state.gameModel.cardStatus === "USER_REJECTED_WORD") {
-                this.messageBox = <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was rejected."} />; // Inform all players that the word was rejected.
+                this.setState({messageBox: <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was rejected."} />}); // Inform all players that the word was rejected.
             }
         }
 
         if (this.state.gameModel.gameStatus === "ACCEPT_REJECT") {
-            if (this.state.gameModel.countAccept.includes(parseInt(localStorage.getItem('userId')))) {
+            if (this.state.gameModel.countAccept.includes(parseInt(sessionStorage.getItem('userId')))) {
                 this.setFrontendGameStatus("THIS_USER_ACCEPTED_WORD");
             } else {
                 this.setFrontendGameStatus("ACCEPT_REJECT_WORD");
@@ -144,7 +147,7 @@ class Game extends React.Component {
         if (this.state.gameModel.gameStatus === "AWAITING_CLUES") {
             this.setFrontendGameStatus("AWAITING_CLUES");
             if (prevState.gameModel.gameStatus === "ACCEPT_REJECT") {
-                this.messageBox = <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was accepted."} />; // Inform all players that the word was accepted.
+                this.setState({messageBox: <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was accepted."} />}); // Inform all players that the word was accepted.
             }
         }
 
@@ -164,7 +167,7 @@ class Game extends React.Component {
                 this.setState({ guessCorrect: 'wrong' });
             }
             else {
-                this.setState({ guessCorrect: 'skipped' }); // TODO: Currently skipped is counted as wrong on server side (status from 66. commit).
+                this.setState({ guessCorrect: 'skipped' });
             }
             this.setState({ lastTurnEndScreenDate: Date.now() });
         }
@@ -198,18 +201,18 @@ class Game extends React.Component {
 
 
     async updateGameData() {
-        if(!localStorage.getItem("gameId"))
+        if(!sessionStorage.getItem("gameId"))
         {
-            return
+            return;
         }
         const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
 
         let response = null;
         let responseTimestamp = null;
-        let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+        let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
 
         try {
-            let gameId = localStorage.getItem("gameId");
+            let gameId = sessionStorage.getItem("gameId");
             response = await api.get(`/game/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
             responseTimestamp = response.data.timestamp; // save timestamp before (incorrect) automatic conversion
             this.setState({gameModel: response.data});
@@ -218,12 +221,12 @@ class Game extends React.Component {
             alert(`Something went wrong while fetching the game data: \n${handleError(error)}`);
             return;
         }
-        
+
         if (this.state.gameModel.timestamp !== null) {
             let timestamp = new Date();
             let [hours, minutes, seconds] = responseTimestamp.split(":");
             timestamp.setHours(hours);
-            timestamp.setMinutes(minutes);
+            timestamp.setMinutes(parseInt(minutes) + (new Date().getTimezoneOffset())); // assumes the responseTimestamp is in UTC
             timestamp.setSeconds(seconds);
             let gameModel = this.state.gameModel;
             gameModel.timestamp = timestamp;
@@ -243,7 +246,7 @@ class Game extends React.Component {
             for (let i=0; i<response.data.playerIds.length; i++) {
 
                 let userResponse = await api.get('/user/' + response.data.playerIds[i], {headers: {'X-Auth-Token': requestHeader}});
-                if (userResponse.data.id == localStorage.getItem('userId')) {
+                if (userResponse.data.id == sessionStorage.getItem('userId')) {
                     this.setState({currentUser: userResponse.data});
                 }
                 if (userResponse.data.id == this.state.gameModel.activePlayer) {
@@ -339,7 +342,23 @@ class Game extends React.Component {
                     </React.Fragment>
                 );
             }
-            timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000} key={"CluesTimer"}/>
+            timer = <Timer
+                startTime={this.state.gameModel.timestamp - Date.now() + 30000}
+                onTimerFinished={async () => {
+                    let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
+                    let requestBody = JSON.stringify({ clue: null });
+                    try {
+                        await api.put(`/game/${sessionStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+                        if (this.state.gameModel.playerIds.length == 3) {
+                            await api.put(`/game/${sessionStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+                        }
+                    }
+                    catch (error) {
+                        console.log(`An error occurred when submitting the guess: \n${handleError(error)}`);
+                    }
+                }}
+                key={"CluesTimer"}
+            />
         }
 
         if (this.state.frontendGameStatus == "AWAITING_GUESS") {
@@ -359,7 +378,20 @@ class Game extends React.Component {
                     </React.Fragment>
                 );
             }
-            timer = <Timer startTime={this.state.gameModel.timestamp - Date.now() + 30000} key={"GuessTimer"}/>
+            timer = <Timer
+                startTime={this.state.gameModel.timestamp - Date.now() + 30000}
+                onTimerFinished={async () => {
+                    let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
+                    let requestBody = JSON.stringify({ guess: null, wordIndex: this.props.gameModel.wordIndex});
+                    try {
+                        await api.put(`/game/${sessionStorage.getItem('gameId')}/guess`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+                    }
+                    catch (error) {
+                        console.log(`An error occurred when submitting the guess: \n${handleError(error)}`);
+                    }
+                }}
+                key={"GuessTimer"}
+            />
         }
 
         if (this.state.frontendGameStatus == "TURN_FINISHED") {
@@ -371,15 +403,24 @@ class Game extends React.Component {
             );
         }
 
-        // TODO: Sometimes overlapped by info messages -> fix formatting?
-        if ((this.state.frontendGameStatus == "SELECT_INDEX" && !this.isActivePlayer(this.state.currentUser.id)) ||
-            (this.state.frontendGameStatus == "ACCEPT_REJECT_WORD" && this.isActivePlayer(this.state.currentUser.id)) ||
-            (this.state.gameModel.gameStatus == "AWAITING_CLUES" && this.isActivePlayer(this.state.currentUser.id)) ||
-            (this.state.gameModel.gameStatus == "AWAITING_GUESS" && !this.isActivePlayer(this.state.currentUser.id)) ||
-            (this.state.frontendGameStatus == "TURN_FINISHED")) {
-            userElements = (
-                <UserGameContainer>
-                    {this.state.users.map((user) => {
+
+        // Code to display the users on left and right part of the game.
+        let usersOnLeft = [];
+        let usersOnRight = [];
+
+        for (let counter = 0; counter < this.state.users.length; ++counter) {
+            if (counter == 1 || counter == 3) { // less space on right -> display less users there
+                usersOnRight.push(this.state.users[counter]);
+            }
+            else {
+                usersOnLeft.push(this.state.users[counter])
+            }
+        }
+
+        userElements = (
+            <React.Fragment>
+                <GameUserLeftContainer>
+                    {usersOnLeft.map((user) => {
                         return (
                             <UserLayout
                                 user={user}
@@ -388,31 +429,29 @@ class Game extends React.Component {
                             />
                         );
                     })}
-                </UserGameContainer>
-            );
-        }
+                </GameUserLeftContainer>
+                <GameUserRightContainer>
+                    {usersOnRight.map((user) => {
+                        return (
+                            <UserLayout
+                                user={user}
+                                key={user.id}
+                                isActivePlayer={this.isActivePlayer(user.id)}
+                            />
+                        );
+                    })}
+                </GameUserRightContainer>
+            </React.Fragment>
+        );
 
-        /*
-        else {
-            userElements = (
-                <UserGameContainer style={{marginTop: "5%"}}>
-                    <UserLayout
-                        user={this.state.currentUser}
-                        key={this.state.currentUser.id}
-                        isActivePlayer={this.isActivePlayer(this.state.currentUser)}
-                    />
-                </UserGameContainer>
-            );
-        }
-        */
 
         return (
             // Basic layout that is (nearly) the same in all game states.
             <BaseContainerBody>
-                <LeaveButton clearTimer={this.clearTimer}/>
-                {this.messageBox}
-                {timer}
                 <BaseContainerGame>
+                    <LeaveButton clearTimer={this.clearTimer}/>
+                    {this.state.messageBox}
+                    {timer}
                     {this.alert}
                     <GameInfoContainer>
                         <GameInfo>

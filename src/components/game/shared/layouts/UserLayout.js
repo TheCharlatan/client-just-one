@@ -20,7 +20,6 @@ flex-direction: column;
 
 align-items: center;
 justify-content: center;
-
 `;
 
 const UserNameContainer = styled.div`
@@ -28,6 +27,10 @@ width: 100%;
 height: 37px;
 
 text-align:center;
+
+display: flex;
+align-items: center;
+justify-content: center;
 
 background: #FFFFFF;
 border: 5px solid #DDC18E;
@@ -38,7 +41,6 @@ box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 const UserName = styled(FontBasic)`
 font-size: 14px;
 color: #82278E;
-
 
 mix-blend-mode: darken;
 text-stroke: 1px #710070;
@@ -61,9 +63,6 @@ const ActivePlayer = styled.div`
 width: 139px;
 height: 190px;
 
-margin-left: 90px;
-margin-right: 90px;
-
 display: flex;
 flex-direction: column;
 
@@ -76,10 +75,10 @@ background: ${props => props.isActivePlayer ? 'radial-gradient(81.05% 81.05% at 
 `;
 
 
-const UserLayout = ({user}) => {
+function UserLayout(props) {
 
-    var url;
-    switch (user.image) {
+    let url;
+    switch (props.user.image) {
         case "lion":
             url = lion;
             break;
@@ -109,15 +108,18 @@ const UserLayout = ({user}) => {
     }
 
     return (
-        <ActivePlayer isActivePlayer={user.isActivePlayer}>
+        <ActivePlayer isActivePlayer={props.isActivePlayer}>
             <UserContainer>
                 <UserProfilePicture image={url}/>
                 <UserNameContainer>
-                    <UserName> {user.username} </UserName>
+                    <UserName>
+                        {props.user.username}
+                    </UserName>
                 </UserNameContainer>
             </UserContainer>
         </ActivePlayer>
     );
 };
+
 
 export default UserLayout;

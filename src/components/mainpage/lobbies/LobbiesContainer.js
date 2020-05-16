@@ -23,7 +23,7 @@ export class LobbiesContainer extends React.Component {
         let response = null;
 
         try {
-            requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             response = await api.get('/lobby', {headers: {'X-Auth-Token': requestHeader}});
         }
         catch (error) {
@@ -45,8 +45,8 @@ export class LobbiesContainer extends React.Component {
         }
 
         try {
-            requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            response = await api.get(`/user/${localStorage.getItem('userId')}`, {headers: {'X-Auth-Token': requestHeader}});
+            requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
+            response = await api.get(`/user/${sessionStorage.getItem('userId')}`, {headers: {'X-Auth-Token': requestHeader}});
         }
         catch (error) {
             alert(`Could not load invitations: \n${handleError(error)}`);
@@ -136,4 +136,5 @@ border: 6px solid #DDC18E;
 box-sizing: border-box;
 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 text-align:center;
+line-height: 0px;
 `;

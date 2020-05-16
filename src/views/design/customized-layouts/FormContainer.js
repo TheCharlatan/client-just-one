@@ -9,6 +9,8 @@ flex-direction: column;
 align-items: center;
 min-height: 300px;
 justify-content: center;
+
+line-height: 0px;
 `;
 
 export default FormContainer;

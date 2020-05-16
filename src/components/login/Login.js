@@ -20,6 +20,7 @@ import toBinary from "./toBinary";
 const FormContainerLogin = styled(FormContainer)`
 margin-top: 20%;
 height: 315px;
+line-height: 0px;
 
 `;
 
@@ -30,19 +31,20 @@ const FormLogin = styled(Form)`
 `;
 
 const InputFieldLogin = styled(InputField)`
-font-family: fantasy;
+font-family: helvetica;
 font-style: normal;
-font-weight: normal;
+font-weight: 900;
 font-size: 18px;
 letter-spacing: 0.41em;
 color: #FF369D;
 text-stroke: 2px #DE1E80;
 -webkit-text-stroke: 2px #DE1E80;
+text-transform: uppercase;
 
 &::placeholder {
-    font-family: fantasy;
+    font-family: helvetica;
     font-style: normal;
-    font-weight: normal;
+    font-weight: 900;
     font-size: 18px;
     letter-spacing: 0.41em;
     color: #FF369D;
@@ -92,7 +94,7 @@ class Login extends React.Component {
   /**
    * HTTP POST request is sent to the backend.
    * If the request is successful, a new user is returned to the front-end
-   * and its token is stored in the localStorage.
+   * and its token is stored in the sessionStorage.
    */
   async login() {
     try {
@@ -107,8 +109,8 @@ class Login extends React.Component {
       
 
       // Store the token into the local storage.
-      localStorage.setItem('token', token.token);
-      localStorage.setItem('userId', token.id);
+      sessionStorage.setItem('token', token.token);
+      sessionStorage.setItem('userId', token.id);
 
       // Login successfully worked --> navigate to the route /game in the GameRouter
       this.props.history.push(`/mainpage`);

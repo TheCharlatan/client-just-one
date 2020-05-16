@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
-const Form = styled.div`
+const Form = styled.h2`
 display: flex
 flex-wrap: wrap;
-  justify-content: center;
+align-items: center;
+justify-content: center;
   
   padding-left: 37px;
   padding-right: 37px;

@@ -9,6 +9,7 @@ right: 0px;
 
 display: flex;
 flex-direction: column;
+line-height: 0px;
 
 background: #F8E7D1;
 border: 13px solid #DDC18E;

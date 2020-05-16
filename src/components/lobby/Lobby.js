@@ -52,9 +52,9 @@ export class Lobby extends React.Component {
     }
 
     async componentDidMount() {
-        let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+        let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
         try {
-            const response = await api.get(`/lobby/${localStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
+            const response = await api.get(`/lobby/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
             if (response.data == null) {
                 alert("Unexpected error");
                 return;
@@ -92,8 +92,8 @@ export class Lobby extends React.Component {
     }
 
     async startGame() {
-        let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-        if (this.state.hostPlayerId != localStorage.getItem('userId')) {
+        let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
+        if (this.state.hostPlayerId != sessionStorage.getItem('userId')) {
             alert("Only the lobby host is allowed to start the game.");
             return;
         }
@@ -114,13 +114,10 @@ export class Lobby extends React.Component {
 
     leaveLobby = async () => {
         let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-        api.delete(`lobby/${localStorage.getItem('lobbyId')}`,
-            {headers: {'X-Auth-Token': localStorage.getItem('token')}})
-
         await api.delete(`lobby/${localStorage.getItem('lobbyId')}`,
             {headers: {'X-Auth-Token': requestHeader}, data: localStorage.getItem('userId'), params:{browserClose:false}})
             .then(r => {
-                localStorage.removeItem("lobbyId");
+                sessionStorage.removeItem("lobbyId");
                 this.props.history.push(`/mainpage`);
 
             });
@@ -137,13 +134,14 @@ export class Lobby extends React.Component {
         if(!localStorage.getItem("lobbyId")){
             return;
         }
-        let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+      
+        let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
 
         try {
-            const response = await api.get(`/user/${localStorage.getItem('userId')}`, {headers: {'X-Auth-Token': requestHeader}});
+            const response = await api.get(`/user/${sessionStorage.getItem('userId')}`, {headers: {'X-Auth-Token': requestHeader}});
 
             if (response.data && response.data.gameId) {
-                localStorage.setItem("gameId", response.data.gameId);
+                sessionStorage.setItem("gameId", response.data.gameId);
                 this.props.history.push(`/game/${response.data.gameId}`);
             }
         } catch (error) {

@@ -20,6 +20,7 @@ flex-direction: column;
 
 align-items: center;
 justify-content: center;
+line-height: 0px;
 `;
 
 const UserNameContainer = styled.button`

@@ -11,9 +11,10 @@ box-sizing: border-box;
 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
 
+display: flex;
 align-items: center;
 justify-content: center;
-text-align:center;
+line-height: 0px;
 
 &:hover:enabled {
   box-shadow: 0 8px 8px rgba(0, 0, 0, 0.4);

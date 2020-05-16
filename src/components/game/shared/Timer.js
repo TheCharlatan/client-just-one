@@ -33,6 +33,9 @@ export class Timer extends React.Component {
             });
         }
         else {
+            if (this.state.displayTime > 0) {
+                this.props.onTimerFinished();
+            }
             this.setState({
                 displayTime: 0
             });

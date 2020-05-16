@@ -44,6 +44,7 @@ box-shadow: none;
 grid-area: input;
 margin: auto;
 padding-top: 15px;
+
 `;
 
 const FormContainerRegistration = styled(FormContainer)`
@@ -53,21 +54,24 @@ margin: 0px;
 `;
 
 const InputFieldRegistration = styled(InputField)`
-width: 280px;
+width: 300px;
 
-font-family: fantasy;
+font-family: helvetica;
 font-style: normal;
-font-weight: normal;
+font-weight: 900;
 font-size: 18px;
 letter-spacing: 0.41em;
 color: #00A6EC;
 text-stroke: 2px #006AAE;
 -webkit-text-stroke: 2px #006AAE;
+text-transform: uppercase;
+
+line-height: normal;
 
 &::placeholder {
-    font-family: fantasy;
+    font-family: helvetica;
     font-style: normal;
-    font-weight: normal;
+    font-weight: 900;
     font-size: 18px;
     letter-spacing: 0.41em;
     color: #00A6EC;
@@ -79,8 +83,9 @@ text-stroke: 2px #006AAE;
 `;
 
 const LabelRegistration = styled(Label)`
-width: 280px;
+width: 350px;
 margin-right: 15px;
+line-height: 0px;
 `;
 
 const ButtonRegistration = styled(Button)`
@@ -90,7 +95,7 @@ width: 200px;
 `;
 
 const Select = styled.select`
-  width: 280px;
+  width: 300px;
   height: 38px;
   background: #FFFFFF;
   border: 6px solid #F8E7D1;
@@ -99,11 +104,11 @@ const Select = styled.select`
   
   padding-left: 5px;
   font-size: 18px;
-    font-family: fantasy;
+    font-family: helvetica;
     font-style: normal;
-    font-weight: normal;
+    font-weight: 900;
     font-size: 18px;
-    line-height: 0px;
+    
     letter-spacing: 0.41em;
     text-transform: uppercase;
     font-feature-settings: 'cpsp' on, 'ss04' on;
@@ -130,6 +135,8 @@ const Select = styled.select`
 const Message = styled.div`
 float:left;
 height: 38px;
+margin-left: 5px;
+margin-top: 2px;
 display:none;
 width:fit-content;
 padding:1%;
@@ -190,7 +197,7 @@ class Registration extends React.Component {
     /**
      * HTTP POST request is sent to the backend.
      * If the request is successful, a new user is returned to the front-end
-     * and its token is stored in the localStorage.
+     * and its token is stored in the sessionStorage.
      */
     async register() {
         try {
@@ -206,8 +213,8 @@ class Registration extends React.Component {
             /**
              * only register the user but after success go back to the login window
              */
-            const response = await api.post('/user', requestBody);
-            console.log(response);
+            await api.post('/user', requestBody);
+
 
             // Login successfully worked --> navigate to the route /game in the GameRouter
             this.props.history.push(`/login`);

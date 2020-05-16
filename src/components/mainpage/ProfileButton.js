@@ -23,7 +23,7 @@ function ChatButton(props) {
     return (
         <FlexButton
             onClick={() => {
-                let userId = localStorage.getItem("userId");
+                let userId = sessionStorage.getItem("userId");
                 props.history.push(`/user/${userId}`);
             }}>
             <Violet>My Profile</Violet>

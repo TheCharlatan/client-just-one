@@ -73,6 +73,7 @@ margin: 0px 200px;
 display: flex;
 flexDirection: row;
 justify-content: space-between;
+line-height: 0px;
 `;
 
 

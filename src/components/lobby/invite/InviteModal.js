@@ -21,8 +21,8 @@ export default class InviteModal extends React.Component {
         let responseLobby = null;
 
         try {
-            requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-            responseLobby = await api.get(`/lobby/${localStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
+            requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
+            responseLobby = await api.get(`/lobby/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
             //TODO check response status
         } catch {
             console.log("Ooops 1");
@@ -39,7 +39,7 @@ export default class InviteModal extends React.Component {
         let responseInvite = null;
 
         try {
-            requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             responseInvite = await api.get('/user', {headers: {'X-Auth-Token': requestHeader}});
             //TODO check response status
         } catch {
@@ -86,7 +86,7 @@ export default class InviteModal extends React.Component {
                     return (
                         <React.Fragment>
                             <div className="pull-right" obj={user} key={index} id={user.id}
-                                 style={{width: "100%", marginBottom: '5%', marginTop: '2%'}}>
+                                 style={{width: "100%", marginBottom: '5%', marginTop: '2%', lineHeight: "0px"}}>
                                 <Label className="modal-label" key={"label"+user.id} style={{height: "45px"}}>
                                     <Blue key={"blue"+user.id}>{user.username}</Blue>
                                 </Label>

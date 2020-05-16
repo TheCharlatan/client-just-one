@@ -78,7 +78,7 @@ export class UserProfile extends React.Component {
     async loadUserData(userProfileId) {
         let userData;
         try {
-            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             let response = await api.get(`/user/${userProfileId}`, {headers: {'X-Auth-Token': requestHeader}});
             userData = response.data;
         } catch (error) {
@@ -172,6 +172,7 @@ export class UserProfile extends React.Component {
         }
 
         let button = null;
+          
         if (localStorage.getItem("userId") == this.state.userData.id) {
             if (this.state.edit === true) {
                 button = (
