@@ -216,6 +216,19 @@ class Registration extends React.Component {
         }
     }
 
+
+
+    handleKeyPress = (event) => {
+        if(event.key === 'Enter'){
+            if(!this.state.username || !this.state.password || !this.state.repeat_password || this.checkPassword === false)
+            {
+                return;
+            }
+            console.log('enter press here! ')
+            this.register();
+        }
+    }
+
     /**
      *  Every time the user enters something in the input field, the state gets updated.
      * @param key (the key of the state for identifying the field that needs to be updated)
@@ -302,7 +315,13 @@ class Registration extends React.Component {
      * You may call setState() immediately in componentDidMount().
      * It will trigger an extra rendering, but it will happen before the browser updates the screen.
      */
-    componentDidMount() {}
+    componentDidMount() {
+        document.addEventListener("keydown", this.handleKeyPress, false);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener("keydown", this.handleKeyPress, false);
+    }
 
     render() {
         let message;
