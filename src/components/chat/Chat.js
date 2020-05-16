@@ -24,7 +24,7 @@ class Chat extends React.Component {
 
     async componentDidMount() {
          try {
-            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             let response = await api.get(`chat/${this.props.chatEndpoint}`, {headers: {'X-Auth-Token': requestHeader}});
             this.setState({
                 messages: response.data,
@@ -52,7 +52,7 @@ class Chat extends React.Component {
         }
         this.setState({asyncLock: true})
         try {
-            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             let response = await api.get(`chatpoll/${this.props.chatEndpoint}`, {headers: {'X-Auth-Token': requestHeader}});
             this.setState({
                 messages: response.data,

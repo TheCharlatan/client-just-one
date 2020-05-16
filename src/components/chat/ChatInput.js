@@ -32,10 +32,10 @@ export function ChatInput(props) {
 
 async function submitMessage(chatEndpoint, message) {
 
-    let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+    let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
     let username = ''
     try {
-        let response = await api.get(`user` + '/' + localStorage.getItem('userId'), {headers: {'X-Auth-Token': requestHeader}});
+        let response = await api.get(`user` + '/' + sessionStorage.getItem('userId'), {headers: {'X-Auth-Token': requestHeader}});
         username = response.data.username
     }
     catch (error) {
@@ -48,7 +48,7 @@ async function submitMessage(chatEndpoint, message) {
     });
 
     try {
-        let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+        let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
         await api.post(`chat/${chatEndpoint}`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
         document.getElementById('chatInput').value = ''; // clear message after successful submission
     }
