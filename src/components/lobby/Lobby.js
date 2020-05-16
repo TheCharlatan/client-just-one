@@ -86,7 +86,7 @@ export class Lobby extends React.Component {
             alert(`Something went wrong while fetching the users: ${error}`);
         }
         this.setState({loaded: true});
-        api.post(`/lobbypoll/${localStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
+        api.post(`/lobbypoll/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
         this.updateLobby()
         this.setState({updateTimer: setInterval(() => this.updateLobby(), 1000)})
     }
@@ -113,9 +113,9 @@ export class Lobby extends React.Component {
     }
 
     leaveLobby = async () => {
-        let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
-        await api.delete(`lobby/${localStorage.getItem('lobbyId')}`,
-            {headers: {'X-Auth-Token': requestHeader}, data: localStorage.getItem('userId'), params:{browserClose:false}})
+        let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
+        await api.delete(`lobby/${sessionStorage.getItem('lobbyId')}`,
+            {headers: {'X-Auth-Token': requestHeader}, data: sessionStorage.getItem('userId'), params:{browserClose:false}})
             .then(r => {
                 sessionStorage.removeItem("lobbyId");
                 this.props.history.push(`/mainpage`);
@@ -131,7 +131,7 @@ export class Lobby extends React.Component {
         }
         // set the asyncLock, don't forget to reset in the return scenarios.
         this.setState({asyncLock: true});
-        if(!localStorage.getItem("lobbyId")){
+        if(!sessionStorage.getItem("lobbyId")){
             return;
         }
       
@@ -149,7 +149,7 @@ export class Lobby extends React.Component {
         }
 
         try {
-            const response = await api.get(`/lobbypoll/${localStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
+            const response = await api.get(`/lobbypoll/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
             if (response.data == null) {
                 this.setState({asyncLock: false});
                 this.updateLobby();
@@ -197,7 +197,7 @@ export class Lobby extends React.Component {
                     <ChatButton/>
                 </BottomLeftContainer>
                 <ChatContainer style={{gridArea: "1 / 1 / 3 / 2"}}>
-                    <Chat chatEndpoint={`/lobby/${localStorage.getItem('lobbyId')}/chat`}/>
+                    <Chat chatEndpoint={`${sessionStorage.getItem('lobbyId')}`}/>
                 </ChatContainer>
                 <CenterContainer>
                     <ActionContainer>
