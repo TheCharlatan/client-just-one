@@ -89,10 +89,19 @@ class AppRouter extends React.Component {
                 exact
                 render={(parentProps) =>
                     <ProfileGuard>
-                        <UserProfile parentProps={parentProps}/>
+                        <UserProfile edit={false} parentProps={parentProps}/>
                     </ProfileGuard>
                 }
             />
+              <Route
+                  path="/user/:userProfileId/edit"
+                  exact
+                  render={(parentProps) =>
+                      <ProfileGuard>
+                          <UserProfile edit={true} parentProps={parentProps}/>
+                      </ProfileGuard>
+                  }
+              />
 
             <Route path="/" exact render={() => <Redirect to={"/login"} />} />
           </div>

@@ -21,66 +21,124 @@ import squirrel from "../../img/squirrel.png";
 import hippo from "../../img/hippo.png";
 import tiger from "../../img/tiger.png";
 import profilePlaceholder from "../../img/profilePlaceholder.png";
-
 import {Spinner} from "../../views/design/Spinner";
-
+import InputField from "../../views/design/customized-layouts/InputField";
+import Orange from "../../views/design/font-families/Orange";
+import {
+    DogContainer,
+    ElephantContainer,
+    GiraffeContainer,
+    HippoContainer,
+    LionContainer, PenguinContainer, SquirrelContainer, TigerContainer
+} from "../registration/ImageContainerContent";
+import {ChooseImageContainer} from "../registration/ImageContainer";
+import EditProfilePictureButton from "../../views/design/customized-layouts/EditProfilePictureButton";
 
 
 export class UserProfile extends React.Component {
-
-
     constructor(props) {
         super(props);
         this.state = {
             userData: null,
+            edit: false,
+            showHiddenElement: false
         }
     }
 
 
     async componentDidMount() {
+        this.setState({edit: this.props.edit});
         const {userProfileId} = this.props.parentProps.match.params;
+        this.loadUserData(userProfileId);
+    }
 
-        let userData = null;
+    handleInputChange(key, value) {
+        // Example: if the key is username, this statement is the equivalent to the following one:
+        this.setState({
+            userData: {
+                ...this.state.userData,
+                [key]: value,
+            },
+        });
+        console.log(this.state.userData);
+    }
 
+    async saveModifiedUser() {
+        try {
+            let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
+            await api.put(`/user/${localStorage.getItem('userId')}/edit`, this.state.userData, {headers: {'X-Auth-Token': requestHeader}});
+        } catch (error) {
+            console.log(`An error occurred when submitting the clue: \n${handleError(error)}`);
+            return;
+        }
+        this.loadUserData(localStorage.getItem('userId'));
+        console.log(this.state.userData);
+    }
+
+    async loadUserData(userProfileId) {
+        let userData;
         try {
             let requestHeader = 'X-Auth-Token ' + localStorage.getItem('token');
             let response = await api.get(`/user/${userProfileId}`, {headers: {'X-Auth-Token': requestHeader}});
             userData = response.data;
-        }
-        catch (error) {
+        } catch (error) {
             alert(`Something went wrong while fetching the user data: \n${handleError(error)}`);
             return;
         }
-
         if (userData !== null && userData.birthDay !== null) {
-            if (userData.birthDay instanceof Date && !isNaN(userData.birthDay)) {
-                userData.birthDay = new Date(userData.birthDay);
-            }
-            else {
-                userData.birthDay = null; // invalid date
-            }
+            userData.birthDay = userData.birthDay.substring(0, 10);
         }
-
-        if (userData !== null && userData.gender !== null) {
-            if (userData.gender == 'f') {
-                userData.gender = 'Female';
-            }
-            else if (userData.gender == 'm') {
-                userData.gender = 'Female';
-            }
-            else {
-                userData.gender = null; // if not saved on server, it gets set to char with id 0
-            }
-        }
-
         this.setState({userData: userData});
     }
 
 
+    chooseProfileImages(value) {
+        let url;
+        switch (value) {
+            case "lion":
+                url = lion;
+                break;
+            case "dog":
+                url = dog;
+                break;
+            case "elephant":
+                url = elephant;
+                break;
+            case "giraffe":
+                url = giraffe;
+                break;
+            case "penguin":
+                url = penguin;
+                break;
+            case "squirrel":
+                url = squirrel;
+                break;
+            case "hippo":
+                url = hippo;
+                break;
+            case "tiger":
+                url = tiger;
+                break;
+            default:
+                url = null;
+        }
+        document.getElementById("profilePicture").style.backgroundImage = `url(${url})`;
+        this.setState({'showHiddenElement': false});
+        this.handleInputChange("image", value);
+    }
+
+    showProfileImages() {
+        if (this.state.showHiddenElement === false) {
+            this.setState({'showHiddenElement': true});
+        } else {
+            this.setState({'showHiddenElement': false});
+        }
+    }
+
     render() {
 
         if (this.state.userData === null) {
-            return <Spinner />
+            return <Spinner/>
         }
 
         let url = null;
@@ -115,43 +173,137 @@ export class UserProfile extends React.Component {
 
         let button = null;
         if (localStorage.getItem("userId") == this.state.userData.id) {
-            button = (
-                <ButtonContainer>
-                <EditButton
-                    width="50%"
-                    onClick={() => {this.props.parentProps.history.push(`/user/${localStorage.getItem('userId')}/edit`);}}
-                >
-                    <Red>
-                        Edit
-                    </Red>
-                </EditButton>
-            </ButtonContainer>
-            );
+            if (this.state.edit === true) {
+                button = (
+                    <ButtonContainer>
+                        <FormButton
+                            width="50%"
+                            onClick={() => {
+                                this.props.parentProps.history.push(`/user/${localStorage.getItem('userId')}/`);
+                            }}
+                        >
+                            <Red>
+                                Cancel
+                            </Red>
+                        </FormButton>
+                        <FormButton
+                            width="50%"
+                            onClick={() => {
+                                this.saveModifiedUser().then(r => this.props.parentProps.history.push(`/user/${localStorage.getItem('userId')}/`));
+                            }}
+                        >
+                            <Red>
+                                Save
+                            </Red>
+                        </FormButton>
+                    </ButtonContainer>);
+            } else {
+                button = (
+                    <ButtonContainer>
+                        <FormButton
+                            width="50%"
+                            onClick={() => {
+                                this.props.parentProps.history.push(`/user/${localStorage.getItem('userId')}/edit`);
+                            }}
+                        >
+                            <Red>
+                                Edit
+                            </Red>
+                        </FormButton>
+                    </ButtonContainer>);
+            }
         }
 
         return (
-            <BaseContainer>
+            <BaseContainer style={{marginTop: '0'}}>
                 <Button
-                    onClick={() => {this.props.parentProps.history.push(`/mainpage`);}}
+                    onClick={() => {
+                        this.props.parentProps.history.push(`/mainpage`);
+                    }}
                 >
                     <Red>
                         Back
                     </Red>
                 </Button>
+                <ChooseImageContainer style={{display: this.state.showHiddenElement ? 'flex' : 'none'}}
+                                      id={"hiddenProfileImages"}>
+                    <LionContainer
+                        value={"lion"}
+                        onClick={e => {
+                            this.chooseProfileImages(e.target.value)
+                        }}
+                    />
+                    <DogContainer
+                        value={"dog"}
+                        onClick={e => {
+                            this.chooseProfileImages(e.target.value)
+                        }}
+                    />
+                    <ElephantContainer
+                        value={"elephant"}
+                        onClick={e => {
+                            this.chooseProfileImages(e.target.value)
+                        }}
+                    />
+                    <GiraffeContainer
+                        value={"giraffe"}
+                        onClick={e => {
+                            this.chooseProfileImages(e.target.value)
+                        }}
+                    />
+                    <HippoContainer
+                        value={"hippo"}
+                        onClick={e => {
+                            this.chooseProfileImages(e.target.value)
+                        }}
+                    />
+                    <SquirrelContainer
+                        value={"squirrel"}
+                        onClick={e => {
+                            this.chooseProfileImages(e.target.value)
+                        }}
+                    />
+                    <TigerContainer
+                        value={"tiger"}
+                        onClick={e => {
+                            this.chooseProfileImages(e.target.value)
+                        }}
+                    />
+                    <PenguinContainer
+                        value={"penguin"}
+                        onClick={e => {
+                            this.chooseProfileImages(e.target.value)
+                        }}
+                    />
+                </ChooseImageContainer>
                 <CenterContainer>
                     <FormContainer>
-                        <ProfilePictureContainer style={{'backgroundImage': `url(${url})`}} />
-                        <InvisibleForm>
+                        <ProfilePictureContainer id={"profilePicture"}>
+                            {this.state.edit
+                                ? <EditProfilePictureButton
+                                    onClick={() => {
+                                        this.showProfileImages()
+                                    }}
+                                />
+                                : null
+                            }
+                        </ProfilePictureContainer>
+                        <InvisibleForm className="tooltip">
                             <ProfileLabel>
                                 <Blue>
                                     Username
                                 </Blue>
                             </ProfileLabel>
-                            <ProfileLabel>
-                                <Blue>
-                                    {this.state.userData.username}
-                                </Blue>
-                            </ProfileLabel>
+                            <ProfileInput
+                                value={this.state.userData.username || ''}
+                                disabled
+                            >
+                            </ProfileInput>
+                            {this.state.edit
+                                ? <div className="tooltiptext"><Orange style={{lineHeight: "unset"}}>Username cannot be
+                                    changed.</Orange></div>
+                                : null
+                            }
                         </InvisibleForm>
                         <InvisibleForm>
                             <ProfileLabel>
@@ -159,11 +311,15 @@ export class UserProfile extends React.Component {
                                     Name
                                 </Blue>
                             </ProfileLabel>
-                            <ProfileLabel>
-                                <Blue>
-                                    {this.state.userData.name}
-                                </Blue>
-                            </ProfileLabel>
+                            <ProfileInput
+                                value={this.state.userData.name || ''}
+                                placeholder="..."
+                                disabled={!this.state.edit}
+                                onChange={e => {
+                                    this.handleInputChange('name', e.target.value);
+                                }}
+                            >
+                            </ProfileInput>
                         </InvisibleForm>
                         <InvisibleForm>
                             <ProfileLabel>
@@ -171,11 +327,16 @@ export class UserProfile extends React.Component {
                                     Birthday
                                 </Blue>
                             </ProfileLabel>
-                            <ProfileLabel>
-                                <Blue>
-                                    {this.state.userData.birthDay}
-                                </Blue>
-                            </ProfileLabel>
+                            <ProfileInput
+                                value={this.state.userData.birthDay || ''}
+                                placeholder="..."
+                                type="date"
+                                disabled={!this.state.edit}
+                                onChange={e => {
+                                    this.handleInputChange('birthDay', e.target.value);
+                                }}
+                            >
+                            </ProfileInput>
                         </InvisibleForm>
                         <InvisibleForm>
                             <ProfileLabel>
@@ -183,11 +344,18 @@ export class UserProfile extends React.Component {
                                     Gender
                                 </Blue>
                             </ProfileLabel>
-                            <ProfileLabel>
-                                <Blue>
-                                    {this.state.userData.gender}
-                                </Blue>
-                            </ProfileLabel>
+                            <Select
+                                value={this.state.userData.gender || ''}
+                                onChange={e => {
+                                    this.handleInputChange('gender', e.target.value);
+                                }}
+                            >
+                                <option value='${null}' hidden>
+                                    ...
+                                </option>
+                                <option value='f'> female</option>
+                                <option value='m'> male</option>
+                            </Select>
                         </InvisibleForm>
                         <InvisibleForm>
                             <ProfileLabel>
@@ -195,11 +363,15 @@ export class UserProfile extends React.Component {
                                     Country
                                 </Blue>
                             </ProfileLabel>
-                            <ProfileLabel>
-                                <Blue>
-                                    {this.state.userData.country}
-                                </Blue>
-                            </ProfileLabel>
+                            <ProfileInput
+                                value={this.state.userData.country || ''}
+                                placeholder="..."
+                                disabled={!this.state.edit}
+                                onChange={e => {
+                                    this.handleInputChange('country', e.target.value);
+                                }}
+                            >
+                            </ProfileInput>
                         </InvisibleForm>
                         {button}
                     </FormContainer>
@@ -222,9 +394,75 @@ padding-top: 15px;
 const ProfileLabel = styled(Label)`
 width: 280px;
 margin: 0px 20px;
+text-align:right;
 `;
 
-const EditButton = styled(Button)`
+const ProfileInput = styled(InputField)`
+width: 280px;
+
+font-family: fantasy;
+font-style: normal;
+font-weight: normal;
+font-size: 18px;
+letter-spacing: 0.41em;
+color: #00A6EC;
+text-stroke: 2px #006AAE;
+-webkit-text-stroke: 2px #006AAE;
+margin: 0px 20px;
+
+&::placeholder {
+    font-family: fantasy;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    letter-spacing: 0.41em;
+    color: #00A6EC;
+    mix-blend-mode: darken;
+    text-stroke: 2px #006AAE;
+    -webkit-text-stroke: 2px #006AAE;
+    
+  }
+`;
+
+const Select = styled.select`
+  width: 280px;
+  height: 38px;
+  background: #FFFFFF;
+  border: 6px solid #F8E7D1;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  margin: 0px 20px;
+  padding-left: 5px;
+  font-size: 18px;
+    font-family: fantasy;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 0px;
+    letter-spacing: 0.41em;
+    text-transform: uppercase;
+    font-feature-settings: 'cpsp' on, 'ss04' on;
+    color: #00A6EC;
+    text-stroke: 2px #006AAE;
+    -webkit-text-stroke: 2px #006AAE;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    
+
+  option {    
+    display: flex;
+    white-space: pre;
+    min-height: 38px;
+    padding: 0px 2px 1px;
+    
+    background: #FFFFFF;
+    border: 6px solid #F8E7D1;
+    box-sizing: border-box;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    
+  }
+`;
+
+const FormButton = styled(Button)`
 margin-left: 20px;
 margin-right: 20px;
 width: 200px;
