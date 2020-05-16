@@ -86,7 +86,8 @@ export class UserProfile extends React.Component {
             return;
         }
         if (userData !== null && userData.birthDay !== null) {
-            userData.birthDay = userData.birthDay.substring(0, 10);
+            const date = new Date(userData.birthDay);
+            userData.birthDay = date.toLocaleDateString();
         }
         this.setState({userData: userData});
     }
