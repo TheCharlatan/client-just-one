@@ -50,17 +50,6 @@ export class UserProfile extends React.Component {
         this.setState({edit: this.props.edit});
         const {userProfileId} = this.props.parentProps.match.params;
         this.loadUserData(userProfileId);
-        /*if (userData !== null && userData.gender !== null) {
-            if (userData.gender == 'f') {
-                userData.gender = 'Female';
-            }
-            else if (userData.gender == 'm') {
-                userData.gender = 'Female';
-            }
-            else {
-                userData.gender = null; // if not saved on server, it gets set to char with id 0
-            }
-        }*/
     }
 
     handleInputChange(key, value) {
@@ -96,15 +85,12 @@ export class UserProfile extends React.Component {
             alert(`Something went wrong while fetching the user data: \n${handleError(error)}`);
             return;
         }
-        this.setState({userData: userData});
         if (userData !== null && userData.birthDay !== null) {
-            if (userData.birthDay instanceof Date && !isNaN(userData.birthDay)) {
-                userData.birthDay = new Date(userData.birthDay);
-            } else {
-                userData.birthDay = null; // invalid date
-            }
+            userData.birthDay = userData.birthDay.substring(0, 10);
         }
+        this.setState({userData: userData});
     }
+
 
     chooseProfileImages(value) {
         let url;
