@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Yellow from "../../../views/design/font-families/Yellow";
 import {LobbiesList} from "./LobbiesList";
 import {api, handleError} from "../../../helpers/api";
+import Red from "../../../views/design/font-families/Red";
 
 
 export class LobbiesContainer extends React.Component {
@@ -56,13 +57,20 @@ export class LobbiesContainer extends React.Component {
         if (response.data !== null && response.data.invitations && response.data.invitations.length > 0) {
             let invitedLobbies = [];
             this.state.openLobbies.forEach(lobby => {
+                console.log(this.state.openLobbies);
                 if (response.data.invitations.includes(lobby.id)) {
-                    invitedLobbies.push(lobby)
+                    invitedLobbies.push(lobby);
                 }
             });
             this.setState({
                 invitedLobbies: invitedLobbies
             });
+            this.state.invitedLobbies.forEach(lobby => {
+                if (this.state.openLobbies.includes(lobby)) {
+                    const index = this.state.openLobbies.indexOf(lobby);
+                    this.state.openLobbies.splice(index, 1);
+                    this.setState({openLobbies: this.state.openLobbies})
+            }});
         }
         else {
             this.setState({
@@ -76,7 +84,7 @@ export class LobbiesContainer extends React.Component {
 
         let lobbiesComponent;
 
-        if (this.state.openLobbies.length > 0) {
+        if (this.state.openLobbies.length > 0 ) {
             lobbiesComponent =
                 <React.Fragment>
                     <Label>
@@ -85,9 +93,9 @@ export class LobbiesContainer extends React.Component {
                     <LobbiesList lobbies={this.state.openLobbies} history={this.props.history} />
                 </React.Fragment>;
         }
-        else {
+        if (this.state.openLobbies.length <= 0 && this.state.invitedLobbies.length <= 0){
             lobbiesComponent =
-                <p style={{width: "200px"}}>There are no open lobbies. Please create a new one if you want to play.</p>
+                <Red style={{width: "300px"}}>There are no open lobbies. Please create a new one if you want to play.</Red>
         }
 
         if (this.state.invitedLobbies.length > 0) {
