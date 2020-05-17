@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Yellow from "../../../views/design/font-families/Yellow";
 import {LobbiesList} from "./LobbiesList";
 import {api, handleError} from "../../../helpers/api";
+import Red from "../../../views/design/font-families/Red";
 
 
 export class LobbiesContainer extends React.Component {
@@ -83,7 +84,7 @@ export class LobbiesContainer extends React.Component {
 
         let lobbiesComponent;
 
-        if (this.state.openLobbies.length > 0) {
+        if (this.state.openLobbies.length > 0 ) {
             lobbiesComponent =
                 <React.Fragment>
                     <Label>
@@ -92,9 +93,9 @@ export class LobbiesContainer extends React.Component {
                     <LobbiesList lobbies={this.state.openLobbies} history={this.props.history} />
                 </React.Fragment>;
         }
-        else {
+        if (this.state.openLobbies.length <= 0 && this.state.invitedLobbies.length <= 0){
             lobbiesComponent =
-                <p style={{width: "200px"}}>There are no open lobbies. Please create a new one if you want to play.</p>
+                <Red style={{width: "300px"}}>There are no open lobbies. Please create a new one if you want to play.</Red>
         }
 
         if (this.state.invitedLobbies.length > 0) {
