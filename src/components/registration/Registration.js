@@ -229,11 +229,10 @@ class Registration extends React.Component {
 
                 // Login successfully worked --> navigate to the route /game in the GameRouter
                 this.props.history.push(`/login`);
-            } catch (error) {
-                let message_2 = errorBox(error);
-                //alert(`Something went wrong during the registration: \n${handleError(error)}`);
+            }
+            catch (error) {
+                let message_2=errorBox(error);
                 this.showErrorModal(message_2);
-
             }
         }
     }

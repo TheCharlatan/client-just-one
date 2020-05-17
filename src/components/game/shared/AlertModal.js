@@ -1,7 +1,9 @@
 import React from "react";
 import Red from "../../../views/design/font-families/Red";
+import Yellow from "../../../views/design/font-families/Yellow";
 import Blue from "../../../views/design/font-families/Blue";
 import Button from "../../../views/design/Button";
+import Green from "../../../views/design/font-families/Green";
 import styled from "styled-components";
 
 const FlexButton = styled(Button)`

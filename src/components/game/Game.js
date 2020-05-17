@@ -197,7 +197,7 @@ class Game extends React.Component {
 
 
     componentWillUnmount() {
-        clearInterval(this.updateTimer);
+        clearInterval(this.state.updateTimer);
     }
 
 
@@ -272,7 +272,7 @@ class Game extends React.Component {
 
     clearTimer()
     {
-        clearInterval(this.updateTimer);
+        clearInterval(this.state.updateTimer);
     }
 
 
@@ -400,6 +400,7 @@ class Game extends React.Component {
                 <TurnEndScreen
                     correct={this.state.guessCorrect}
                     activeUser={this.state.activeUser}
+                    mysteryWord={this.state.gameModel.words[this.state.gameModel.wordIndex]}
                 />
             );
         }
