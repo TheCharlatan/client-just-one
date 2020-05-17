@@ -249,7 +249,7 @@ class Registration extends React.Component {
 
     handleKeyPress = (event) => {
         if(event.key === 'Enter'){
-            if(!this.state.username || !this.state.password || !this.state.repeat_password || this.checkPassword === false)
+            if(!this.state.username || !this.state.password || !this.state.repeat_password || this.checkPassword === false || this.state.showError)
             {
                 return;
             }

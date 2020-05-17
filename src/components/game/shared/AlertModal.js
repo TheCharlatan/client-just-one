@@ -22,6 +22,23 @@ export default class AlertModal extends React.Component {
         super(props);
     }
 
+    handleKeyPress = (event) => {
+        if(event.key === 'Enter'){
+            if(this.props.error === "true")
+            {
+                this.props.hideModal();
+            }
+        }
+    }
+
+    componentDidMount() {
+        document.addEventListener("keydown", this.handleKeyPress, false);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener("keydown", this.handleKeyPress, false);
+    }
+
     render() {
         if (!this.props.show) {
             return null;

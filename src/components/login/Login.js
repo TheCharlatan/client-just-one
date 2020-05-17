@@ -156,7 +156,7 @@ class Login extends React.Component {
     // add key press event listener
     handleKeyPress = (event) => {
         if(event.key === 'Enter'){
-            if(!this.state.username || !this.state.password)
+            if(!this.state.username || !this.state.password || this.state.showError)
             {
                 return;
             }
