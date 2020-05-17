@@ -126,7 +126,7 @@ export class Lobby extends React.Component {
     async updateLobby() {
         // This asyncLock makes sure there is only one asynchronous instance of this function running at a time.
         // It is in effect a function mutex
-        if(this.state.asyncLock) {
+        if(this.state.asyncLock || this.state.updateTimer == null) {
             return;
         }
         // set the asyncLock, don't forget to reset in the return scenarios.
@@ -183,7 +183,8 @@ export class Lobby extends React.Component {
     }
 
     componentWillUnmount() {
-        clearInterval(this.updateTimer);
+        clearInterval(this.state.updateTimer);
+        this.setState({updateTimer: null});
     }
 
     render() {
