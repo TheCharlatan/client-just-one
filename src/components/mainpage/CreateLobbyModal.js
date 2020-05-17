@@ -31,8 +31,9 @@ export class CreateLobbyModal extends React.Component {
     try {
       requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
       response = await api.post('/lobby', requestBody, {headers: {'X-Auth-Token': requestHeader}});
-      if(response.status)
-      this.props.hideModal();
+      if(response.status) {
+        this.props.hideModal();
+      }
     }
     catch {
       console.log("Ooops 1");

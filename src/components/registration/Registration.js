@@ -207,11 +207,10 @@ class Registration extends React.Component {
      */
     async register() {
         //check if password length >= 8 otherwise alert
-        if(this.state.password.length < 8) {
+        if (this.state.password.length < 8) {
             alert('Please enter a password with 8 or more characters!');
             return;
-        }
-        else {
+        } else {
 
             try {
                 const requestBody = JSON.stringify({
@@ -228,13 +227,14 @@ class Registration extends React.Component {
                  */
                 await api.post('/user', requestBody);
 
-            // Login successfully worked --> navigate to the route /game in the GameRouter
-            this.props.history.push(`/login`);
-        } catch (error) {
-            let message_2=errorBox(error);
-            //alert(`Something went wrong during the registration: \n${handleError(error)}`);
-            this.showErrorModal(message_2);
+                // Login successfully worked --> navigate to the route /game in the GameRouter
+                this.props.history.push(`/login`);
+            } catch (error) {
+                let message_2 = errorBox(error);
+                //alert(`Something went wrong during the registration: \n${handleError(error)}`);
+                this.showErrorModal(message_2);
 
+            }
         }
     }
 

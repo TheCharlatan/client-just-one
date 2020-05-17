@@ -3,9 +3,6 @@ import {Button} from "../../views/design/Button";
 import Yellow from "../../views/design/font-families/Yellow";
 import React from "react";
 
-import { api, handleError } from '../../helpers/api';
-
-
 const FlexButton = styled(Button)`
   display: flex;
   justify-content: center;

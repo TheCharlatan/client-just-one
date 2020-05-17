@@ -1,4 +1,3 @@
-import Red from "../../../views/design/font-families/Red";
 import React from "react";
 import Form from "../../../views/design/customized-layouts/Form";
 import FormContainer from "../../../views/design/customized-layouts/FormContainer";
