@@ -41,7 +41,7 @@ export class ClueInput extends React.Component {
         }
         catch (error) {
             console.log(`An error occurred when submitting the clue: \n${handleError(error)}`);
-            //return; //removed the return otherwise returning error message
+            //return; //todo removed the return otherwise returning error message
         }
 
         if (clue1 !== this.state.placeholder1 && clue1 !== "" && !this.state.clue1Submitted) {
