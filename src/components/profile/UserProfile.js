@@ -142,8 +142,7 @@ export class UserProfile extends React.Component {
         if (this.state.userData === null) {
             return <Spinner/>
         }
-
-        let url = null;
+        let url;
         switch (this.state.userData.image) {
             case "lion":
                 url = lion;
@@ -280,7 +279,7 @@ export class UserProfile extends React.Component {
                 </ChooseImageContainer>
                 <CenterContainer>
                     <FormContainer>
-                        <ProfilePictureContainer id={"profilePicture"}>
+                        <ProfilePictureContainer id={"profilePicture"} style={{backgroundImage: `url(${url})`}}>
                             {this.state.edit
                                 ? <EditProfilePictureButton
                                     onClick={() => {
