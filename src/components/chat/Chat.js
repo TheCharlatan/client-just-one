@@ -17,7 +17,7 @@ class Chat extends React.Component {
             loaded: false,
             loadMessagesTimer: null,
             asyncLock: false
-        }
+        };
         this.loadChatMessages = this.loadChatMessages.bind(this);
     }
 
@@ -56,7 +56,8 @@ class Chat extends React.Component {
         if (this.state.asyncLock || this.state.loadMessagesTimer == null) {
             return
         }
-        this.setState({asyncLock: true})
+
+        this.setState({asyncLock: true});
 
         try {
             let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
@@ -67,7 +68,7 @@ class Chat extends React.Component {
             });
         }
         catch (error) {
-            this.setState({asyncLock: false})
+            this.setState({asyncLock: false});
             await this.loadChatMessages();
             return;
         }
