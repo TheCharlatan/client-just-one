@@ -77,7 +77,7 @@ class Chat extends React.Component {
 
 
     render() {
-        return <Spinner />
+        
         if (!this.state.loaded) {
             return <Spinner />
         }
