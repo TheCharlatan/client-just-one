@@ -172,7 +172,6 @@ export class UserProfile extends React.Component {
             default:
                 url = profilePlaceholder;
         }
-        alert(url);
         let button = null;
           
         if (sessionStorage.getItem("userId") == this.state.userData.id) {
@@ -417,6 +416,7 @@ text-stroke: 2px #006AAE;
 -webkit-text-stroke: 2px #006AAE;
 margin: 0px 20px;
 line-height:normal;
+text-transform: uppercase;
 &::placeholder {
     font-family: fantasy;
     font-style: normal;
@@ -429,6 +429,7 @@ line-height:normal;
     -webkit-text-stroke: 2px #006AAE;
     
   }
+ 
 `;
 
 const Select = styled.select`
