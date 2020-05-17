@@ -40,4 +40,5 @@ const UserNameContainer = styled.button`
 background: none;
 border: none;
 text-align: left;
+cursor:pointer;
 `;
