@@ -303,7 +303,7 @@ export class UserProfile extends React.Component {
                             >
                             </ProfileInput>
                             {this.state.edit
-                                ? <div className="tooltiptext"><Orange style={{lineHeight: "unset"}}>Username cannot be
+                                ? <div className="tooltiptext"><Orange style={{lineHeight: "1.6", fontSize:'14px', letterSpacing:'0.31em'}}>Username cannot be
                                     changed.</Orange></div>
                                 : null
                             }
