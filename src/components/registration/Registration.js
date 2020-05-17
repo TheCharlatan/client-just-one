@@ -233,6 +233,7 @@ class Registration extends React.Component {
                 this.props.history.push(`/login`);
             }
             catch (error) {
+                console.log(`Something went wrong during the registration: \n${handleError(error)}`);
                 let message_2=errorBox(error);
                 this.showErrorModal(message_2);
             }
@@ -261,7 +262,6 @@ class Registration extends React.Component {
             {
                 return;
             }
-
             this.register();
         }
     }
