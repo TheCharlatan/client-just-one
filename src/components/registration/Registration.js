@@ -208,7 +208,8 @@ class Registration extends React.Component {
     async register() {
         //check if password length >= 8 otherwise alert
         if (this.state.password.length < 8) {
-            alert('Please enter a password with 8 or more characters!');
+            let message_2='Please enter a password with 8 or more characters!';
+            this.showErrorModal(message_2);
             return;
         }
         else {
@@ -300,7 +301,6 @@ class Registration extends React.Component {
         if(this.state.showHiddenElement === false){
             this.setState({['showHiddenElement'] : true});
             document.getElementById("hiddenProfileImages").style.display="flex";
-
         }
         else {
             this.setState({['showHiddenElement'] : false});
