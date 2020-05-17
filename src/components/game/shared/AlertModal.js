@@ -41,7 +41,7 @@ export default class AlertModal extends React.Component {
                     <Red style={{lineHeight:"unset"}}>{this.props.message_1}</Red>
                 </div>
                 <div>
-                    <Blue style={{lineHeight:"unset"}}>{this.props.message_2}</Blue>
+                    <Blue style={{lineHeight:"unset", fontWeight:'100', fontSize:'16px'}}>{this.props.message_2}</Blue>
                 </div>
                 {button}
             </div>
