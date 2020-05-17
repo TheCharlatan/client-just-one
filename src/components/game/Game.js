@@ -196,7 +196,7 @@ class Game extends React.Component {
 
 
     componentWillUnmount() {
-        clearInterval(this.updateTimer);
+        clearInterval(this.state.updateTimer);
     }
 
 
@@ -271,7 +271,7 @@ class Game extends React.Component {
 
     clearTimer()
     {
-        clearInterval(this.updateTimer);
+        clearInterval(this.state.updateTimer);
     }
 
 
