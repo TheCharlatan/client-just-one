@@ -60,6 +60,7 @@ export class UserProfile extends React.Component {
                 [key]: value,
             },
         });
+
         console.log(this.state.userData);
     }
 
@@ -85,11 +86,14 @@ export class UserProfile extends React.Component {
             alert(`Something went wrong while fetching the user data: \n${handleError(error)}`);
             return;
         }
-        if (userData !== null && userData.birthDay !== null) {
-            const date = new Date(userData.birthDay);
+        /*if (userData !== null && userData.birthDay !== null) {
+            //const date = new Date(userData.birthDay);
+            const date = new Date("2020-05-12");
             userData.birthDay = date.toLocaleDateString();
-        }
+
+        }*/
         this.setState({userData: userData});
+        console.log(userData);
     }
 
 
@@ -330,7 +334,7 @@ export class UserProfile extends React.Component {
                                 </Blue>
                             </ProfileLabel>
                             <ProfileInput
-                                value={this.state.userData.birthDay || ''}
+                                value={this.state.userData.birthDay}
                                 placeholder="..."
                                 type="date"
                                 disabled={!this.state.edit}
@@ -411,7 +415,7 @@ color: #00A6EC;
 text-stroke: 2px #006AAE;
 -webkit-text-stroke: 2px #006AAE;
 margin: 0px 20px;
-
+line-height:normal;
 &::placeholder {
     font-family: fantasy;
     font-style: normal;
