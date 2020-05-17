@@ -3,12 +3,21 @@
 /**
 This file contains the general and shared style of your application.
  */
+
+
 body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-height: 100vh;
+  min-width: 100vh;
 }
 
+/*
 body::after{
   content: "";
   background-image: url(img/logo_trans.png);
@@ -21,7 +30,11 @@ body::after{
   right: 0;
   position: absolute;
   z-index: -1;
+
+  max-height: 768px;
+  max-width: 1366px;
 }
+*/
 
 .modal {
   /* some styles to position the modal at the center of the page */

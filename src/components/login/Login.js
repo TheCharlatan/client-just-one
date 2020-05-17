@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {BaseContainer, CenterContainer} from '../../helpers/layout';
+import {Background, BaseContainer, CenterContainer} from '../../helpers/layout';
 
 import { api, handleError } from '../../helpers/api';
 import Token from '../shared/models/Token';
@@ -27,7 +27,7 @@ line-height: 0px;
 const FormLogin = styled(Form)`
   width: 885px;
   height: 100%;
-  padding-top: 50px;
+  padding-top: 20px;
 `;
 
 const InputFieldLogin = styled(InputField)`
@@ -160,6 +160,7 @@ class Login extends React.Component {
     render() {
     return (
         <BaseContainer>
+            <Background/>
             <CenterContainer>
                 <FormContainerLogin>
                     <FormLogin>

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {BaseContainer, CenterContainer} from '../../helpers/layout';
+import {Background, BaseContainer, CenterContainer} from '../../helpers/layout';
 import {api, handleError} from '../../helpers/api';
 import {withRouter} from 'react-router-dom';
 import FormContainer from "../../views/design/customized-layouts/FormContainer";
@@ -345,6 +345,7 @@ class Registration extends React.Component {
         }
         return (
             <BaseContainer>
+                <Background/>
                 <ChooseImageContainer id={"hiddenProfileImages"}>
                     <LionContainer
                         value={"lion"}

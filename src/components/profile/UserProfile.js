@@ -1,6 +1,6 @@
 import React from "react";
 import {api, handleError} from "../../helpers/api";
-import {BaseContainer, CenterContainer} from "../../helpers/layout";
+import {Background, BaseContainer, CenterContainer, TopLeftContainer} from "../../helpers/layout";
 import ProfilePictureContainer from "../../views/design/customized-layouts/ProfilePictureContainer";
 import ButtonContainer from "../../views/design/customized-layouts/ButtonContainer";
 import styled from "styled-components";
@@ -218,15 +218,18 @@ export class UserProfile extends React.Component {
 
         return (
             <BaseContainer style={{marginTop: '0'}}>
-                <Button
-                    onClick={() => {
-                        this.props.parentProps.history.push(`/mainpage`);
-                    }}
-                >
-                    <Red>
-                        Back
-                    </Red>
-                </Button>
+                <Background/>
+                <TopLeftContainer>
+                    <Button
+                        onClick={() => {
+                            this.props.parentProps.history.push(`/mainpage`);
+                        }}
+                    >
+                        <Red>
+                            Back
+                        </Red>
+                    </Button>
+                </TopLeftContainer>
                 <ChooseImageContainer style={{display: this.state.showHiddenElement ? 'flex' : 'none'}}
                                       id={"hiddenProfileImages"}>
                     <LionContainer
