@@ -69,7 +69,7 @@ export class UserProfile extends React.Component {
             let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             await api.put(`/user/${sessionStorage.getItem('userId')}/edit`, this.state.userData, {headers: {'X-Auth-Token': requestHeader}});
         } catch (error) {
-            console.log(`An error occurred when submitting the clue: \n${handleError(error)}`);
+            console.log(`An error occurred when saving the modified changes to profile: \n${handleError(error)}`);
             return;
         }
         this.loadUserData(sessionStorage.getItem('userId'));
