@@ -45,9 +45,13 @@ class Chat extends React.Component {
        this.setState({loadMessagesTimer: timer});
     }
 
+    componentWillUnmount() {
+        clearInterval(this.state.loadMessagesTimer);
+        this.setState({loadMessagesTimer: null});
+    }
 
     async loadChatMessages() {
-        if (this.state.asyncLock) {
+        if (this.state.asyncLock || this.state.loadMessagesTimer == null) {
             return
         }
         this.setState({asyncLock: true})
