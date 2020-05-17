@@ -161,6 +161,7 @@ padding:1%;
 `;
 
 
+
 /**
  * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
  * You should have a class (instead of a functional component) when:
@@ -205,29 +206,35 @@ class Registration extends React.Component {
      * and its token is stored in the sessionStorage.
      */
     async register() {
-        try {
-            const requestBody = JSON.stringify({
-                username: this.state.username,
-                password: this.state.password,
-                name: this.state.name,
-                birthDay: this.state.birthDay,
-                gender: this.state.gender,
-                country: this.state.country,
-                image: this.state.image,
-            });
-            /**
-             * only register the user but after success go back to the login window
-             */
-            await api.post('/user', requestBody);
+        //check if password length >= 8 otherwise alert
+        if (this.state.password.length < 8) {
+            alert('Please enter a password with 8 or more characters!');
+            return;
+        }
+        else {
 
+            try {
+                const requestBody = JSON.stringify({
+                    username: this.state.username,
+                    password: this.state.password,
+                    name: this.state.name,
+                    birthDay: this.state.birthDay,
+                    gender: this.state.gender,
+                    country: this.state.country,
+                    image: this.state.image,
+                });
+                /**
+                 * only register the user but after success go back to the login window
+                 */
+                await api.post('/user', requestBody);
 
-            // Login successfully worked --> navigate to the route /game in the GameRouter
-            this.props.history.push(`/login`);
-        } catch (error) {
-            let message_2=errorBox(error);
-            //alert(`Something went wrong during the registration: \n${handleError(error)}`);
-            this.showErrorModal(message_2);
-
+                // Login successfully worked --> navigate to the route /game in the GameRouter
+                this.props.history.push(`/login`);
+            }
+            catch (error) {
+                let message_2=errorBox(error);
+                this.showErrorModal(message_2);
+            }
         }
     }
 
@@ -253,7 +260,7 @@ class Registration extends React.Component {
             {
                 return;
             }
-            console.log('enter press here! ')
+
             this.register();
         }
     }
@@ -426,7 +433,7 @@ class Registration extends React.Component {
                         </ProfilePictureContainer>
                         <FormRegistration>
                             <LabelRegistration>
-                                <Blue>username</Blue>
+                                <Blue>username*</Blue>
                             </LabelRegistration>
                             <InputFieldRegistration
                                 placeholder="..."
@@ -448,7 +455,7 @@ class Registration extends React.Component {
                         </FormRegistration>
                         <FormRegistration>
                             <LabelRegistration>
-                                <Blue>password</Blue>
+                                <Blue>password*</Blue>
                             </LabelRegistration>
                             <InputFieldRegistration
                                 id = "password"
@@ -462,7 +469,7 @@ class Registration extends React.Component {
                         </FormRegistration>
                         <FormRegistration className="tooltip">
                             <LabelRegistration>
-                                <Blue>repeat password</Blue>
+                                <Blue>repeat password*</Blue>
                             </LabelRegistration>
                             <InputFieldRegistration
                                 id = "confirm_password"
