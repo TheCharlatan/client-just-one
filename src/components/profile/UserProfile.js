@@ -172,7 +172,7 @@ export class UserProfile extends React.Component {
             default:
                 url = profilePlaceholder;
         }
-
+        alert(url);
         let button = null;
           
         if (sessionStorage.getItem("userId") == this.state.userData.id) {
@@ -316,7 +316,7 @@ export class UserProfile extends React.Component {
                             </ProfileLabel>
                             <ProfileInput
                                 value={this.state.userData.name || ''}
-                                placeholder="..."
+                                placeholder = {(this.state.edit) ? "..." : ""}
                                 disabled={!this.state.edit}
                                 onChange={e => {
                                     this.handleInputChange('name', e.target.value);
@@ -331,9 +331,9 @@ export class UserProfile extends React.Component {
                                 </Blue>
                             </ProfileLabel>
                             <ProfileInput
-                                value={this.state.userData.birthDay}
-                                placeholder="..."
-                                type="date"
+                                value={this.state.userData.birthDay || ''}
+                                placeholder = {(this.state.edit) ? "..." : ""}
+                                type = {(this.state.edit) ? "date" : "text"}
                                 disabled={!this.state.edit}
                                 onChange={e => {
                                     this.handleInputChange('birthDay', e.target.value);
@@ -352,10 +352,14 @@ export class UserProfile extends React.Component {
                                 onChange={e => {
                                     this.handleInputChange('gender', e.target.value);
                                 }}
+                                style={{opacity:'initial'}}
+                                disabled={!this.state.edit}
                             >
-                                <option value='${null}' hidden>
+                                {(this.state.edit) ? <option value='${null}' hidden>
                                     ...
-                                </option>
+                                </option> : <option value='${null}' hidden>
+
+                                </option>}
                                 <option value='f'> female</option>
                                 <option value='m'> male</option>
                             </Select>
@@ -368,7 +372,7 @@ export class UserProfile extends React.Component {
                             </ProfileLabel>
                             <ProfileInput
                                 value={this.state.userData.country || ''}
-                                placeholder="..."
+                                placeholder = {(this.state.edit) ? "..." : ""}
                                 disabled={!this.state.edit}
                                 onChange={e => {
                                     this.handleInputChange('country', e.target.value);
