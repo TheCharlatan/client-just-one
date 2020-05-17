@@ -86,12 +86,9 @@ export class UserProfile extends React.Component {
             alert(`Something went wrong while fetching the user data: \n${handleError(error)}`);
             return;
         }
-        /*if (userData !== null && userData.birthDay !== null) {
-            //const date = new Date(userData.birthDay);
-            const date = new Date("2020-05-12");
-            userData.birthDay = date.toLocaleDateString();
-
-        }*/
+        if (userData !== null && userData.birthDay !== null) {
+            userData.birthDay = userData.birthDay.substring(0,10);
+        }
         this.setState({userData: userData});
         console.log(userData);
     }
