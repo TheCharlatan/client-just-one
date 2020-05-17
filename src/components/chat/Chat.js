@@ -17,7 +17,7 @@ class Chat extends React.Component {
             loaded: false,
             loadMessagesTimer: null,
             asyncLock: false
-        }
+        };
         this.loadChatMessages = this.loadChatMessages.bind(this);
     }
 
@@ -45,16 +45,20 @@ class Chat extends React.Component {
        this.setState({loadMessagesTimer: timer});
     }
 
+
     componentWillUnmount() {
         clearInterval(this.state.loadMessagesTimer);
         this.setState({loadMessagesTimer: null});
     }
 
+
     async loadChatMessages() {
         if (this.state.asyncLock || this.state.loadMessagesTimer == null) {
             return
         }
-        this.setState({asyncLock: true})
+
+        this.setState({asyncLock: true});
+
         try {
             let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             let response = await api.get(`chatpoll/${this.props.chatEndpoint}`, {headers: {'X-Auth-Token': requestHeader}});
@@ -64,16 +68,17 @@ class Chat extends React.Component {
             });
         }
         catch (error) {
-            this.setState({asyncLock: false})
-            this.loadChatMessages()
+            this.setState({asyncLock: false});
+            await this.loadChatMessages();
             return;
         }
+
         this.setState({asyncLock: false})
     }
 
 
     render() {
-
+        
         if (!this.state.loaded) {
             return <Spinner />
         }

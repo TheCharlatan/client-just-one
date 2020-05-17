@@ -60,6 +60,7 @@ export class UserProfile extends React.Component {
                 [key]: value,
             },
         });
+
         console.log(this.state.userData);
     }
 
@@ -68,7 +69,7 @@ export class UserProfile extends React.Component {
             let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             await api.put(`/user/${sessionStorage.getItem('userId')}/edit`, this.state.userData, {headers: {'X-Auth-Token': requestHeader}});
         } catch (error) {
-            console.log(`An error occurred when submitting the clue: \n${handleError(error)}`);
+            console.log(`An error occurred when saving the modified changes to profile: \n${handleError(error)}`);
             return;
         }
         this.loadUserData(sessionStorage.getItem('userId'));
@@ -86,10 +87,10 @@ export class UserProfile extends React.Component {
             return;
         }
         if (userData !== null && userData.birthDay !== null) {
-            const date = new Date(userData.birthDay);
-            userData.birthDay = date.toLocaleDateString();
+            userData.birthDay = userData.birthDay.substring(0,10);
         }
         this.setState({userData: userData});
+        console.log(userData);
     }
 
 
@@ -141,8 +142,7 @@ export class UserProfile extends React.Component {
         if (this.state.userData === null) {
             return <Spinner/>
         }
-
-        let url = null;
+        let url;
         switch (this.state.userData.image) {
             case "lion":
                 url = lion;
@@ -171,7 +171,6 @@ export class UserProfile extends React.Component {
             default:
                 url = profilePlaceholder;
         }
-
         let button = null;
           
         if (sessionStorage.getItem("userId") == this.state.userData.id) {
@@ -283,7 +282,7 @@ export class UserProfile extends React.Component {
                 </ChooseImageContainer>
                 <CenterContainer>
                     <FormContainer>
-                        <ProfilePictureContainer id={"profilePicture"}>
+                        <ProfilePictureContainer id={"profilePicture"} style={{backgroundImage: `url(${url})`}}>
                             {this.state.edit
                                 ? <EditProfilePictureButton
                                     onClick={() => {
@@ -305,7 +304,7 @@ export class UserProfile extends React.Component {
                             >
                             </ProfileInput>
                             {this.state.edit
-                                ? <div className="tooltiptext"><Orange style={{lineHeight: "unset"}}>Username cannot be
+                                ? <div className="tooltiptext"><Orange style={{lineHeight: "1.6", fontSize:'14px', letterSpacing:'0.31em'}}>Username cannot be
                                     changed.</Orange></div>
                                 : null
                             }
@@ -318,7 +317,7 @@ export class UserProfile extends React.Component {
                             </ProfileLabel>
                             <ProfileInput
                                 value={this.state.userData.name || ''}
-                                placeholder="..."
+                                placeholder = {(this.state.edit) ? "..." : ""}
                                 disabled={!this.state.edit}
                                 onChange={e => {
                                     this.handleInputChange('name', e.target.value);
@@ -334,8 +333,8 @@ export class UserProfile extends React.Component {
                             </ProfileLabel>
                             <ProfileInput
                                 value={this.state.userData.birthDay || ''}
-                                placeholder="..."
-                                type="date"
+                                placeholder = {(this.state.edit) ? "..." : ""}
+                                type = {(this.state.edit) ? "date" : "text"}
                                 disabled={!this.state.edit}
                                 onChange={e => {
                                     this.handleInputChange('birthDay', e.target.value);
@@ -354,10 +353,14 @@ export class UserProfile extends React.Component {
                                 onChange={e => {
                                     this.handleInputChange('gender', e.target.value);
                                 }}
+                                style={{opacity:'initial'}}
+                                disabled={!this.state.edit}
                             >
-                                <option value='${null}' hidden>
+                                {(this.state.edit) ? <option value='${null}' hidden>
                                     ...
-                                </option>
+                                </option> : <option value='${null}' hidden>
+
+                                </option>}
                                 <option value='f'> female</option>
                                 <option value='m'> male</option>
                             </Select>
@@ -370,7 +373,7 @@ export class UserProfile extends React.Component {
                             </ProfileLabel>
                             <ProfileInput
                                 value={this.state.userData.country || ''}
-                                placeholder="..."
+                                placeholder = {(this.state.edit) ? "..." : ""}
                                 disabled={!this.state.edit}
                                 onChange={e => {
                                     this.handleInputChange('country', e.target.value);
@@ -414,7 +417,8 @@ color: #00A6EC;
 text-stroke: 2px #006AAE;
 -webkit-text-stroke: 2px #006AAE;
 margin: 0px 20px;
-
+line-height:normal;
+text-transform: uppercase;
 &::placeholder {
     font-family: fantasy;
     font-style: normal;
@@ -427,6 +431,7 @@ margin: 0px 20px;
     -webkit-text-stroke: 2px #006AAE;
     
   }
+ 
 `;
 
 const Select = styled.select`

@@ -56,7 +56,7 @@ export class Lobby extends React.Component {
         try {
             const response = await api.get(`/lobby/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
             if (response.data == null) {
-                alert("Unexpected error");
+                alert("Unexpected error when loading lobby.");
                 return;
             }
             if (response.data.name)
@@ -74,6 +74,7 @@ export class Lobby extends React.Component {
             alert(`An error occurred when retrieving lobby players: ${error}`);
             return;
         }
+
         // get the users to show them in the lobby
         try {
             for (let i = 0; i < this.state.playerIds.length; i++) {
@@ -85,10 +86,12 @@ export class Lobby extends React.Component {
         } catch (error) {
             alert(`Something went wrong while fetching the users: ${error}`);
         }
+
         this.setState({loaded: true});
-        api.post(`/lobbypoll/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
-        this.updateLobby()
-        this.setState({updateTimer: setInterval(() => this.updateLobby(), 1000)})
+
+        await api.post(`/lobbypoll/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
+        await this.updateLobby();
+        this.setState({updateTimer: setInterval(() => this.updateLobby(), 1000)});
     }
 
     async startGame() {
@@ -101,6 +104,7 @@ export class Lobby extends React.Component {
             alert("Not enough players to start the game.")
             return;
         }
+
         try {
             const requestBody = JSON.stringify({
                 playerIds: this.state.playerIds
@@ -131,7 +135,8 @@ export class Lobby extends React.Component {
         }
         // set the asyncLock, don't forget to reset in the return scenarios.
         this.setState({asyncLock: true});
-        if(!sessionStorage.getItem("lobbyId")){
+
+        if (!sessionStorage.getItem("lobbyId")) {
             return;
         }
       
@@ -144,7 +149,8 @@ export class Lobby extends React.Component {
                 sessionStorage.setItem("gameId", response.data.gameId);
                 this.props.history.push(`/game/${response.data.gameId}`);
             }
-        } catch (error) {
+        }
+        catch (error) {
             alert(`An error occurred when starting a new game: ${handleError(error)}`);
         }
 
@@ -152,7 +158,7 @@ export class Lobby extends React.Component {
             const response = await api.get(`/lobbypoll/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
             if (response.data == null) {
                 this.setState({asyncLock: false});
-                this.updateLobby();
+                await this.updateLobby();
                 return;
             }
             if (response.data.playerIds && response.data.playerIds.length > 0) {
@@ -160,12 +166,14 @@ export class Lobby extends React.Component {
                     playerIds: response.data.playerIds
                 })
             }
-        } catch (error) {
+        }
+        catch (error) {
             // just continue, this is usually the timeout error. Serious errors (like the server being down) are caught by the other api calls in this function)
             this.setState({asyncLock: false});
-            this.updateLobby();
+            await this.updateLobby();
             return;
         }
+
         // get the users to show them in the lobby
         try {
             let users = []
@@ -176,9 +184,11 @@ export class Lobby extends React.Component {
                 users.push(responseUser.data)
             }
             this.setState({users: users})
-        } catch (error) {
+        }
+        catch (error) {
             alert(`Something went wrong while fetching the users: ${error}`);
         }
+
         this.setState({asyncLock: false});
     }
 

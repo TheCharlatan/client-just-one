@@ -101,6 +101,7 @@ class Game extends React.Component {
                     <AlertModal
                         show={this.state.show}
                         message_1={`${leftPlayerUserId} left unexpectedly. `}
+                        error = "false"
                         message_2={`The game will continue in a few seconds.`}
                     />
                 );
@@ -196,7 +197,7 @@ class Game extends React.Component {
 
 
     componentWillUnmount() {
-        clearInterval(this.updateTimer);
+        clearInterval(this.state.updateTimer);
     }
 
 
@@ -271,7 +272,7 @@ class Game extends React.Component {
 
     clearTimer()
     {
-        clearInterval(this.updateTimer);
+        clearInterval(this.state.updateTimer);
     }
 
 
@@ -399,6 +400,7 @@ class Game extends React.Component {
                 <TurnEndScreen
                     correct={this.state.guessCorrect}
                     activeUser={this.state.activeUser}
+                    mysteryWord={this.state.gameModel.words[this.state.gameModel.wordIndex]}
                 />
             );
         }

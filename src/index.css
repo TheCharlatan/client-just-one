@@ -102,7 +102,7 @@ button {
 
 .tooltip .tooltiptext {
   visibility: hidden;
-  width: 250px;
+  width: 160px;
   background-color: #F8E7D1;
   color: #fff;
   text-align: center;
@@ -112,7 +112,7 @@ button {
   /* Position the tooltip */
   position: absolute;
   z-index: 1;
-  top: -5%;
+  top: -25%;
   left: 105%;
   margin-left: -60px;
 }

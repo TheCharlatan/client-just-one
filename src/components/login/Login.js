@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import {Background, BaseContainer, CenterContainer} from '../../helpers/layout';
 
-import { api, handleError } from '../../helpers/api';
+import {api, errorBox, handleError} from '../../helpers/api';
 import Token from '../shared/models/Token';
 import { withRouter } from 'react-router-dom';
 import FormContainer from "../../views/design/customized-layouts/FormContainer";
@@ -15,6 +15,7 @@ import Green from "../../views/design/font-families/Green";
 import Button from "../../views/design/Button";
 import ButtonContainer from "../../views/design/customized-layouts/ButtonContainer";
 import toBinary from "./toBinary";
+import AlertModal from "../game/shared/AlertModal";
 
 
 const FormContainerLogin = styled(FormContainer)`
@@ -88,8 +89,12 @@ class Login extends React.Component {
     super();
     this.state = {
       password: null,
-      username: null
+      username: null,
+      showError: false, // modal window for alert when player closes the browser unexpectedly.
+      errorMessage : null
     };
+    this.showErrorModal = this.showErrorModal.bind(this);
+    this.hideErrorModal = this.hideErrorModal.bind(this);
   }
   /**
    * HTTP POST request is sent to the backend.
@@ -115,9 +120,28 @@ class Login extends React.Component {
       // Login successfully worked --> navigate to the route /game in the GameRouter
       this.props.history.push(`/mainpage`);
     } catch (error) {
-      alert(`Something went wrong during the login: \n${handleError(error)}`);
+      //alert(`Something went wrong during the login: \n${handleError(error)}`);
+        let message_2=errorBox(error);
+        //alert(`Something went wrong during the registration: \n${handleError(error)}`);
+        this.showErrorModal(message_2);
+
     }
   }
+
+    //show the alert window
+    showErrorModal(error) {
+        this.setState({
+            showError: true,
+            errorMessage: error
+        });
+    }
+
+    hideErrorModal() {
+        this.setState({
+            showError: false,
+            errorMessage: null
+        });
+    }
 
   /**
    *  Every time the user enters something in the input field, the state gets updated.
@@ -132,7 +156,7 @@ class Login extends React.Component {
     // add key press event listener
     handleKeyPress = (event) => {
         if(event.key === 'Enter'){
-            if(!this.state.username || !this.state.password)
+            if(!this.state.username || !this.state.password || this.state.showError)
             {
                 return;
             }
@@ -158,9 +182,23 @@ class Login extends React.Component {
 
 
     render() {
+        let alertBox = null;
+        if(this.state.showError)
+        {
+            alertBox = (
+                <AlertModal
+                    show={this.state.showError}
+                    message_1={`Something went wrong during the login: `}
+                    message_2={`${this.state.errorMessage}`}
+                    error = "true"
+                    hideModal = {this.hideErrorModal}
+                />
+            );
+        }
     return (
         <BaseContainer>
             <Background/>
+            {alertBox}
             <CenterContainer>
                 <FormContainerLogin>
                     <FormLogin>

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {Background, BaseContainer, CenterContainer} from '../../helpers/layout';
-import {api, handleError} from '../../helpers/api';
+import {api, errorBox, handleError} from '../../helpers/api';
 import {withRouter} from 'react-router-dom';
 import FormContainer from "../../views/design/customized-layouts/FormContainer";
 import Form from "../../views/design/customized-layouts/Form";
@@ -35,6 +35,7 @@ import squirrel from "../../img/squirrel.png"
 import tiger from "../../img/tiger.png"
 import Green from "../../views/design/font-families/Green";
 import Red from "../../views/design/font-families/Red";
+import AlertModal from "../game/shared/AlertModal";
 
 
 const FormRegistration = styled(Form)`
@@ -160,6 +161,7 @@ padding:1%;
 `;
 
 
+
 /**
  * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
  * You should have a class (instead of a functional component) when:
@@ -189,9 +191,13 @@ class Registration extends React.Component {
             country: null,
             image: null,
             showHiddenElement: false,
-            message : null
+            message : null,
+            showError: false, // modal window for alert when player closes the browser unexpectedly.
+            errorMessage : null
         };
         this.checkPassword = false;
+        this.showErrorModal = this.showErrorModal.bind(this);
+        this.hideErrorModal = this.hideErrorModal.bind(this);
     }
 
     /**
@@ -200,38 +206,61 @@ class Registration extends React.Component {
      * and its token is stored in the sessionStorage.
      */
     async register() {
-        try {
-            const requestBody = JSON.stringify({
-                username: this.state.username,
-                password: this.state.password,
-                name: this.state.name,
-                birthDay: this.state.birthDay,
-                gender: this.state.gender,
-                country: this.state.country,
-                image: this.state.image,
-            });
-            /**
-             * only register the user but after success go back to the login window
-             */
-            await api.post('/user', requestBody);
+        //check if password length >= 8 otherwise alert
+        if (this.state.password.length < 8) {
+            alert('Please enter a password with 8 or more characters!');
+            return;
+        }
+        else {
 
+            try {
+                const requestBody = JSON.stringify({
+                    username: this.state.username,
+                    password: this.state.password,
+                    name: this.state.name,
+                    birthDay: this.state.birthDay,
+                    gender: this.state.gender,
+                    country: this.state.country,
+                    image: this.state.image,
+                });
+                /**
+                 * only register the user but after success go back to the login window
+                 */
+                await api.post('/user', requestBody);
 
-            // Login successfully worked --> navigate to the route /game in the GameRouter
-            this.props.history.push(`/login`);
-        } catch (error) {
-            alert(`Something went wrong during the registration: \n${handleError(error)}`);
+                // Login successfully worked --> navigate to the route /game in the GameRouter
+                this.props.history.push(`/login`);
+            }
+            catch (error) {
+                let message_2=errorBox(error);
+                this.showErrorModal(message_2);
+            }
         }
     }
 
+    //show the alert window
+     showErrorModal(error) {
+        this.setState({
+            showError: true,
+            errorMessage : error
+        });
+    }
+
+    hideErrorModal() {
+        this.setState({
+            showError: false,
+            errorMessage : null
+        });
+    }
 
 
     handleKeyPress = (event) => {
         if(event.key === 'Enter'){
-            if(!this.state.username || !this.state.password || !this.state.repeat_password || this.checkPassword === false)
+            if(!this.state.username || !this.state.password || !this.state.repeat_password || this.checkPassword === false || this.state.showError)
             {
                 return;
             }
-            console.log('enter press here! ')
+
             this.register();
         }
     }
@@ -343,9 +372,25 @@ class Registration extends React.Component {
         else{
             message = null;
         }
+
+        let alertBox = null;
+        if(this.state.showError)
+        {
+            alertBox = (
+                <AlertModal
+                    show={this.state.showError}
+                    message_1={`Something went wrong during the registration: `}
+                    message_2={`${this.state.errorMessage}`}
+                    error = "true"
+                    hideModal = {this.hideErrorModal}
+                />
+            );
+        }
+
         return (
             <BaseContainer>
                 <Background/>
+                {alertBox}
                 <ChooseImageContainer id={"hiddenProfileImages"}>
                     <LionContainer
                         value={"lion"}
@@ -389,7 +434,7 @@ class Registration extends React.Component {
                         </ProfilePictureContainer>
                         <FormRegistration>
                             <LabelRegistration>
-                                <Blue>username</Blue>
+                                <Blue>username*</Blue>
                             </LabelRegistration>
                             <InputFieldRegistration
                                 placeholder="..."
@@ -411,7 +456,7 @@ class Registration extends React.Component {
                         </FormRegistration>
                         <FormRegistration>
                             <LabelRegistration>
-                                <Blue>password</Blue>
+                                <Blue>password*</Blue>
                             </LabelRegistration>
                             <InputFieldRegistration
                                 id = "password"
@@ -425,7 +470,7 @@ class Registration extends React.Component {
                         </FormRegistration>
                         <FormRegistration className="tooltip">
                             <LabelRegistration>
-                                <Blue>repeat password</Blue>
+                                <Blue>repeat password*</Blue>
                             </LabelRegistration>
                             <InputFieldRegistration
                                 id = "confirm_password"
