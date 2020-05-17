@@ -14,7 +14,7 @@ class Leaderboard extends React.Component {
         this.state = {
             leaderboardUsers: [],
             orderedDescending: true
-        }
+        };
         this.orderLeaderboard = this.orderLeaderboard.bind(this);
         this.scrollLeaderboardToLeader = this.scrollLeaderboardToLeader.bind(this);
         this.scrollLeaderboardToCurrentUser = this.scrollLeaderboardToCurrentUser.bind(this);

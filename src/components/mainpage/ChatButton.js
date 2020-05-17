@@ -6,10 +6,19 @@ import React from "react";
 import { api, handleError } from '../../helpers/api';
 
 
-const FlexButton = styled(Button)`
-  display: flex;
-  justify-content: center;
-  background: #FFFFFF;
+const FlexButton = styled.button`
+position: relative;
+width: 100%; // scales (was 267px before for a column-width of 272px)
+height: 45px;
+display: flex;
+align-items: center;
+justify-content: center;
+line-height: 0px;
+background: #FFFFFF;
+border: 6px solid #DDC18E;
+box-sizing: border-box;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  
 `;
 
 
