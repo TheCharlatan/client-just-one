@@ -56,13 +56,20 @@ export class LobbiesContainer extends React.Component {
         if (response.data !== null && response.data.invitations && response.data.invitations.length > 0) {
             let invitedLobbies = [];
             this.state.openLobbies.forEach(lobby => {
+                console.log(this.state.openLobbies);
                 if (response.data.invitations.includes(lobby.id)) {
-                    invitedLobbies.push(lobby)
+                    invitedLobbies.push(lobby);
                 }
             });
             this.setState({
                 invitedLobbies: invitedLobbies
             });
+            this.state.invitedLobbies.forEach(lobby => {
+                if (this.state.openLobbies.includes(lobby)) {
+                    const index = this.state.openLobbies.indexOf(lobby);
+                    this.state.openLobbies.splice(index, 1);
+                    this.setState({openLobbies: this.state.openLobbies})
+            }});
         }
         else {
             this.setState({
