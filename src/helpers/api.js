@@ -33,3 +33,29 @@ export const handleError = error => {
     return error.message;
   }
 };
+
+export const errorBox = error =>{
+  const response = error.response;
+  let errorMessage = `Something else happened.`;
+
+  // catch 4xx and 5xx status codes
+  if (response && !!`${response.status}`.match(/^[4|5]\d{2}$/)) {
+    if (response.data.status) {
+      errorMessage= `${response.data.message}`;
+    } else {
+      errorMessage= `${response.data}`;
+    }
+    console.log('The request was made and answered but was unsuccessful.', error.response);
+
+  } else {
+    if (error.message.match(/Network Error/)) {
+      //alert('The server cannot be reached.\nDid you start it?');
+      errorMessage = 'The server cannot be reached.\\nDid you start it?';
+    }
+    else{
+      errorMessage= `Something else happened.`;
+    }
+    console.log('Something else happened.', error);
+  }
+  return  errorMessage;
+};

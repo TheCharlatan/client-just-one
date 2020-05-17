@@ -101,6 +101,7 @@ class Game extends React.Component {
                     <AlertModal
                         show={this.state.show}
                         message_1={`${leftPlayerUserId} left unexpectedly. `}
+                        error = "false"
                         message_2={`The game will continue in a few seconds.`}
                     />
                 );
