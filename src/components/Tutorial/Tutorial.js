@@ -5,35 +5,26 @@ import styled from "styled-components";
 import TutorialPage1 from "../../img/TutorialPage1.PNG"
 import TutorialPage2 from "../../img/TutorialPage2.PNG"
 import TutorialPage3 from "../../img/TutorialPage3.PNG"
+import {BaseContainer} from "../../helpers/layout";
 
 class Tutorial extends React.Component {
-    render() {
+        render() {
         return (
-            <Container>
-                <LeaveButtonContainer>
-                    <LeaveButton history={this.props.history}/>
-                </LeaveButtonContainer>
-                <TutorialContainer>
-                    <TutorialPage1Container/>
-                    <TutorialPage2Container/>
-                    <TutorialPage3Container/>
-                </TutorialContainer>
-            </Container>
+            <BaseContainer style={{backgroundColor: "#F8E7D1", overflowY: "scroll"}}>
+                    <LeaveButtonContainer>
+                        <LeaveButton history={this.props.history}/>
+                    </LeaveButtonContainer>
+                    <TutorialContainer >
+                        <TutorialPage1Container/>
+                        <TutorialPage2Container/>
+                        <TutorialPage3Container/>
+                    </TutorialContainer>
+            </BaseContainer>
         );
     }
 }
 
 export default withRouter(Tutorial);
-
-const Container = styled.div`
-display: grid;
-grid-template-columns: 180px 1fr;
-grid-template-rows: 50px 1fr;
-grid-column-gap: 0px;
-grid-row-gap: 0px;
-
-background-color: #F8E7D1;
-`;
 
 const LeaveButtonContainer = styled.div`
 grid-area: 1 / 1 / 2 / 2;
