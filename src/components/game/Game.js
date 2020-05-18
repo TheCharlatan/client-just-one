@@ -82,18 +82,12 @@ class Game extends React.Component {
 
         this.setState({messageBox: null});
 
-        // TODO: Player has left (new number of players is lower than in prevState.gameModel) -> reset state.
         if (prevState.gameModel.playerIds.length !== this.state.gameModel.playerIds.length)
         {
             clearInterval(this.updateTimer);
-
-            let leftPlayerUserId = prevState.gameModel.playerIds.filter(n=>!this.state.gameModel.playerIds.includes(n))
-
-            if (leftPlayerUserId.length == 0) {
-                return;
-            }
-
             this.showModal();
+
+            let leftPlayerUserId = prevState.gameModel.playerIds.filter(n => !this.state.gameModel.playerIds.includes(n));
 
             if (this.state.gameModel.playerIds.length >=  3)
             {
@@ -156,11 +150,11 @@ class Game extends React.Component {
             this.setFrontendGameStatus("AWAITING_GUESS");
         }
 
-        if ((prevState.gameModel.gameStatus === "AWAITING_GUESS" || prevState.gameModel.gameStatus === "AWAITING_GUESS") && this.state.gameModel.gameStatus === "AWAITING_INDEX") {
+        if ((prevState.gameModel.gameStatus === "AWAITING_CLUES" || prevState.gameModel.gameStatus === "AWAITING_GUESS") && (this.state.gameModel.gameStatus === "AWAITING_INDEX" || this.state.gameModel.gameStatus === "GAME_OVER")) {
             this.setFrontendGameStatus("TURN_FINISHED");
 
             // TODO: Screen for no valid clues.
-          
+
             if (this.state.gameModel.wordsGuessedCorrect > prevState.gameModel.wordsGuessedCorrect) {
                 this.setState({ guessCorrect: 'correct' });
             }
@@ -267,7 +261,7 @@ class Game extends React.Component {
 
 
     isActivePlayer(playerId) {
-            return playerId === this.state.gameModel.activePlayer;
+        return playerId === this.state.gameModel.activePlayer;
     }
 
     clearTimer()
