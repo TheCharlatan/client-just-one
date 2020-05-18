@@ -51,6 +51,7 @@ export class CreateLobbyModal extends React.Component {
     try {
       requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
       response = await api.post('/lobby', requestBody, {headers: {'X-Auth-Token': requestHeader}});
+
     }
     catch(error) {
       console.log(`Something went wrong during the creating the lobby: \n${handleError(error)}`);

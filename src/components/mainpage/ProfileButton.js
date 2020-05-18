@@ -3,8 +3,6 @@ import {Button} from "../../views/design/Button";
 import Violet from "../../views/design/font-families/Violet";
 import React from "react";
 
-import { api, handleError } from '../../helpers/api';
-
 
 const FlexButton = styled(Button)`
   display: flex;
@@ -19,7 +17,7 @@ const FlexButton = styled(Button)`
 
 
 // button below chat component on main page
-function ChatButton(props) {
+function ProfileButton(props) {
     return (
         <FlexButton
             onClick={() => {
@@ -31,4 +29,4 @@ function ChatButton(props) {
     );
 }
 
-export default ChatButton;
+export default ProfileButton;

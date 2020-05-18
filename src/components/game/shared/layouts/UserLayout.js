@@ -119,7 +119,7 @@ function UserLayout(props) {
             </UserContainer>
         </ActivePlayer>
     );
-};
+}
 
 
 export default UserLayout;

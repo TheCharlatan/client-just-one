@@ -3,7 +3,7 @@ import {Button} from "../../views/design/Button";
 import Red from "../../views/design/font-families/Red";
 import React from "react";
 
-import { api, handleError } from '../../helpers/api';
+import { api} from '../../helpers/api';
 
 
 const FlexButton = styled(Button)`

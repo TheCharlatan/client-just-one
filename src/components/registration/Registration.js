@@ -211,8 +211,7 @@ class Registration extends React.Component {
             let message_2='Please enter a password with 8 or more characters!';
             this.showErrorModal(message_2);
             return;
-        }
-        else {
+        } else {
 
             try {
                 const requestBody = JSON.stringify({

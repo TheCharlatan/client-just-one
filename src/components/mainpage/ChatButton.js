@@ -2,7 +2,6 @@ import styled from "styled-components";
 import {Button} from "../../views/design/Button";
 import Yellow from "../../views/design/font-families/Yellow";
 import React from "react";
-
 import { api, handleError } from '../../helpers/api';
 
 
@@ -18,7 +17,6 @@ background: #FFFFFF;
 border: 6px solid #DDC18E;
 box-sizing: border-box;
 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  
 `;
 
 
