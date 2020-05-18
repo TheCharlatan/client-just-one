@@ -55,12 +55,6 @@ export class Timer extends React.Component {
 
 
 const TimerContainer = styled.div`
-position: fixed;
-top: 5%;
-left: 50%;
-transform: translate( -50%, -50%);
-
-padding: 2px;
 
 border-radius: 2px;
 text-align: center;

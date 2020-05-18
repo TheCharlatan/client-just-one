@@ -3,9 +3,7 @@ import styled from "styled-components";
 
 export const GameInfo = styled.div`
 width: 263px;
-position: absolute;
-top: 0px;
-right: 0px;
+
 
 display: flex;
 flex-direction: column;

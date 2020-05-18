@@ -9,6 +9,7 @@ import {TeamStats} from "./TeamStats";
 import Green from "../../../views/design/font-families/Green";
 import FinishButton from "./FinishButton";
 import {Spinner} from "../../../views/design/Spinner";
+import {Background, BaseContainer, CenterContainer, TopLeftContainer} from "../../../helpers/layout";
 
 
 // The end of game overview.
@@ -63,22 +64,27 @@ class GameOverview extends React.Component {
         }
 
         return (
-          <React.Fragment>
-              <FinishButton timerId={this.timerId}/>
-              <IndividualStatsContainer style={{margin: '10px 50px'}}>
-                  <div style={{paddingTop: '10.45em'}}>
-                  <TextLabel>
-                      <Green style={{fontSize: 16, letterSpacing: '0.1em'}}>
-                          Points
-                      </Green>
-                  </TextLabel>
-                  </div>
-                  {this.props.users.map((user) => {
-                    return <UserStats user={user} gameStats={this.state.gameStats} />
-                  })}
-              </IndividualStatsContainer>
-              <TeamStats gameStats={this.state.gameStats} />
-          </React.Fragment>
+          <BaseContainer>
+              <Background/>
+              <TopLeftContainer>
+                <FinishButton timerId={this.timerId}/>
+              </TopLeftContainer>
+              <CenterContainer>
+                  <IndividualStatsContainer style={{margin: '10px 50px'}}>
+                      <div style={{paddingTop: '10.45em'}}>
+                      <TextLabel>
+                          <Green style={{fontSize: 16, letterSpacing: '0.1em'}}>
+                              Points
+                          </Green>
+                      </TextLabel>
+                      </div>
+                      {this.props.users.map((user) => {
+                        return <UserStats user={user} gameStats={this.state.gameStats} />
+                      })}
+                  </IndividualStatsContainer>
+                  <TeamStats gameStats={this.state.gameStats} />
+              </CenterContainer>
+          </BaseContainer>
         );
     }
 }
