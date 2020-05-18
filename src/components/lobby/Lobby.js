@@ -1,5 +1,5 @@
 import React from 'react';
-import {BaseContainer, BottomLeftContainer, CenterContainer, ChatContainer} from '../../helpers/layout';
+import {Background, BaseContainer, BottomLeftContainer, CenterContainer, ChatContainer} from '../../helpers/layout';
 import ChatButton from "./ChatButton";
 import StartGameBtn from "./StartGameBtn";
 import LeaveBtn from "./LeaveBtn";
@@ -204,6 +204,7 @@ export class Lobby extends React.Component {
 
         return (
             <BaseContainer>
+                <Background/>
                 <BottomLeftContainer>
                     <ChatButton/>
                 </BottomLeftContainer>

@@ -1,21 +1,20 @@
 import styled from "styled-components";
 import {BaseContainer} from "../../../../helpers/layout";
 
-
-export const BaseContainerBody = styled.div`
-min-width: 100vw;
-min-height: 100vh;
-`;
-
 export const BaseContainerGame = styled(BaseContainer)`
 display: grid;
 grid-template-columns: 263px repeat(2, 1fr) 263px;
 grid-template-rows: repeat(4, 1fr);
 grid-column-gap: 0px;
 grid-row-gap: 0px;
+`;
 
-min-width: 100vw;
-min-height: 100vh;
+export const TopCenterContainer = styled.div`
+grid-area: 1 / 2 / 2 / 4;
+display: flex;
+align-items: center;
+justify-content: center;
+
 `;
 
 export const CardStacksContainer = styled.div`

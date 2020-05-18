@@ -19,6 +19,7 @@ export class PleaseWait extends React.Component {
                     minHeight: "0",
                     width: "60%",
                     marginTop: "15%",
+                    lineHeight: "normal",
                 }}
             >
                 <Form style={{ width: "auto", height: "auto" ,borderWidth:"3px"}}>

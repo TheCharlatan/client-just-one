@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    Background,
     BaseContainer,
     BottomLeftContainer,
     CenterContainer,
@@ -69,6 +70,7 @@ export class MainPage extends React.Component {
     render() {
         return (
             <BaseContainer>
+                <Background/>
                 <TopLeftContainer>
                     <LogoutButton history={this.props.history}/>
                 </ TopLeftContainer>
@@ -97,6 +99,7 @@ export class MainPage extends React.Component {
                 <LeaderboardContainer>
                     <Leaderboard history={this.props.history}/>
                 </LeaderboardContainer>
+
             </BaseContainer>
         );
     }

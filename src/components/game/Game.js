@@ -2,14 +2,13 @@ import React from 'react';
 import {api, handleError} from '../../helpers/api';
 import {withRouter} from 'react-router-dom';
 import {
-    BaseContainerBody,
     BaseContainerGame,
     CardGuessedContainer,
     CardStacksContainer,
     ChangeElementContainer,
     GameInfoContainer,
     GameUserLeftContainer,
-    GameUserRightContainer
+    GameUserRightContainer, TopCenterContainer
 } from "./shared/layouts/GameLayout"
 import {GameInfo, GameInfoLabel, Info, InfoLabel} from "./shared/layouts/GameInfoStyle";
 import UserLayout from "./shared/layouts/UserLayout";
@@ -34,6 +33,7 @@ import {NonInterferingMessageBox} from "./message/NonInterferingMessageBox";
 import {Timer} from "./shared/Timer";
 import AlertModal from "./shared/AlertModal";
 import LeaveButton from "./leaveGame/LeaveBtn";
+import {Background, TopLeftContainer, TopRightContainer} from "../../helpers/layout";
 
 
 // The game component responsible for the conditional rendering.
@@ -449,12 +449,18 @@ class Game extends React.Component {
 
         return (
             // Basic layout that is (nearly) the same in all game states.
-            <BaseContainerBody>
+
                 <BaseContainerGame>
-                    <LeaveButton clearTimer={this.clearTimer}/>
+                    <Background/>
+                    <TopLeftContainer>
+                        <LeaveButton clearTimer={this.clearTimer}/>
+                    </TopLeftContainer>
                     {this.state.messageBox}
+                    <TopCenterContainer>
                     {timer}
+                    </TopCenterContainer>
                     {this.alert}
+
                     <GameInfoContainer>
                         <GameInfo>
                             <GameInfoLabel>
@@ -478,6 +484,7 @@ class Game extends React.Component {
                             </Info>
                         </GameInfo>
                     </GameInfoContainer>
+
                     <CardStacksContainer>
                         <CardStackLabel>
                             <Yellow>Stack</Yellow>
@@ -505,7 +512,7 @@ class Game extends React.Component {
                         {changingElements}
                     </ChangeElementContainer>
                 </BaseContainerGame>
-            </BaseContainerBody>
+
         );
     }
 }
