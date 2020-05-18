@@ -138,6 +138,7 @@ float:left;
 height: 38px;
 margin-left: 5px;
 margin-top: 2px;
+white-space: nowrap;
 display:none;
 width:fit-content;
 padding:1%;
