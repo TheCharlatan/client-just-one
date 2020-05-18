@@ -30,7 +30,6 @@ export class Lobby extends React.Component {
             users: [],
             loaded: false,
             updateTimer: null,
-            asyncLock: false,
         };
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
@@ -88,10 +87,7 @@ export class Lobby extends React.Component {
         }
 
         this.setState({loaded: true});
-
-        await api.post(`/lobbypoll/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
-        await this.updateLobby();
-        this.setState({updateTimer: setInterval(() => this.updateLobby(), 1000)});
+        this.setState({updateTimer: setInterval(() => this.updateLobby(), 500)})
     }
 
     async startGame() {
@@ -128,15 +124,7 @@ export class Lobby extends React.Component {
     }
 
     async updateLobby() {
-        // This asyncLock makes sure there is only one asynchronous instance of this function running at a time.
-        // It is in effect a function mutex
-        if(this.state.asyncLock || this.state.updateTimer == null) {
-            return;
-        }
-        // set the asyncLock, don't forget to reset in the return scenarios.
-        this.setState({asyncLock: true});
-
-        if (!sessionStorage.getItem("lobbyId")) {
+        if(!sessionStorage.getItem("lobbyId")){
             return;
         }
       
@@ -155,23 +143,18 @@ export class Lobby extends React.Component {
         }
 
         try {
-            const response = await api.get(`/lobbypoll/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
+            const response = await api.get(`/lobby/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
             if (response.data == null) {
-                this.setState({asyncLock: false});
-                await this.updateLobby();
-                return;
+                alert("Unexpted Error");
             }
+
             if (response.data.playerIds && response.data.playerIds.length > 0) {
                 this.setState({
                     playerIds: response.data.playerIds
                 })
             }
-        }
-        catch (error) {
-            // just continue, this is usually the timeout error. Serious errors (like the server being down) are caught by the other api calls in this function)
-            this.setState({asyncLock: false});
-            await this.updateLobby();
-            return;
+        } catch (error) {
+            alert(`An error occurred when retrieving lobby players: ${error}`);
         }
 
         // get the users to show them in the lobby
@@ -188,8 +171,6 @@ export class Lobby extends React.Component {
         catch (error) {
             alert(`Something went wrong while fetching the users: ${error}`);
         }
-
-        this.setState({asyncLock: false});
     }
 
     componentWillUnmount() {

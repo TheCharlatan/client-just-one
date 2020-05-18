@@ -120,9 +120,8 @@ class Login extends React.Component {
       // Login successfully worked --> navigate to the route /game in the GameRouter
       this.props.history.push(`/mainpage`);
     } catch (error) {
-      //alert(`Something went wrong during the login: \n${handleError(error)}`);
+        console.log(`Something went wrong during the login: \n${handleError(error)}`);
         let message_2=errorBox(error);
-        //alert(`Something went wrong during the registration: \n${handleError(error)}`);
         this.showErrorModal(message_2);
 
     }
