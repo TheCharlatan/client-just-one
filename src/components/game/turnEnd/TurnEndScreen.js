@@ -18,13 +18,43 @@ export class TurnEndScreen extends React.Component {
         let message = null;
 
         if (this.props.correct == "correct") {
-            message = <React.Fragment> <Red>Hurray! </Red>  <Red>Username guessed</Red> <MysteryWord> {this.props.mysteryWord} </MysteryWord> <Red>correctly</Red></React.Fragment>
+            message =
+                <React.Fragment>
+                    <Red>
+                        Hurray! {this.props.activeUser.username} guessed
+                    </Red>
+                    <MysteryWord>
+                        {this.props.mysteryWord}
+                    </MysteryWord>
+                    <Red>
+                         correctly.
+                    </Red>
+                </React.Fragment>
         }
         else if (this.props.correct == "wrong") {
-            message = <React.Fragment> <Blue>No! </Blue> <Blue> Username guessed </Blue> <MysteryWord> {this.props.mysteryWord} </MysteryWord> <Blue> wrong </Blue> </React.Fragment>
+            message =
+                <React.Fragment>
+                    <Blue>
+                        No! {this.props.activeUser.username} guessed
+                    </Blue>
+                    <MysteryWord>
+                        {this.props.mysteryWord}
+                    </MysteryWord>
+                    <Blue>
+                         wrong.
+                    </Blue>
+                </React.Fragment>
         }
         else {
-            message = <React.Fragment> <Yellow>Ohh! </Yellow> <Yellow> Username skipped </Yellow> <MysteryWord> {this.props.mysteryWord} </MysteryWord> </React.Fragment>
+            message =
+                <React.Fragment>
+                    <Yellow>
+                        Ohh! {this.props.activeUser.username} skipped the word
+                    </Yellow>
+                    <MysteryWord>
+                        {this.props.mysteryWord}.
+                    </MysteryWord>
+                </React.Fragment>
         }
 
         return (
