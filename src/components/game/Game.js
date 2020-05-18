@@ -52,7 +52,8 @@ class Game extends React.Component {
             updateTimer: null, // Timer to periodically pull the newest game data and update the game state accordingly
             lastTurnEndScreenDate: null, // when the last TurnEndScreen was opened
             show: false, // modal window for alert when player closes the browser unexpectedly.
-            messageBox: null // In certain situations a message box is displayed for a few seconds for information purposes.
+            messageBox: null, // In certain situations a message box is displayed for a few seconds for information purposes.
+            previousState: null
         };
         this.updateGame = this.updateGame.bind(this);
         this.showModal = this.showModal.bind(this);
@@ -77,7 +78,7 @@ class Game extends React.Component {
     // update the game state based on newest game data
     async updateGame() {
 
-        const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
+        let prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
         await this.updateGameData();
 
         this.setState({messageBox: null});
@@ -152,6 +153,7 @@ class Game extends React.Component {
 
         if ((prevState.gameModel.gameStatus === "AWAITING_CLUES" || prevState.gameModel.gameStatus === "AWAITING_GUESS") && (this.state.gameModel.gameStatus === "AWAITING_INDEX" || this.state.gameModel.gameStatus === "GAME_OVER")) {
             this.setFrontendGameStatus("TURN_FINISHED");
+            this.setState({previousState: prevState});
 
             // TODO: Screen for no valid clues.
 
@@ -185,7 +187,8 @@ class Game extends React.Component {
     async componentDidMount() {
         await this.updateGameData();
         this.setState({
-            updateTimer: setInterval(() => this.updateGame(), 200)
+            updateTimer: setInterval(() => this.updateGame(), 200),
+            previousState: JSON.parse(JSON.stringify(this.state))
         });
     }
 
@@ -392,9 +395,9 @@ class Game extends React.Component {
         if (this.state.frontendGameStatus == "TURN_FINISHED") {
             changingElements = (
                 <TurnEndScreen
-                    correct={this.state.guessCorrect}
-                    activeUser={this.state.activeUser}
-                    mysteryWord={this.state.gameModel.words[this.state.gameModel.wordIndex]}
+                    correct={this.state.previousState.guessCorrect}
+                    activeUser={this.state.previousState.activeUser}
+                    mysteryWord={this.state.previousState.gameModel.words[this.state.previousState.gameModel.wordIndex]}
                 />
             );
         }
