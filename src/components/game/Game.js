@@ -164,7 +164,9 @@ class Game extends React.Component {
             else {
                 this.setState({ guessCorrect: 'skipped' });
             }
+            
             this.setState({ lastTurnEndScreenDate: Date.now() });
+            return;
         }
 
         if (this.state.gameModel.gameStatus === "GAME_OVER") {
