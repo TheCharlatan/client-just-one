@@ -33,22 +33,16 @@ export class ClueInput extends React.Component {
             if (clue1 !== this.state.placeholder1 && clue1 !== "" && !this.state.clue1Submitted) {
                 let requestBody = JSON.stringify({ clue: clue1 });
                 await api.put(`/game/${sessionStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+                this.setState({"clue1Submitted": true});
             }
             if (clue2 !== this.state.placeholder2 && clue1 !== "" && !this.state.clue2Submitted) {
                 let requestBody = JSON.stringify({ clue: clue2 });
                 await api.put(`/game/${sessionStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+                this.setState({"clue2Submitted": true});
             }
         }
         catch (error) {
             console.log(`An error occurred when submitting the clue: \n${handleError(error)}`);
-            //return; //todo removed the return otherwise returning error message
-        }
-
-        if (clue1 !== this.state.placeholder1 && clue1 !== "" && !this.state.clue1Submitted) {
-            this.setState({"clue1Submitted": true});
-        }
-        if (clue2 !== this.state.placeholder2 && clue2 !== "" && !this.state.clue2Submitted) {
-            this.setState({"clue2Submitted": true});
         }
 
         this.props.updateGame();
