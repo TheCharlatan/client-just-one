@@ -52,7 +52,7 @@ export class TurnEndScreen extends React.Component {
                         Ohh! {this.props.activeUser.username} skipped the word
                     </Yellow>
                     <MysteryWord>
-                        {this.props.mysteryWord}.
+                        {this.props.mysteryWord}
                     </MysteryWord>
                 </React.Fragment>
         }

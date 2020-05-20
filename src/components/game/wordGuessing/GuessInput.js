@@ -86,13 +86,13 @@ export class GuessInput extends React.Component {
                 />
                 <div className="pull-right" style={{width: "100%"}}>
                     <Button
-                        style={{width: "30%", marginLeft: "auto", marginRight: "10px"}}
+                        style={{width: "35%", marginLeft: "auto", marginRight: "10px"}}
                         onClick={async () => {await this.handleGuess("SKIP");}}
                     >
                         <Red>Skip</Red>
                     </Button>
                     <Button
-                        disabled={!this.state.guess} style={{width: "30%", marginRight: "auto"}}
+                        disabled={!this.state.guess} style={{width: "35%", marginRight: "auto"}}
                         onClick={async () => {await this.handleGuess(guess);}}
                     >
                         <Green>Submit</Green>

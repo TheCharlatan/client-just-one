@@ -232,7 +232,7 @@ class Game extends React.Component {
             let timestamp = new Date();
             let [hours, minutes, seconds] = responseTimestamp.split(":");
             timestamp.setHours(hours);
-            timestamp.setMinutes(parseInt(minutes) + (new Date().getTimezoneOffset())); // assumes the responseTimestamp is in UTC
+            timestamp.setMinutes(parseInt(minutes)); // assumes the responseTimestamp is in UTC
             timestamp.setSeconds(seconds);
             let gameModel = this.state.gameModel;
             gameModel.timestamp = timestamp;
@@ -454,69 +454,71 @@ class Game extends React.Component {
 
         return (
             // Basic layout that is (nearly) the same in all game states.
+            <BaseContainerGame>
+                <Background/>
+                <TopLeftContainer>
+                    <LeaveButton clearTimer={this.clearTimer}/>
+                </TopLeftContainer>
 
-                <BaseContainerGame>
-                    <Background/>
-                    <TopLeftContainer>
-                        <LeaveButton clearTimer={this.clearTimer}/>
-                    </TopLeftContainer>
+                <TopCenterContainer>
+                {timer}
+                </TopCenterContainer>
+                {this.alert}
+
+                <GameInfoContainer>
+                    <GameInfo>
+                        <GameInfoLabel>
+                            <Red>Game Info</Red>
+                        </GameInfoLabel>
+                        <InfoLabel>
+                            <Orange>Correct</Orange>
+                        </InfoLabel>
+                        <Info>
+                            <Orange>
+                                {this.state.gameModel.wordsGuessedCorrect}
+                            </Orange>
+                        </Info>
+                        <InfoLabel>
+                            <Orange>Wrong</Orange>
+                        </InfoLabel>
+                        <Info>
+                            <Orange>
+                                {this.state.gameModel.wordsGuessedWrong}
+                            </Orange>
+                        </Info>
+                    </GameInfo>
+                </GameInfoContainer>
+
+                <CardStacksContainer>
+                    <CardStackLabel>
+                        <Yellow>Stack</Yellow>
+                    </CardStackLabel>
+                    <CardStack/>
+                    <CardStackNumber>
+                        <Yellow>
+                            {this.state.gameModel.cardStackCount}
+                        </Yellow>
+                    </CardStackNumber>
+                </CardStacksContainer>
+
+                <CardGuessedContainer>
+                    <CardStackLabel>
+                        <Yellow>Guessed</Yellow>
+                    </CardStackLabel>
+                    <CardStack/>
+                    <CardStackNumber>
+                        <Yellow>
+                            {this.state.gameModel.cardGuessedCount}
+                        </Yellow>
+                    </CardStackNumber>
+                </CardGuessedContainer>
+
+                {userElements}
+                <ChangeElementContainer style={{flexDirection: 'column'}}>
+                    {changingElements}
                     {this.state.messageBox}
-                    <TopCenterContainer>
-                    {timer}
-                    </TopCenterContainer>
-                    {this.alert}
-
-                    <GameInfoContainer>
-                        <GameInfo>
-                            <GameInfoLabel>
-                                <Red>Game Info</Red>
-                            </GameInfoLabel>
-                            <InfoLabel>
-                                <Orange>Correct</Orange>
-                            </InfoLabel>
-                            <Info>
-                                <Orange>
-                                    {this.state.gameModel.wordsGuessedCorrect}
-                                </Orange>
-                            </Info>
-                            <InfoLabel>
-                                <Orange>Wrong</Orange>
-                            </InfoLabel>
-                            <Info>
-                                <Orange>
-                                    {this.state.gameModel.wordsGuessedWrong}
-                                </Orange>
-                            </Info>
-                        </GameInfo>
-                    </GameInfoContainer>
-
-                    <CardStacksContainer>
-                        <CardStackLabel>
-                            <Yellow>Stack</Yellow>
-                        </CardStackLabel>
-                        <CardStack/>
-                        <CardStackNumber>
-                            <Yellow>
-                                {this.state.gameModel.cardStackCount}
-                            </Yellow>
-                        </CardStackNumber>
-                    </CardStacksContainer>
-                    <CardGuessedContainer>
-                        <CardStackLabel>
-                            <Yellow>Guessed</Yellow>
-                        </CardStackLabel>
-                        <CardStack/>
-                        <CardStackNumber>
-                            <Yellow>
-                                {this.state.gameModel.cardGuessedCount}
-                            </Yellow>
-                        </CardStackNumber>
-                    </CardGuessedContainer>
-                    {userElements}
-                    <ChangeElementContainer style={{flexDirection: 'column'}}>
-                        {changingElements}
-                    </ChangeElementContainer>
-                </BaseContainerGame>
+                </ChangeElementContainer>
+            </BaseContainerGame>
 
         );
     }
