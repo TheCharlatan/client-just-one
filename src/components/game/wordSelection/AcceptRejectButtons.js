@@ -8,36 +8,34 @@ export function AcceptRejectButtons(props) {
 
     return (
         <div>
-            <WordBox>
-                <Green
-                    style={{lineHeight: "initial", margin: "0.5em"}}
-                    onClick={async () => {
-                        try {
-                            let requestBody = sessionStorage.getItem('userId');
-                            let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
-                            await api.put(`game/${sessionStorage.getItem('gameId')}/accept`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
-                        }
-                        catch (error) {
-                            alert(`Something went wrong: \n${handleError(error)}`);
-                        }
-                    }}
-                >
+            <WordBox
+                onClick={async () => {
+                    try {
+                        let requestBody = sessionStorage.getItem('userId');
+                        let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
+                        await api.put(`game/${sessionStorage.getItem('gameId')}/accept`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
+                    }
+                    catch (error) {
+                        alert(`Something went wrong: \n${handleError(error)}`);
+                    }
+                }}
+            >
+                <Green style={{lineHeight: "initial", margin: "0.5em"}}>
                     Accept
                 </Green>
             </WordBox>
-            <WordBox>
-                <Green
-                    style={{lineHeight: "initial", margin: "0.5em"}}
-                    onClick={async () => {
-                        try {
-                            let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
-                            await api.delete(`game/${sessionStorage.getItem('gameId')}/number`, {headers: {'X-Auth-Token': requestHeader}});
-                        }
-                        catch (error) {
-                            alert(`Something went wrong: \n${handleError(error)}`);
-                        }
-                    }}
-                >
+            <WordBox
+                onClick={async () => {
+                    try {
+                        let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
+                        await api.delete(`game/${sessionStorage.getItem('gameId')}/number`, {headers: {'X-Auth-Token': requestHeader}});
+                    }
+                    catch (error) {
+                        alert(`Something went wrong: \n${handleError(error)}`);
+                    }
+                }}
+            >
+                <Green style={{lineHeight: "initial", margin: "0.5em"}}>
                     Reject
                 </Green>
             </WordBox>
