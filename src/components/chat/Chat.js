@@ -54,7 +54,7 @@ class Chat extends React.Component {
 
     async loadChatMessages() {
         if (this.state.asyncLock || this.state.loadMessagesTimer == null) {
-            return
+            return;
         }
 
         this.setState({asyncLock: true});
@@ -73,7 +73,12 @@ class Chat extends React.Component {
             return;
         }
 
-        this.setState({asyncLock: false})
+        this.setState({asyncLock: false});
+
+        if (this.state.messages.length > 0) {
+            let height = document.getElementById('chatMessagesContainer').childNodes[0].offsetHeight;
+            document.getElementById("chatMessagesContainer").scrollTop = this.state.messages.length*height;
+        }
     }
 
 
@@ -86,7 +91,8 @@ class Chat extends React.Component {
         return (
             <div style={{display: 'flex', flexDirection: 'column', height: "100%", background: "#FFFFFF",  border: "8px solid #DDC18E", borderTop: "none", borderBottom: "none"}}>
                 <ChatMessages id={'chatMessagesContainer'}>
-                    {this.state.messages.map((messageObject) => {
+                    {this.state.messages.map((message, index, messages) => {
+                        let messageObject = messages[messages.length - 1 - index];
                         return <ChatMessage message={messageObject.message} username={messageObject.username}/>
                     })}
                 </ChatMessages>
