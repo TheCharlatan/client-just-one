@@ -87,15 +87,21 @@ class Game extends React.Component {
         {
             clearInterval(this.updateTimer);
             this.showModal();
+            
+            let leftPlayerUserNames = new Array();
 
-            let leftPlayerUserId = prevState.gameModel.playerIds.filter(n => !this.state.gameModel.playerIds.includes(n));
+            prevState.users.forEach((user) => {
+                if (!this.state.gameModel.playerIds.includes(user.id)) {
+                    leftPlayerUserNames.push(user.username);
+                }
+            });
 
             if (this.state.gameModel.playerIds.length >=  3)
             {
                 this.alert = (
                     <AlertModal
                         show={this.state.show}
-                        message_1={`${leftPlayerUserId} left unexpectedly. `}
+                        message_1={`${leftPlayerUserNames.join(', ')} left unexpectedly. `}
                         error = "false"
                         message_2={`The game will continue in a few seconds.`}
                     />
@@ -105,7 +111,7 @@ class Game extends React.Component {
                 this.alert=(
                     <AlertModal
                         show={this.state.show}
-                        message_1={`${leftPlayerUserId} left unexpectedly. `}
+                        message_1={`${leftPlayerUserNames.join(', ')} left unexpectedly. `}
                         message_2={`Unfortunately the game cannot be continued only with 2 players. You will be redirected to the game overview soon.`}
                     />
                 );
