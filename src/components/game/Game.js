@@ -352,7 +352,7 @@ class Game extends React.Component {
                 startTime={this.state.gameModel.timestamp - Date.now() + 30000}
                 onTimerFinished={async () => {
                     let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
-                    let requestBody = JSON.stringify({ clue: null });
+                    let requestBody = JSON.stringify({ clue: '' });
                     try {
                         await api.put(`/game/${sessionStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
                         if (this.state.gameModel.playerIds.length == 3) {
@@ -388,7 +388,7 @@ class Game extends React.Component {
                 startTime={this.state.gameModel.timestamp - Date.now() + 30000}
                 onTimerFinished={async () => {
                     let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
-                    let requestBody = JSON.stringify({ guess: null, wordIndex: this.props.gameModel.wordIndex});
+                    let requestBody = JSON.stringify({ guess: '', wordIndex: this.props.gameModel.wordIndex});
                     try {
                         await api.put(`/game/${sessionStorage.getItem('gameId')}/guess`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
                     }
