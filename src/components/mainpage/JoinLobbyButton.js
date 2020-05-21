@@ -13,17 +13,11 @@ const FlexButton = styled(Button)`
 
 
 // one of the buttons in the middle part of main page
-function JoinLobbyButton() {
+function JoinLobbyButton(props) {
     return (
         <FlexButton
             onClick={() => {
-                let lobbiesContainer = document.getElementById("lobbiesContainer");
-                if (lobbiesContainer.style.display === "none") {
-                    lobbiesContainer.style.display = "block";
-                }
-                else {
-                    lobbiesContainer.style.display = "none";
-                }
+                props.loadLobbies();
             }}>
             <Red>Join Lobby</Red>
         </FlexButton>

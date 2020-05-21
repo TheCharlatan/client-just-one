@@ -3,6 +3,7 @@ import Green from "../../../views/design/font-families/Green";
 import React from "react";
 import Violet from "../../../views/design/font-families/Violet";
 import {api} from '../../../helpers/api';
+import User from "../../shared/models/User";
 
 export default class InviteModalBtn extends React.Component {
 
@@ -11,10 +12,37 @@ export default class InviteModalBtn extends React.Component {
         this.state = {
             enabled : true,
             friendId : this.props.id,
-            display : 'invite'
         };
+        this.alreadyInvited = this.alreadyInvited.bind(this);
         this.inviteFriend = this.inviteFriend.bind(this);
     }
+
+    async componentDidMount(prevProps, prevState, snapshot) {
+        this.alreadyInvited();
+    }
+
+    async alreadyInvited()
+    {
+        let requestHeader = null;
+        try {
+            requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
+            const responseFriend = await api.get(`/user/${this.state.friendId}`, {headers: {'X-Auth-Token': requestHeader}});
+            if(responseFriend != null && responseFriend.data.invitations != null && responseFriend.data.invitations.length >0)
+            {
+                const lobbyId=sessionStorage.getItem("lobbyId");
+                if(responseFriend.data.invitations.includes(parseInt(lobbyId)))
+                {
+                    this.setState({enabled:false});
+                }
+            }
+
+        } catch {
+            console.log("already invite friend unexpected error");
+            return;
+        }
+        return true;
+    }
+
 
     async inviteFriend() {
 //TODO toggle commit
@@ -31,15 +59,9 @@ export default class InviteModalBtn extends React.Component {
             console.log("invite friend unexpected error");
             return;
         }
-
         this.setState({
             enabled: false,
-            display:'sent'
         });
-    }
-
-    async componentDidMount() {
-
     }
 
     render() {

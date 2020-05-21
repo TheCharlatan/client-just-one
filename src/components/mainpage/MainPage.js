@@ -23,6 +23,7 @@ import ChatButton from "./ChatButton";
 import ProfileButton from "./ProfileButton";
 import {LobbiesContainer} from "./lobbies/LobbiesContainer";
 import CreateLobbyModal from "./CreateLobbyModal";
+import {api, handleError} from "../../helpers/api";
 
 /**
  * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
@@ -38,13 +39,19 @@ export class MainPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            show: false
+            show: false,
+            openLobbies:[]
         };
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
+        this.loadLobbies = this.loadLobbies.bind(this);
     }
 
     showModal() {
+        let lobbiesContainer = document.getElementById("lobbiesContainer");
+        if (lobbiesContainer.style.display === "block") {
+            lobbiesContainer.style.display = "none";
+        }
         this.setState({
             show: true
         });
@@ -56,6 +63,38 @@ export class MainPage extends React.Component {
         });
     }
 
+    async loadLobbies()
+    {
+        let requestHeader = null;
+        let response = null;
+
+        try {
+            requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
+            response = await api.get('/lobby', {headers: {'X-Auth-Token': requestHeader}});
+        }
+        catch (error) {
+            alert(`Could not load open lobbies: \n${handleError(error)}`);
+            return;
+        }
+        // TODO: Validate data.
+        if (response.data !== null && response.data.length > 0) {
+            this.setState({
+                openLobbies:response.data
+            });
+        }
+        else {
+            this.setState({
+                openLobbies: []
+            });
+        }
+        let lobbiesContainer = document.getElementById("lobbiesContainer");
+        if (lobbiesContainer.style.display === "none") {
+            lobbiesContainer.style.display = "block";
+        }
+        else {
+            lobbiesContainer.style.display = "none";
+        }
+    }
 
 
     /**
@@ -84,13 +123,13 @@ export class MainPage extends React.Component {
                     <FormContainer style={{marginTop: 0}}>
                         <Form style={{width: "auto", height: "auto"}}>
                             <CreateLobbyButton onClick={() => this.showModal()}/>
-                            <JoinLobbyButton/>
+                            <JoinLobbyButton loadLobbies={this.loadLobbies}/>
                             <TutorialButton history={this.props.history}/>
                         </Form>
                     </FormContainer>
                     <CreateLobbyModal hideModal={this.hideModal} createLobby={this.createLobby} show={this.state.show} />
                     <div id="lobbiesContainer" style={{display: "none"}}>
-                        <LobbiesContainer history={this.props.history}/>
+                        <LobbiesContainer openLobbies={this.state.openLobbies} history={this.props.history}/>
                     </div>
                 </CenterContainer>
                 <TopRightContainer>
