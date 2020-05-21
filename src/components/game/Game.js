@@ -403,7 +403,7 @@ class Game extends React.Component {
         if (this.state.frontendGameStatus == "TURN_FINISHED") {
             changingElements = (
                 <TurnEndScreen
-                    correct={this.state.previousState.guessCorrect}
+                    correct={this.state.guessCorrect}
                     activeUser={this.state.previousState.activeUser}
                     mysteryWord={this.state.previousState.gameModel.words[this.state.previousState.gameModel.wordIndex]}
                 />
