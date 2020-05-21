@@ -1,31 +1,27 @@
-# SoPra FS20 - Client Template
+# Just One Client
 
-## Getting started with React
+Just One Client (JOC) is a client for the multiplayer game Just One. It is written to work with a server, for which the source code can be found [here](https://github.com/SOPRA-2020/server-just-one).
+JOC is designed as a Single Page Application (SPA) and provides an intuitive and colorful web interface to play the game, as well as use associated functionalities, such as chatting with other users and use lobbies.
 
-Read and go through those Tutorials, It will make your life easier!
+## Technologies
 
-- Read the React [Docs](https://reactjs.org/docs/getting-started.html)
-- Do this React [Getting Started](https://reactjs.org/tutorial/tutorial.html) Tutorial (it doesn’t assume any existing React knowledge)
-- Get an Understanding of [CSS](http://localhost:3000) and [HTML](https://www.w3schools.com/html/html_intro.asp)!
+JOC uses the JS-based [Node.js](https://nodejs.org/en/) runtime together with [React](https://reactjs.org/) for it's user interface. It's SPA functiuonality is also implemented using React.
 
-Once you have done all of this, in the template there are two main external dependencies that you should look at:
+## High-Level Components
 
-- [styled-components](https://www.styled-components.com/docs)
-  It removes the mapping between components and styles (i.e. external css files). This means that when you're defining your styles, you're actually creating a normal React component, that has your styles attached to it
-* [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start) Declarative routing for React being a collection of navigational components that compose declaratively with your application. 
+JOC is highly modular, using reusable, periodically self-updating React components to implement it's functionality. The most important ones are:
+* [AppRouter](https://github.com/SOPRA-2020/client-just-one/blob/master/src/components/shared/routers/AppRouter.js)<br>
+Handles the routing of the application. Ensures that only logged in players can use it, and handles transition between different parts of the app.
+* [Mainpage](https://github.com/SOPRA-2020/client-just-one/blob/master/src/components/mainpage/MainPage.js)<br>
+The Mainpage component ties together many other components (like Chat, Leaderboard, ...). From here, users can navigate to other pages and use most of the site's community features.
+* [Lobby](https://github.com/SOPRA-2020/client-just-one/blob/master/src/components/lobby/Lobby.js)<br>
+Before joining a game, at least 3 users have to join a lobby. Also provides functionality for inviting players and chatting.
+* [Chat](https://github.com/SOPRA-2020/client-just-one/blob/master/src/components/chat/Chat.js)<br>
+Responsible for UI and communication with the server for chat components. Gets used by the mainpage and lobby components. Can work with separate endpoints.
+* [Game](https://github.com/SOPRA-2020/client-just-one/blob/master/src/components/game/Game.js)<br>
+The frontend engine of the game. Based on the current status retrieved, it sets the frontend status and communicates received information to the players. Makes use of many different components for the different game states.
 
-<!-- ## IDE Recommendation
-As a student, you have the possibility with [JetBrains](https://www.jetbrains.com/student/) to obtain a free individual license and have access to several IDEs. 
-We recommend you to use [WebStorm](https://www.jetbrains.com/webstorm/specials/webstorm/webstorm.html?gclid=EAIaIQobChMIyPOj5f723wIVqRXTCh3SKwtYEAAYASAAEgLtMvD_BwE&gclsrc=aw.ds) for your front-end. 
-Once you have downloaded and installed it, you can add the following WebStorm plugins: 
-> Go to Preferences > Plugins > Browse Repositories and look for: 
-* [styled-components](https://plugins.jetbrains.com/plugin/9997-styled-components) (provides coding assistance like CSS Highlighting for Styled Components)
-* [prettier](https://plugins.jetbrains.com/plugin/10456-prettier) (a smart code formatter)
-* [Material Theme UI](https://plugins.jetbrains.com/plugin/8006-material-theme-ui) (Material Theme for Jetbrains IDEs, allowing a total customization of the IDE including Themes, Color Schemes, Icons and many other features.)
-
-Feel free to use other IDEs (e.g. [VisualStudio](https://code.visualstudio.com/)) if you want.  -->
-
-## Prerequisites and Installation
+## Launch & Deployment
 
 For your local development environment you'll need Node.js >= 8.10. You can download it [here](https://nodejs.org). All other dependencies including React get installed with:
 
@@ -56,9 +52,19 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-## Learn More
+## UI Flow
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Placeholder
 
 
->Thanks to Lucas Pelloni for the template
+## Roadmap
+
+We could do so much cool stuff!!!
+
+## Authors & Acknowledgements
+
+I did all the work, so thanks for that to me. I also thank me for being so supportive of myself, and also me for being always there for me <3
+
+## License
+
+Idc, just take ~~our~~ my code.
