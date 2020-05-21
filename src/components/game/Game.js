@@ -53,7 +53,8 @@ class Game extends React.Component {
             lastTurnEndScreenDate: null, // when the last TurnEndScreen was opened
             show: false, // modal window for alert when player closes the browser unexpectedly.
             messageBox: null, // In certain situations a message box is displayed for a few seconds for information purposes.
-            previousState: null
+            previousState: null,
+            skipped: 0 //to show also the skipped cards in frontend
         };
         this.updateGame = this.updateGame.bind(this);
         this.showModal = this.showModal.bind(this);
@@ -171,6 +172,7 @@ class Game extends React.Component {
             }
             else {
                 this.setState({ guessCorrect: 'skipped' });
+                this.setState({skipped: this.state.skipped + 1});
             }
             
             this.setState({ lastTurnEndScreenDate: Date.now() });
@@ -293,6 +295,7 @@ class Game extends React.Component {
             return <GameOverview
                 gameModel={this.state.gameModel}
                 users={this.state.users}
+                skipped={this.state.skipped}
             />;
         }
 
@@ -484,6 +487,14 @@ class Game extends React.Component {
                         <Info>
                             <Orange>
                                 {this.state.gameModel.wordsGuessedWrong}
+                            </Orange>
+                        </Info>
+                        <InfoLabel>
+                            <Orange>Skipped</Orange>
+                        </InfoLabel>
+                        <Info>
+                            <Orange>
+                                {this.state.skipped}
                             </Orange>
                         </Info>
                     </GameInfo>

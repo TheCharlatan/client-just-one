@@ -46,7 +46,7 @@ export class TeamStats extends React.Component{
                 </Label>
                 <Label style={{background: 'white'}}>
                     <Blue style={{letterSpacing: '0.1em'}}>
-                        {13 - this.props.gameStats.wordsGuessedCorrect - this.props.gameStats.wordsGuessedWrong}
+                        {this.props.skipped}
                     </Blue>
                 </Label>
             </StatsRow>
