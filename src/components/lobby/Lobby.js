@@ -12,7 +12,7 @@ import Heading from "../../views/design/customized-layouts/Heading.js";
 import Pink from "../../views/design/font-families/Pink";
 import InviteModal from "./invite/InviteModal";
 import {api, handleError} from "../../helpers/api";
-import {ActionContainer, UserContainer} from "./LobbyLayout";
+import {ActionContainer, CenterContainerLobby, UserContainer} from "./LobbyLayout";
 
 import {Spinner} from "../../views/design/Spinner";
 import UserLayoutLobby from "./UserLayoutLobby";
@@ -194,7 +194,7 @@ export class Lobby extends React.Component {
                 </ChatContainer>
                 <CenterContainer>
                     <ActionContainer>
-                        <FormContainer style={{minHeight: "0"}}>
+                        <FormContainer style={{minHeight: "0", marginTop: "20px"}}>
                             <Heading>
                                 <Pink style={{fontSize: "x-large", fontSizeImportant: "true"}}>
                                     {this.state.lobbyName}
@@ -206,7 +206,7 @@ export class Lobby extends React.Component {
                                 minHeight: "0",
                                 width: "60%",
                                 widthImportant: "true",
-                                marginTop: "4em",
+                                marginTop: "1em",
                             }}
                         >
                             <Form style={{width: "auto", height: "auto"}}>
