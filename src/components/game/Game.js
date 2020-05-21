@@ -293,6 +293,7 @@ class Game extends React.Component {
             return <GameOverview
                 gameModel={this.state.gameModel}
                 users={this.state.users}
+                roundsPlayed={this.state.gameModel.round - 1}
             />;
         }
 
@@ -484,6 +485,14 @@ class Game extends React.Component {
                         <Info>
                             <Orange>
                                 {this.state.gameModel.wordsGuessedWrong}
+                            </Orange>
+                        </Info>
+                        <InfoLabel>
+                            <Orange>Skipped</Orange>
+                        </InfoLabel>
+                        <Info>
+                            <Orange>
+                                {(13 - this.state.gameModel.cardStackCount) - this.state.gameModel.wordsGuessedCorrect - 2*this.state.gameModel.wordsGuessedWrong}
                             </Orange>
                         </Info>
                     </GameInfo>
