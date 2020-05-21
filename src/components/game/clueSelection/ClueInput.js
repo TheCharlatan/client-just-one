@@ -35,7 +35,7 @@ export class ClueInput extends React.Component {
                 await api.put(`/game/${sessionStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
                 this.setState({"clue1Submitted": true});
             }
-            if (clue2 !== this.state.placeholder2 && clue1 !== "" && !this.state.clue2Submitted) {
+            if (clue2 !== this.state.placeholder2 && clue2 !== "" && !this.state.clue2Submitted && this.props.twoCluesInput) {
                 let requestBody = JSON.stringify({ clue: clue2 });
                 await api.put(`/game/${sessionStorage.getItem('gameId')}/clue`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
                 this.setState({"clue2Submitted": true});
