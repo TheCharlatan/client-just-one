@@ -161,16 +161,17 @@ class Game extends React.Component {
             this.setFrontendGameStatus("TURN_FINISHED");
             this.setState({previousState: prevState});
 
-            // TODO: Screen for no valid clues.
-
             if (this.state.gameModel.wordsGuessedCorrect > prevState.gameModel.wordsGuessedCorrect) {
                 this.setState({ guessCorrect: 'correct' });
             }
             else if (this.state.gameModel.wordsGuessedWrong > prevState.gameModel.wordsGuessedWrong) {
                 this.setState({ guessCorrect: 'wrong' });
             }
-            else {
+            else if (prevState.gameModel.gameStatus !== "AWAITING_CLUES") {
                 this.setState({ guessCorrect: 'skipped' });
+            }
+            else {
+                this.setState({ guessCorrect: 'noValidClues' });
             }
             
             this.setState({ lastTurnEndScreenDate: Date.now() });
@@ -293,6 +294,7 @@ class Game extends React.Component {
             return <GameOverview
                 gameModel={this.state.gameModel}
                 users={this.state.users}
+                roundsPlayed={this.state.gameModel.round - 1}
             />;
         }
 
@@ -484,6 +486,14 @@ class Game extends React.Component {
                         <Info>
                             <Orange>
                                 {this.state.gameModel.wordsGuessedWrong}
+                            </Orange>
+                        </Info>
+                        <InfoLabel>
+                            <Orange>Skipped</Orange>
+                        </InfoLabel>
+                        <Info>
+                            <Orange>
+                                {(13 - this.state.gameModel.cardStackCount) - this.state.gameModel.wordsGuessedCorrect - 2*this.state.gameModel.wordsGuessedWrong}
                             </Orange>
                         </Info>
                     </GameInfo>
