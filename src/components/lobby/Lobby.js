@@ -12,7 +12,7 @@ import Heading from "../../views/design/customized-layouts/Heading.js";
 import Pink from "../../views/design/font-families/Pink";
 import InviteModal from "./invite/InviteModal";
 import {api, handleError} from "../../helpers/api";
-import {ActionContainer, UserContainer} from "./LobbyLayout";
+import {ActionContainer, CenterContainerLobby, UserContainer} from "./LobbyLayout";
 
 import {Spinner} from "../../views/design/Spinner";
 import UserLayoutLobby from "./UserLayoutLobby";
@@ -30,12 +30,14 @@ export class Lobby extends React.Component {
             users: [],
             loaded: false,
             updateTimer: null,
+            invitePlayerList : null
         };
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
         this.startGame = this.startGame.bind(this);
         this.updateLobby = this.updateLobby.bind(this); // TODO: Stop when player joins game.
         this.leaveLobby = this.leaveLobby.bind(this);
+        this.invitedPlayers = this.invitedPlayers.bind(this);
     }
 
     showModal() {
@@ -88,6 +90,29 @@ export class Lobby extends React.Component {
 
         this.setState({loaded: true});
         this.setState({updateTimer: setInterval(() => this.updateLobby(), 500)})
+    }
+
+    async invitedPlayers()
+    {
+        let requestHeader = null;
+        let responseLobby = null;
+
+        try {
+            requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
+            responseLobby = await api.get(`/lobby/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
+            //TODO check response status
+        } catch {
+            console.log("Ooops 1");
+            return;
+        }
+        let invitedPlayers = [];
+        if (responseLobby.data && responseLobby.data.playerIds && responseLobby.data.playerIds.length > 0) {
+            responseLobby.data.playerIds.map(playerId => {
+                    invitedPlayers.push(playerId);
+                }
+            );
+        }
+        this.setState({invitePlayerList : invitedPlayers});
     }
 
     async startGame() {
@@ -194,7 +219,7 @@ export class Lobby extends React.Component {
                 </ChatContainer>
                 <CenterContainer>
                     <ActionContainer>
-                        <FormContainer style={{minHeight: "0"}}>
+                        <FormContainer style={{minHeight: "0", marginTop: "20px"}}>
                             <Heading>
                                 <Pink style={{fontSize: "x-large", fontSizeImportant: "true"}}>
                                     {this.state.lobbyName}
@@ -206,16 +231,21 @@ export class Lobby extends React.Component {
                                 minHeight: "0",
                                 width: "60%",
                                 widthImportant: "true",
-                                marginTop: "4em",
+                                marginTop: "1em",
                             }}
                         >
                             <Form style={{width: "auto", height: "auto"}}>
                                 <StartGameBtn onClick={() => this.startGame()}/>
-                                <InviteBtn onClick={() => this.showModal()}/>
+                                <InviteBtn onClick={() => {
+                                    this.invitedPlayers().then(
+                                        this.showModal()
+                                    );
+                                }
+                                }/>
                                 <LeaveBtn onClick={() => this.leaveLobby()}/>
                             </Form>
                         </FormContainer>
-                        <InviteModal hideModal={this.hideModal} show={this.state.show}/>
+                        <InviteModal hideModal={this.hideModal} friends={this.state.invitePlayerList} show={this.state.show}/>
                     </ActionContainer>
                     <UserContainer>
                         {this.state.users.map((user) => {

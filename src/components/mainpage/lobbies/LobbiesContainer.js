@@ -5,6 +5,7 @@ import Yellow from "../../../views/design/font-families/Yellow";
 import {LobbiesList} from "./LobbiesList";
 import {api, handleError} from "../../../helpers/api";
 import Red from "../../../views/design/font-families/Red";
+import {Spinner} from "../../../views/design/Spinner";
 
 
 export class LobbiesContainer extends React.Component {
@@ -12,38 +13,30 @@ export class LobbiesContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            openLobbies: [],
-            invitedLobbies: []
+            invitedLobbies: [],
+            openLobbies:[],
+            loaded : false
         }
     }
 
+    componentWillUpdate(nextProps, nextState) {
+        //this will give you your latest state from store
+        if(nextProps.openLobbies != nextState.openLobbies)
+        {
+            console.log(this.props);
+            this.setState({
+                openLobbies: nextProps.openLobbies
+            }, () => {
+                this.fillData();
+            });
+        }
+        console.log(nextProps);
+    }
 
-    // load lobbies and fill in data
-    async componentDidMount() {
+    async fillData()
+    {
         let requestHeader = null;
         let response = null;
-
-        try {
-            requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
-            response = await api.get('/lobby', {headers: {'X-Auth-Token': requestHeader}});
-        }
-        catch (error) {
-            alert(`Could not load open lobbies: \n${handleError(error)}`);
-            return;
-        }
-
-        // TODO: Validate data.
-        if (response.data !== null && response.data.length > 0) {
-            this.setState({
-                openLobbies: response.data
-            });
-        }
-        else {
-            this.setState({
-                openLobbies: []
-            });
-            return;
-        }
 
         try {
             requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
@@ -70,7 +63,7 @@ export class LobbiesContainer extends React.Component {
                     const index = this.state.openLobbies.indexOf(lobby);
                     this.state.openLobbies.splice(index, 1);
                     this.setState({openLobbies: this.state.openLobbies})
-            }});
+                }});
         }
         else {
             this.setState({
@@ -80,10 +73,14 @@ export class LobbiesContainer extends React.Component {
     }
 
 
+    // load lobbies and fill in data
+    async componentDidMount() {
+            }
+
+
     render() {
 
         let lobbiesComponent;
-
         if (this.state.openLobbies.length > 0 ) {
             lobbiesComponent =
                 <React.Fragment>

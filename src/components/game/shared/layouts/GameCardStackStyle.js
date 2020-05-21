@@ -32,13 +32,16 @@ margin-top: 7px;
 
 export const CardStackNumber = styled. div`
 width: 173px;
+height: 50px;
 background: #FFFFFF;
 border: 6px solid #DDC18E;
 box-sizing: border-box;
 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
 text-align:center;
-
+display: flex;
+justify-content: center;
+align-items: center;
 margin-bottom: 7px;
 margin-top: 7px;
 `;
