@@ -16,28 +16,18 @@ export default class InviteModal extends React.Component {
         }
     }
 
-    async componentDidMount() {
-        let requestHeader = null;
-        let responseLobby = null;
-
-        try {
-            requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
-            responseLobby = await api.get(`/lobby/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
-            //TODO check response status
-        } catch {
-            console.log("Ooops 1");
-            return;
+    componentWillReceiveProps(props) {
+        const { friends } = this.props;
+        if (props.friends !== friends) {
+            this.invitePlayerList(props.friends);
         }
-        let invitedPlayers = [];
-        if (responseLobby.data && responseLobby.data.playerIds && responseLobby.data.playerIds.length > 0) {
-            responseLobby.data.playerIds.map(playerId => {
-                    invitedPlayers.push(playerId);
-                }
-            );
-        }
+    }
 
+    async invitePlayerList (invitedPlayers)
+    {
+        console.log(invitedPlayers);
         let responseInvite = null;
-
+        let requestHeader = null;
         try {
             requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             responseInvite = await api.get('/user', {headers: {'X-Auth-Token': requestHeader}});
@@ -62,6 +52,27 @@ export default class InviteModal extends React.Component {
             });
             return;
         }
+    }
+
+    async componentDidMount() {
+        /*let requestHeader = null;
+        let responseLobby = null;
+
+        try {
+            requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
+            responseLobby = await api.get(`/lobby/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
+            //TODO check response status
+        } catch {
+            console.log("Ooops 1");
+            return;
+        }
+        let invitedPlayers = [];
+        if (responseLobby.data && responseLobby.data.playerIds && responseLobby.data.playerIds.length > 0) {
+            responseLobby.data.playerIds.map(playerId => {
+                    invitedPlayers.push(playerId);
+                }
+            );
+        }*/
     }
 
     render() {
