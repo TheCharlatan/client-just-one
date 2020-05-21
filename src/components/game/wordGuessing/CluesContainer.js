@@ -45,7 +45,7 @@ export class CluesContainer extends React.Component {
                         width: "100%",
                         marginBottom: "2%",
                         zIndex: 100,
-                        marginTop: "15%"
+                        marginTop: "12%"
                     }}
                 >
                     <Form style={{width: "auto", height: "auto", borderWidth: "3px", display: "grid"}}>
