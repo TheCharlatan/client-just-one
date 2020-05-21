@@ -76,7 +76,7 @@ export class ClueInput extends React.Component {
         }
 
         return (
-            <div style={{display: 'flex', flexDirection: 'column', "marginTop": "2%", marginBottom :"5%"}}>
+            <div style={{display: 'flex', flexDirection: 'column', "marginTop": "5%", marginBottom :"5%"}}>
                 <InputClue
                     placeholder={this.state.placeholder1}
                     onFocus={() => {this.handleInputChange('placeholder1', '');}}

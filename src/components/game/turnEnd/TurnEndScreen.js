@@ -62,6 +62,8 @@ export class TurnEndScreen extends React.Component {
                 style={{
                     minHeight: "0",
                     width: "100%",
+                    marginTop: "4em",
+
                 }}
             >
                 <StyledMessage >
