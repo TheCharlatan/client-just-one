@@ -53,40 +53,7 @@ export class Lobby extends React.Component {
     }
 
     async componentDidMount() {
-        let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
-        try {
-            const response = await api.get(`/lobby/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
-            if (response.data == null) {
-                alert("Unexpected error when loading lobby.");
-                return;
-            }
-            if (response.data.name)
-                this.setState({
-                    lobbyName: response.data.name
-                });
-            if (response.data.playerIds && response.data.playerIds.length > 0) {
-                this.setState({
-                    playerIds: this.state.playerIds.concat(response.data.playerIds)
-                })
-            }
-            if (response.data.hostPlayerId)
-                this.setState({hostPlayerId: response.data.hostPlayerId});
-        } catch (error) {
-            alert(`An error occurred when retrieving lobby players: ${error}`);
-            return;
-        }
-
-        // get the users to show them in the lobby
-        try {
-            for (let i = 0; i < this.state.playerIds.length; i++) {
-                const responseUser = await api.get(`/user/${this.state.playerIds[i]}`, {headers: {'X-Auth-Token': requestHeader}});
-                //make a new field which indicates if the user is the host or not
-                responseUser.data.isHost = responseUser.data.id === this.state.hostPlayerId;
-                this.state.users[i] = responseUser.data;
-            }
-        } catch (error) {
-            alert(`Something went wrong while fetching the users: ${error}`);
-        }
+        await this.updateLobby();
 
         this.setState({loaded: true});
         this.setState({updateTimer: setInterval(() => this.updateLobby(), 500)})
@@ -100,11 +67,12 @@ export class Lobby extends React.Component {
         try {
             requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             responseLobby = await api.get(`/lobby/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
-            //TODO check response status
-        } catch {
-            console.log("Ooops 1");
+        }
+        catch {
+            console.log("Could not load players to invite them.");
             return;
         }
+
         let invitedPlayers = [];
         if (responseLobby.data && responseLobby.data.playerIds && responseLobby.data.playerIds.length > 0) {
             responseLobby.data.playerIds.map(playerId => {
@@ -152,7 +120,7 @@ export class Lobby extends React.Component {
         if(!sessionStorage.getItem("lobbyId")){
             return;
         }
-      
+
         let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
 
         try {
@@ -170,15 +138,23 @@ export class Lobby extends React.Component {
         try {
             const response = await api.get(`/lobby/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
             if (response.data == null) {
-                alert("Unexpted Error");
+                alert("An unexpected error occurred when updating the lobby.");
+            }
+
+            if (response.data.name) {
+                this.setState({lobbyName: response.data.name});
             }
 
             if (response.data.playerIds && response.data.playerIds.length > 0) {
                 this.setState({
                     playerIds: response.data.playerIds
-                })
+                });
             }
-        } catch (error) {
+            if (response.data.hostPlayerId) {
+                this.setState({hostPlayerId: response.data.hostPlayerId});
+            }
+        }
+        catch (error) {
             alert(`An error occurred when retrieving lobby players: ${error}`);
         }
 
@@ -191,7 +167,7 @@ export class Lobby extends React.Component {
                 responseUser.data.isHost = responseUser.data.id === this.state.hostPlayerId;
                 users.push(responseUser.data)
             }
-            this.setState({users: users})
+            this.setState({users: users});
         }
         catch (error) {
             alert(`Something went wrong while fetching the users: ${error}`);
