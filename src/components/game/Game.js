@@ -121,7 +121,7 @@ class Game extends React.Component {
                 this.hideModal();
                 this.alert = null;
                 this.setState({
-                    updateTimer: setInterval(() => this.updateGame(), 500)
+                    updateTimer: setInterval(() => this.updateGame(), 1000)
                 });
             }, 10000);
         }
@@ -197,7 +197,7 @@ class Game extends React.Component {
     async componentDidMount() {
         await this.updateGameData();
         this.setState({
-            updateTimer: setInterval(() => this.updateGame(), 500),
+            updateTimer: setInterval(() => this.updateGame(), 1000),
             previousState: JSON.parse(JSON.stringify(this.state))
         });
     }
