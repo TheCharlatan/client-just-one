@@ -6,38 +6,30 @@ import close from '../../../img/close.png'
 import User from "../../shared/models/User";
 import InviteModalBtn from "./InviteModalBtn";
 import {api} from '../../../helpers/api';
+import {Spinner} from "../../../views/design/Spinner";
 
 export default class InviteModal extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            users: []
+            users: [],
+            loaded:false
         }
     }
 
-    async componentDidMount() {
-        let requestHeader = null;
-        let responseLobby = null;
-
-        try {
-            requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
-            responseLobby = await api.get(`/lobby/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
-            //TODO check response status
-        } catch {
-            console.log("Ooops 1");
-            return;
+    componentWillReceiveProps(props) {
+        const { friends } = this.props;
+        if (props.friends !== friends) {
+            this.invitePlayerList(props.friends);
         }
-        let invitedPlayers = [];
-        if (responseLobby.data && responseLobby.data.playerIds && responseLobby.data.playerIds.length > 0) {
-            responseLobby.data.playerIds.map(playerId => {
-                    invitedPlayers.push(playerId);
-                }
-            );
-        }
+    }
 
+    async invitePlayerList (invitedPlayers)
+    {
+        console.log(invitedPlayers);
         let responseInvite = null;
-
+        let requestHeader = null;
         try {
             requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             responseInvite = await api.get('/user', {headers: {'X-Auth-Token': requestHeader}});
@@ -49,8 +41,10 @@ export default class InviteModal extends React.Component {
         let users = [];
         if (responseInvite.data && responseInvite.data.length > 0) {
             responseInvite.data.map(user => {
-                    if (!invitedPlayers.includes(user.id))
+                    if (!invitedPlayers.includes(user.id) && user.status === "ONLINE" && user.lobbyId <= 0)
+                    {
                         users.push(new User(user))
+                    }
                 }
             );
             this.setState({
@@ -60,13 +54,16 @@ export default class InviteModal extends React.Component {
             this.setState({
                 users: []
             });
-            return;
         }
+        this.setState({loaded:true});
     }
 
     render() {
         if (!this.props.show) {
             return null;
+        }
+        if (!this.state.loaded) {
+            return <Spinner />
         }
         return (
             <div className="modal" style={{top: "20%", height: 'auto', maxHeight: '600px', overflowY: 'auto'}}>
@@ -94,6 +91,13 @@ export default class InviteModal extends React.Component {
                             </div>
                         </React.Fragment>);
                 })}
+                {this.state.users.length === 0 &&
+                <React.Fragment>
+                    <Blue>
+                        No available online players to invite.
+                    </Blue>
+                </React.Fragment>
+                }
             </div>
         );
     }
