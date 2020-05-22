@@ -250,7 +250,7 @@ export class Lobby extends React.Component {
                             }}
                         >
                             <Form style={{width: "auto", height: "auto"}}>
-                                <StartGameBtn onClick={() => this.startGame()}/>
+                                {this.state.hostPlayerId == sessionStorage.getItem('userId') ? <StartGameBtn onClick={() => this.startGame()}/> : null}
                                 <InviteBtn onClick={() => {
                                     this.invitedPlayers().then(
                                         this.showModal()
