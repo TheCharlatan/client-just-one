@@ -54,20 +54,20 @@ For remote deployment, after pushing a new commit to Github, Github Actions depl
 When no login is found, users are redirected to the login page. Users can register an account, or log in with existing credentials.
 
 <p align="center">
-  <img src="./img/Login.png" alt="Login Page" width="767">
+  <img src="./.img/Login.png" alt="Login Page" width="767">
 </p>
 
 After logging in, users arrive at the mainpage. They can chat with other users (left), create or join a lobby (middle) and see how good other players are on the leaderboard (right).
 
 <p align="center">
-  <img src="./img/Mainpage.png" alt="Mainpage" width="767">
+  <img src="./.img/Mainpage.png" alt="Mainpage" width="767">
 </p>
 
 Having joined a lobby by clicking the Join Lobby button or creating a new one, users can chat with their team or invite other players that are online.
 The lobby host can start the game if there are between 3 and 7 players in thier lobby.
 
 <p align="center">
-  <img src="./img/Lobby.png" alt="Mainpage" width="767">
+  <img src="./.img/Lobby.png" alt="Mainpage" width="767">
 </p>
 
 After the lobby host has started the game, the users play it until either all cards are played, or less than 2 players are still in the game.
@@ -77,7 +77,7 @@ The other players can accept or reject the mystery word and, if it was accepted,
 After a turn has ended, the outcome is displayed, and a new turn started.
 
 <p align="center">
-  <img src="./img/Game.png" alt="Mainpage" width="767">
+  <img src="./.img/Game.png" alt="Mainpage" width="767">
 </p>
 
 After the game has ended, an overview is displayed, and the users get moved back to their lobby.
