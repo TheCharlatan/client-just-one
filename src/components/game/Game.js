@@ -385,7 +385,7 @@ class Game extends React.Component {
                 startTime={this.state.gameModel.timestamp - Date.now() + 30000}
                 onTimerFinished={async () => {
                     let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
-                    let requestBody = JSON.stringify({ guess: '', wordIndex: this.props.gameModel.wordIndex});
+                    let requestBody = JSON.stringify({ guess: '', wordIndex: 0});
                     try {
                         await api.put(`/game/${sessionStorage.getItem('gameId')}/guess`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
                     }
