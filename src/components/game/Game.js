@@ -161,16 +161,17 @@ class Game extends React.Component {
             this.setFrontendGameStatus("TURN_FINISHED");
             this.setState({previousState: prevState});
 
-            // TODO: Screen for no valid clues.
-
             if (this.state.gameModel.wordsGuessedCorrect > prevState.gameModel.wordsGuessedCorrect) {
                 this.setState({ guessCorrect: 'correct' });
             }
             else if (this.state.gameModel.wordsGuessedWrong > prevState.gameModel.wordsGuessedWrong) {
                 this.setState({ guessCorrect: 'wrong' });
             }
-            else {
+            else if (prevState.gameModel.gameStatus !== "AWAITING_CLUES") {
                 this.setState({ guessCorrect: 'skipped' });
+            }
+            else {
+                this.setState({ guessCorrect: 'noValidClues' });
             }
             
             this.setState({ lastTurnEndScreenDate: Date.now() });
