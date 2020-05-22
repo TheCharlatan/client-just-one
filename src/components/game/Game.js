@@ -121,7 +121,7 @@ class Game extends React.Component {
                 this.hideModal();
                 this.alert = null;
                 this.setState({
-                    updateTimer: setInterval(() => this.updateGame(), 200)
+                    updateTimer: setInterval(() => this.updateGame(), 500)
                 });
             }, 10000);
         }
@@ -180,6 +180,7 @@ class Game extends React.Component {
 
         if (this.state.gameModel.gameStatus === "GAME_OVER") {
             this.setFrontendGameStatus("GAME_OVER");
+            clearInterval(this.state.updateTimer); // don't remove players who left during the game overview screen
         }
     }
 
@@ -196,7 +197,7 @@ class Game extends React.Component {
     async componentDidMount() {
         await this.updateGameData();
         this.setState({
-            updateTimer: setInterval(() => this.updateGame(), 200),
+            updateTimer: setInterval(() => this.updateGame(), 500),
             previousState: JSON.parse(JSON.stringify(this.state))
         });
     }
