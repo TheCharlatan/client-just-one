@@ -5,7 +5,9 @@ JOC is designed as a Single Page Application (SPA) and provides an intuitive and
 
 ## Technologies
 
-JOC uses the JS-based [Node.js](https://nodejs.org/en/) runtime together with [React](https://reactjs.org/) for it's user interface. It's SPA functiuonality is also implemented using React.
+JOC uses the JS-based [Node.js](https://nodejs.org/en/) runtime together with [React](https://reactjs.org/) for it's user interface.
+It's SPA functiuonality is implemented using [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start).
+With [styled-components](https://www.styled-components.com/docs) styled React components are created directly from styles.
 
 ## High-Level Components
 
@@ -33,24 +35,19 @@ This has to be done before starting the application for the first time (only onc
 
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
 The page will reload if you make edits.<br>
-You will also see any lint errors in the console (use Google Chrome!).
-
-### `npm run test`
-
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Make sure to have an instance of the [server](https://github.com/SOPRA-2020/server-just-one) running.
 
 ### `npm run build`
 
 Builds the app for production to the `build` folder.<br>
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+The build is minified and the filenames include the hashes.
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+For remote deployment, after pushing a new commit to Github, Github Actions deploys the project to [Heroku](https://sopra-fs20-group-06-client.herokuapp.com) as defined in [deploy.yml](https://github.com/SOPRA-2020/client-just-one/blob/master/.github/workflows/deploy.yml).
 
 ## UI Flow
 
