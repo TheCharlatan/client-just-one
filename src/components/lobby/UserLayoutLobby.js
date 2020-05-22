@@ -9,7 +9,7 @@ import giraffe from "../../img/giraffe.png";
 import penguin from "../../img/penguin.png";
 import squirrel from "../../img/squirrel.png";
 import hippo from "../../img/hippo.png";
-import tiger from"../../img/tiger.png";
+import tiger from "../../img/tiger.png";
 
 
 const UserContainer = styled.div`
@@ -111,12 +111,14 @@ const UserLayoutLobby = (props) => {
         <ActivePlayer isHost={props.user.isHost}>
             <UserContainer>
                 <UserProfilePicture
+                    style={{cursor:"pointer"}}
                     image={url}
                     onClick={() => {
                         props.history.push(`/user/${props.user.id}`);
                     }}
                 />
                 <UserNameContainer
+                    style={{cursor:"pointer"}}
                     onClick={() => {
                         props.history.push(`/user/${props.user.id}`);
                     }}

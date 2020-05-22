@@ -29,7 +29,10 @@ import {
     ElephantContainer,
     GiraffeContainer,
     HippoContainer,
-    LionContainer, PenguinContainer, SquirrelContainer, TigerContainer
+    LionContainer,
+    PenguinContainer,
+    SquirrelContainer,
+    TigerContainer
 } from "../registration/ImageContainerContent";
 import {ChooseImageContainer} from "../registration/ImageContainer";
 import EditProfilePictureButton from "../../views/design/customized-layouts/EditProfilePictureButton";

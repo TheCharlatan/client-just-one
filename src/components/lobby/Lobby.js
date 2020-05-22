@@ -12,10 +12,11 @@ import Heading from "../../views/design/customized-layouts/Heading.js";
 import Pink from "../../views/design/font-families/Pink";
 import InviteModal from "./invite/InviteModal";
 import {api, handleError} from "../../helpers/api";
-import {ActionContainer, CenterContainerLobby, UserContainer} from "./LobbyLayout";
+import {ActionContainer, UserContainer} from "./LobbyLayout";
 
 import {Spinner} from "../../views/design/Spinner";
 import UserLayoutLobby from "./UserLayoutLobby";
+import AlertModal from "../game/shared/AlertModal";
 
 export class Lobby extends React.Component {
 
@@ -30,7 +31,9 @@ export class Lobby extends React.Component {
             users: [],
             loaded: false,
             updateTimer: null,
-            invitePlayerList : null
+            invitePlayerList : null,
+            showError: false, // modal window for alert when player closes the browser unexpectedly.
+            errorMessage : null
         };
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
@@ -38,6 +41,8 @@ export class Lobby extends React.Component {
         this.updateLobby = this.updateLobby.bind(this); // TODO: Stop when player joins game.
         this.leaveLobby = this.leaveLobby.bind(this);
         this.invitedPlayers = this.invitedPlayers.bind(this);
+        this.showErrorModal = this.showErrorModal.bind(this);
+        this.hideErrorModal = this.hideErrorModal.bind(this);
     }
 
     showModal() {
@@ -52,41 +57,22 @@ export class Lobby extends React.Component {
         });
     }
 
-    async componentDidMount() {
-        let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
-        try {
-            const response = await api.get(`/lobby/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
-            if (response.data == null) {
-                alert("Unexpected error when loading lobby.");
-                return;
-            }
-            if (response.data.name)
-                this.setState({
-                    lobbyName: response.data.name
-                });
-            if (response.data.playerIds && response.data.playerIds.length > 0) {
-                this.setState({
-                    playerIds: this.state.playerIds.concat(response.data.playerIds)
-                })
-            }
-            if (response.data.hostPlayerId)
-                this.setState({hostPlayerId: response.data.hostPlayerId});
-        } catch (error) {
-            alert(`An error occurred when retrieving lobby players: ${error}`);
-            return;
-        }
+    //show the alert window
+    showErrorModal(error) {
+        this.setState({
+            showError: true,
+            errorMessage : error
+        });
+    }
 
-        // get the users to show them in the lobby
-        try {
-            for (let i = 0; i < this.state.playerIds.length; i++) {
-                const responseUser = await api.get(`/user/${this.state.playerIds[i]}`, {headers: {'X-Auth-Token': requestHeader}});
-                //make a new field which indicates if the user is the host or not
-                responseUser.data.isHost = responseUser.data.id === this.state.hostPlayerId;
-                this.state.users[i] = responseUser.data;
-            }
-        } catch (error) {
-            alert(`Something went wrong while fetching the users: ${error}`);
-        }
+    hideErrorModal() {
+        this.setState({
+            showError: false,
+            errorMessage : null
+        });
+    }
+    async componentDidMount() {
+        await this.updateLobby();
 
         this.setState({loaded: true});
         this.setState({updateTimer: setInterval(() => this.updateLobby(), 500)})
@@ -100,11 +86,12 @@ export class Lobby extends React.Component {
         try {
             requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
             responseLobby = await api.get(`/lobby/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
-            //TODO check response status
-        } catch {
-            console.log("Ooops 1");
+        }
+        catch {
+            console.log("Could not load players to invite them.");
             return;
         }
+
         let invitedPlayers = [];
         if (responseLobby.data && responseLobby.data.playerIds && responseLobby.data.playerIds.length > 0) {
             responseLobby.data.playerIds.map(playerId => {
@@ -118,11 +105,16 @@ export class Lobby extends React.Component {
     async startGame() {
         let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
         if (this.state.hostPlayerId != sessionStorage.getItem('userId')) {
-            alert("Only the lobby host is allowed to start the game.");
+            //alert("Only the lobby host is allowed to start the game.");
+            let message_2=`Only the lobby host is allowed to start the game.`
+            console.log(message_2);
+            this.showErrorModal(message_2);
             return;
         }
         if (this.state.playerIds == null || this.state.playerIds.length < 3) {
-            alert("Not enough players to start the game.")
+            let message_2="Not enough players to start the game."
+            console.log(message_2);
+            this.showErrorModal(message_2);
             return;
         }
 
@@ -152,7 +144,7 @@ export class Lobby extends React.Component {
         if(!sessionStorage.getItem("lobbyId")){
             return;
         }
-      
+
         let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
 
         try {
@@ -170,15 +162,23 @@ export class Lobby extends React.Component {
         try {
             const response = await api.get(`/lobby/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
             if (response.data == null) {
-                alert("Unexpted Error");
+                alert("An unexpected error occurred when updating the lobby.");
+            }
+
+            if (response.data.name) {
+                this.setState({lobbyName: response.data.name});
             }
 
             if (response.data.playerIds && response.data.playerIds.length > 0) {
                 this.setState({
                     playerIds: response.data.playerIds
-                })
+                });
             }
-        } catch (error) {
+            if (response.data.hostPlayerId) {
+                this.setState({hostPlayerId: response.data.hostPlayerId});
+            }
+        }
+        catch (error) {
             alert(`An error occurred when retrieving lobby players: ${error}`);
         }
 
@@ -191,7 +191,7 @@ export class Lobby extends React.Component {
                 responseUser.data.isHost = responseUser.data.id === this.state.hostPlayerId;
                 users.push(responseUser.data)
             }
-            this.setState({users: users})
+            this.setState({users: users});
         }
         catch (error) {
             alert(`Something went wrong while fetching the users: ${error}`);
@@ -208,9 +208,24 @@ export class Lobby extends React.Component {
             return <Spinner/>
         }
 
+        let alertBox = null;
+        if(this.state.showError)
+        {
+            alertBox = (
+                <AlertModal
+                    show={this.state.showError}
+                    message_1={`Error with starting the game.`}
+                    message_2={`${this.state.errorMessage}`}
+                    error = "true"
+                    hideModal = {this.hideErrorModal}
+                />
+            );
+        }
+
         return (
             <BaseContainer>
                 <Background/>
+                {alertBox}
                 <BottomLeftContainer>
                     <ChatButton/>
                 </BottomLeftContainer>

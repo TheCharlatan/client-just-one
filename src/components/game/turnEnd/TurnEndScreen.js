@@ -45,7 +45,7 @@ export class TurnEndScreen extends React.Component {
                     </Blue>
                 </React.Fragment>
         }
-        else {
+        else if (this.props.correct == "skipped") {
             message =
                 <React.Fragment>
                     <Yellow>
@@ -56,6 +56,14 @@ export class TurnEndScreen extends React.Component {
                     </MysteryWord>
                 </React.Fragment>
         }
+        else if (this.props.correct == "noValidClues") {
+            message =
+                <React.Fragment>
+                    <Yellow>
+                        Ohh! There were no valid clues submitted.
+                    </Yellow>
+                </React.Fragment>
+        }
 
         return (
             <FormContainer
@@ -63,7 +71,6 @@ export class TurnEndScreen extends React.Component {
                     minHeight: "0",
                     width: "100%",
                     marginTop: "4em",
-
                 }}
             >
                 <StyledMessage >

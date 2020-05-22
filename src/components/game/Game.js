@@ -161,16 +161,17 @@ class Game extends React.Component {
             this.setFrontendGameStatus("TURN_FINISHED");
             this.setState({previousState: prevState});
 
-            // TODO: Screen for no valid clues.
-
             if (this.state.gameModel.wordsGuessedCorrect > prevState.gameModel.wordsGuessedCorrect) {
                 this.setState({ guessCorrect: 'correct' });
             }
             else if (this.state.gameModel.wordsGuessedWrong > prevState.gameModel.wordsGuessedWrong) {
                 this.setState({ guessCorrect: 'wrong' });
             }
-            else {
+            else if (prevState.gameModel.gameStatus !== "AWAITING_CLUES") {
                 this.setState({ guessCorrect: 'skipped' });
+            }
+            else {
+                this.setState({ guessCorrect: 'noValidClues' });
             }
             
             this.setState({ lastTurnEndScreenDate: Date.now() });
@@ -214,13 +215,11 @@ class Game extends React.Component {
         const prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
 
         let response = null;
-        let responseTimestamp = null;
         let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
 
         try {
             let gameId = sessionStorage.getItem("gameId");
             response = await api.get(`/game/${gameId}`, {headers: {'X-Auth-Token': requestHeader}});
-            responseTimestamp = response.data.timestamp; // save timestamp before (incorrect) automatic conversion
             this.setState({gameModel: response.data});
         }
         catch (error) {
@@ -229,11 +228,7 @@ class Game extends React.Component {
         }
 
         if (this.state.gameModel.timestamp !== null) {
-            let timestamp = new Date();
-            let [hours, minutes, seconds] = responseTimestamp.split(":");
-            timestamp.setHours(hours);
-            timestamp.setMinutes(parseInt(minutes) + (new Date().getTimezoneOffset())); // assumes the responseTimestamp is in UTC
-            timestamp.setSeconds(seconds);
+            let timestamp = new Date(this.state.gameModel.timestamp*1000);
             let gameModel = this.state.gameModel;
             gameModel.timestamp = timestamp;
             this.setState({
