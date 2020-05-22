@@ -229,11 +229,7 @@ class Game extends React.Component {
         }
 
         if (this.state.gameModel.timestamp !== null) {
-            let timestamp = new Date();
-            let [hours, minutes, seconds] = responseTimestamp.split(":");
-            timestamp.setHours(hours);
-            timestamp.setMinutes(parseInt(minutes) + (new Date().getTimezoneOffset())); // assumes the responseTimestamp is in UTC
-            timestamp.setSeconds(seconds);
+            let timestamp = new Date(responseTimestamp*1000);
             let gameModel = this.state.gameModel;
             gameModel.timestamp = timestamp;
             this.setState({
