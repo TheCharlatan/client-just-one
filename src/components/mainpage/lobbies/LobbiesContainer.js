@@ -5,7 +5,6 @@ import Yellow from "../../../views/design/font-families/Yellow";
 import {LobbiesList} from "./LobbiesList";
 import {api, handleError} from "../../../helpers/api";
 import Red from "../../../views/design/font-families/Red";
-import {Spinner} from "../../../views/design/Spinner";
 
 
 export class LobbiesContainer extends React.Component {

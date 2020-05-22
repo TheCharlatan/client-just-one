@@ -12,10 +12,11 @@ import Heading from "../../views/design/customized-layouts/Heading.js";
 import Pink from "../../views/design/font-families/Pink";
 import InviteModal from "./invite/InviteModal";
 import {api, handleError} from "../../helpers/api";
-import {ActionContainer, CenterContainerLobby, UserContainer} from "./LobbyLayout";
+import {ActionContainer, UserContainer} from "./LobbyLayout";
 
 import {Spinner} from "../../views/design/Spinner";
 import UserLayoutLobby from "./UserLayoutLobby";
+import AlertModal from "../game/shared/AlertModal";
 
 export class Lobby extends React.Component {
 
@@ -30,7 +31,9 @@ export class Lobby extends React.Component {
             users: [],
             loaded: false,
             updateTimer: null,
-            invitePlayerList : null
+            invitePlayerList : null,
+            showError: false, // modal window for alert when player closes the browser unexpectedly.
+            errorMessage : null
         };
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
@@ -38,6 +41,8 @@ export class Lobby extends React.Component {
         this.updateLobby = this.updateLobby.bind(this); // TODO: Stop when player joins game.
         this.leaveLobby = this.leaveLobby.bind(this);
         this.invitedPlayers = this.invitedPlayers.bind(this);
+        this.showErrorModal = this.showErrorModal.bind(this);
+        this.hideErrorModal = this.hideErrorModal.bind(this);
     }
 
     showModal() {
@@ -52,6 +57,20 @@ export class Lobby extends React.Component {
         });
     }
 
+    //show the alert window
+    showErrorModal(error) {
+        this.setState({
+            showError: true,
+            errorMessage : error
+        });
+    }
+
+    hideErrorModal() {
+        this.setState({
+            showError: false,
+            errorMessage : null
+        });
+    }
     async componentDidMount() {
         let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
         try {
@@ -118,11 +137,16 @@ export class Lobby extends React.Component {
     async startGame() {
         let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
         if (this.state.hostPlayerId != sessionStorage.getItem('userId')) {
-            alert("Only the lobby host is allowed to start the game.");
+            //alert("Only the lobby host is allowed to start the game.");
+            let message_2=`Only the lobby host is allowed to start the game.`
+            console.log(message_2);
+            this.showErrorModal(message_2);
             return;
         }
         if (this.state.playerIds == null || this.state.playerIds.length < 3) {
-            alert("Not enough players to start the game.")
+            let message_2="Not enough players to start the game."
+            console.log(message_2);
+            this.showErrorModal(message_2);
             return;
         }
 
@@ -208,9 +232,24 @@ export class Lobby extends React.Component {
             return <Spinner/>
         }
 
+        let alertBox = null;
+        if(this.state.showError)
+        {
+            alertBox = (
+                <AlertModal
+                    show={this.state.showError}
+                    message_1={`Error with starting the game.`}
+                    message_2={`${this.state.errorMessage}`}
+                    error = "true"
+                    hideModal = {this.hideErrorModal}
+                />
+            );
+        }
+
         return (
             <BaseContainer>
                 <Background/>
+                {alertBox}
                 <BottomLeftContainer>
                     <ChatButton/>
                 </BottomLeftContainer>
