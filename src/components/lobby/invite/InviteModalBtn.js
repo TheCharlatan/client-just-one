@@ -3,7 +3,6 @@ import Green from "../../../views/design/font-families/Green";
 import React from "react";
 import Violet from "../../../views/design/font-families/Violet";
 import {api} from '../../../helpers/api';
-import User from "../../shared/models/User";
 
 export default class InviteModalBtn extends React.Component {
 
