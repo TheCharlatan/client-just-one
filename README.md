@@ -5,7 +5,7 @@ JOC is designed as a Single Page Application (SPA) and provides an intuitive and
 
 ## Technologies
 
-JOC uses the JS-based [Node.js](https://nodejs.org/en/) runtime together with [React](https://reactjs.org/) for it's user interface.
+JOC uses the JS-based [Node.js](https://nodejs.org/en/) runtime together with the [React framework](https://reactjs.org/) for it's user interface.
 It's SPA functiuonality is implemented using [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start).
 With [styled-components](https://www.styled-components.com/docs) styled React components are created directly from styles.
 
@@ -53,15 +53,19 @@ For remote deployment, after pushing a new commit to Github, Github Actions depl
 
 Placeholder
 
-
 ## Roadmap
 
-We could do so much cool stuff!!!
+No project is ever completely finished, so here are some features that you could add:
+* Bots: To allow users to play alone, bot support could be added to the game. These bots would appear as normal players, giving clues and guessing.
+* Matchmaking: An alternative to bots would be to make playing with others easier. For this, some sort of matchmaking could be added.
+
+If you have any other idea that you would like to implement, feel free to contact us.
 
 ## Authors & Acknowledgements
 
-I did all the work, so thanks for that to me. I also thank me for being so supportive of myself, and also me for being always there for me <3
+This project was implemented by Group 6 of the 2020 SoPra course. Raffael Botschen, Stefanie Javet, Sebastian Küng, Yasara Peiris and Prasun Saurabh.<br>
+Thanks to the SoPra team for the templates, and to our TA Dimitri Kohler for his help.
 
 ## License
 
-Idc, just take ~~our~~ my code.
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE.md](https://github.com/SOPRA-2020/client-just-one/blob/master/LICENSE.md) file for details.
