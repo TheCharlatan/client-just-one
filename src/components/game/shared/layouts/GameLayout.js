@@ -52,7 +52,7 @@ justify-content: center;
 `;
 
 export const GameUserRightContainer = styled.div`
-grid-area: 2 / 4 / 5 / 5;
+grid-area: 3 / 4 / 5 / 5;
 display: flex;
 flex-direction: column;
 flex-wrap: wrap;

@@ -49,8 +49,8 @@ text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
 
 const UserProfilePicture = styled.div`
-width: 120px;
-height: 125px;
+width: 96px;
+height: 100px;
 background-image: url(${props => props.image ? props.image : profilePlaceholder});
 background-repeat: no-repeat;
 background-size: 100% 100%;
@@ -60,8 +60,8 @@ border: 2px solid black;
 `;
 
 const ActivePlayer = styled.div`
-width: 139px;
-height: 190px;
+width: 120px;
+height: 160px;
 
 display: flex;
 flex-direction: column;
