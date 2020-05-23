@@ -22,14 +22,12 @@ export class LobbiesContainer extends React.Component {
         //this will give you your latest state from store
         if(nextProps.openLobbies != nextState.openLobbies)
         {
-            console.log(this.props);
             this.setState({
                 openLobbies: nextProps.openLobbies
             }, () => {
                 this.fillData();
             });
         }
-        console.log(nextProps);
     }
 
     async fillData()
@@ -49,7 +47,6 @@ export class LobbiesContainer extends React.Component {
         if (response.data !== null && response.data.invitations && response.data.invitations.length > 0) {
             let invitedLobbies = [];
             this.state.openLobbies.forEach(lobby => {
-                console.log(this.state.openLobbies);
                 if (response.data.invitations.includes(lobby.id)) {
                     invitedLobbies.push(lobby);
                 }

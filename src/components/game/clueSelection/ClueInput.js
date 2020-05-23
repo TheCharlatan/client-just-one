@@ -43,6 +43,7 @@ export class ClueInput extends React.Component {
         }
         catch (error) {
             console.log(`An error occurred when submitting the clue: \n${handleError(error)}`);
+            return;
         }
 
         this.props.updateGame();

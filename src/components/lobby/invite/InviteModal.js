@@ -27,7 +27,6 @@ export default class InviteModal extends React.Component {
 
     async invitePlayerList (invitedPlayers)
     {
-        console.log(invitedPlayers);
         let responseInvite = null;
         let requestHeader = null;
         try {
@@ -35,7 +34,7 @@ export default class InviteModal extends React.Component {
             responseInvite = await api.get('/user', {headers: {'X-Auth-Token': requestHeader}});
             //TODO check response status
         } catch {
-            console.log("Ooops 2");
+            console.log("An error occured when loading users.");
             return;
         }
         let users = [];

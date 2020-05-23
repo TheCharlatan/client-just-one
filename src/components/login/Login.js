@@ -123,7 +123,7 @@ class Login extends React.Component {
         console.log(`Something went wrong during the login: \n${handleError(error)}`);
         let message_2=errorBox(error);
         this.showErrorModal(message_2);
-
+        return;
     }
   }
 
@@ -159,7 +159,6 @@ class Login extends React.Component {
             {
                 return;
             }
-            console.log('enter press here! ')
             this.login();
         }
     }

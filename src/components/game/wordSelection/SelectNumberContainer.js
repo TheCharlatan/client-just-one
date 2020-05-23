@@ -53,7 +53,6 @@ function NumberButton(props) {
             onClick={async () => {
                 try {
                     let requestBody = JSON.stringify({'wordIndex': props.number});
-                    console.log(requestBody);
                     let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
                     await api.put(`/game/${props.id}/number`, requestBody, {headers: {'X-Auth-Token': requestHeader}});
                 } catch (error) {

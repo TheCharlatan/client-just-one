@@ -35,7 +35,8 @@ class LeaveButton extends React.Component {
             sessionStorage.removeItem("gameId");
             await api.delete(`game/user/${gameId}`,  {headers: {'X-Auth-Token': requestHeader}, data: requestBody});
         } catch {
-            console.log("fail");
+            console.log("Some error occured when removing user from game.");
+            return;
         }
     }
 

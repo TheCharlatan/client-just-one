@@ -363,6 +363,7 @@ class Game extends React.Component {
                     }
                     catch (error) {
                         console.log(`An error occurred when submitting the guess: \n${handleError(error)}`);
+                        return;
                     }
                 }}
                 key={"CluesTimer"}
@@ -396,6 +397,7 @@ class Game extends React.Component {
                     }
                     catch (error) {
                         console.log(`An error occurred when submitting the guess: \n${handleError(error)}`);
+                        return;
                     }
                 }}
                 key={"GuessTimer"}
