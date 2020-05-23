@@ -11,6 +11,9 @@ export class NonInterferingMessageBox extends React.Component {
     }
 
     componentDidMount() {
+        setTimeout(() => {
+            this.props.onTimeOut();
+        }, 5000);
     }
 
     render() {

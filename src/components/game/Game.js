@@ -58,6 +58,7 @@ class Game extends React.Component {
         this.updateGame = this.updateGame.bind(this);
         this.showModal = this.showModal.bind(this);
         this.hideModal = this.hideModal.bind(this);
+        this.hideMessageBox = this.hideMessageBox.bind(this);
         this.clearTimer = this.clearTimer.bind(this);
         this.alert = null;
     }
@@ -65,13 +66,19 @@ class Game extends React.Component {
     //show the alert window
     showModal() {
         this.setState({
-            show: true,
+            show: true
         });
     }
 
     hideModal() {
         this.setState({
-            show: false,
+            show: false
+        });
+    }
+
+    hideMessageBox() {
+        this.setState({
+            messageBox: null
         });
     }
 
@@ -80,8 +87,6 @@ class Game extends React.Component {
 
         let prevState = JSON.parse(JSON.stringify(this.state)); // deep-copy previous state
         await this.updateGameData();
-
-        this.setState({messageBox: null});
 
         if (prevState.gameModel.playerIds.length !== this.state.gameModel.playerIds.length)
         {
@@ -133,8 +138,8 @@ class Game extends React.Component {
 
         if (this.state.gameModel.gameStatus === "AWAITING_INDEX") {
             this.setFrontendGameStatus("SELECT_INDEX");
-            if (this.state.gameModel.cardStatus === "USER_REJECTED_WORD") {
-                this.setState({messageBox: <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was rejected."} />}); // Inform all players that the word was rejected.
+            if (this.state.gameModel.cardStatus === "USER_REJECTED_WORD" && prevState.gameModel.gameStatus === "ACCEPT_REJECT") {
+                this.setState({messageBox: <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was rejected."} onTimeOut={this.hideMessageBox} />}); // Inform all players that the word was rejected.
             }
         }
 
@@ -149,7 +154,7 @@ class Game extends React.Component {
         if (this.state.gameModel.gameStatus === "AWAITING_CLUES") {
             this.setFrontendGameStatus("AWAITING_CLUES");
             if (prevState.gameModel.gameStatus === "ACCEPT_REJECT") {
-                this.setState({messageBox: <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was accepted."} />}); // Inform all players that the word was accepted.
+                this.setState({messageBox: <NonInterferingMessageBox id={'nonInterferingMessageBox'} message={"The word was accepted."} onTimeOut={this.hideMessageBox} />}); // Inform all players that the word was accepted.
             }
         }
 
