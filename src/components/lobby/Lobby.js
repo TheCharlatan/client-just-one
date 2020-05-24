@@ -88,7 +88,7 @@ export class Lobby extends React.Component {
             responseLobby = await api.get(`/lobby/${sessionStorage.getItem('lobbyId')}`, {headers: {'X-Auth-Token': requestHeader}});
         }
         catch {
-            console.log("Could not load players to invite them.");
+            console.log("Could not load lobby");
             return;
         }
 
@@ -105,7 +105,6 @@ export class Lobby extends React.Component {
     async startGame() {
         let requestHeader = 'X-Auth-Token ' + sessionStorage.getItem('token');
         if (this.state.hostPlayerId != sessionStorage.getItem('userId')) {
-            //alert("Only the lobby host is allowed to start the game.");
             let message_2=`Only the lobby host is allowed to start the game.`
             console.log(message_2);
             this.showErrorModal(message_2);

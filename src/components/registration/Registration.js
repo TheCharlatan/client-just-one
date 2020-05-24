@@ -236,6 +236,7 @@ class Registration extends React.Component {
                 console.log(`Something went wrong during the registration: \n${handleError(error)}`);
                 let message_2=errorBox(error);
                 this.showErrorModal(message_2);
+                return;
             }
         }
     }

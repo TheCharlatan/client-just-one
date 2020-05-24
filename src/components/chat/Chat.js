@@ -112,7 +112,7 @@ flex: 1;
 flex-direction: column;
 margin-bottom: auto;
 background: white;
-border: 13px solid #DDC18E;
+border: 8px solid #DDC18E;
 boxSizing: border-box;
 boxShadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 overflow: auto;
