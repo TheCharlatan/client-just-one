@@ -76,7 +76,7 @@ After the lobby host has started the game, the users play it until either all ca
 Users can leave the game to the lobby by clicking the Leave Game button, which also starts a new round for all remaining players.
 The active player changes after every round. He first has to enter a number to determine the word, and after all clues were entered he can enter the guess.
 The other players can accept or reject the mystery word and, if it was accepted, enter clues.
-After a turn has ended, the outcome is displayed, and a new turn started.
+After a turn has ended, the outcome is displayed, and a new round is started.
 
 <p align="center">
   <img src="./.img/Game.png" alt="Mainpage" width="767">
