@@ -6,7 +6,7 @@ JOC is designed as a Single Page Application (SPA) and provides an intuitive and
 ## Technologies
 
 JOC uses the JS-based [Node.js](https://nodejs.org/en/) runtime together with the [React framework](https://reactjs.org/) for it's user interface.
-It's SPA functiuonality is implemented using [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start).
+It's SPA functionality is implemented using [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start).
 With [styled-components](https://www.styled-components.com/docs) styled React components are created directly from styles.
 
 ## High-Level Components
@@ -64,7 +64,7 @@ After logging in, users arrive at the mainpage. They can chat with other users (
 </p>
 
 Having joined a lobby by clicking the Join Lobby button or creating a new one, users can chat with their team or invite other players that are online.
-The lobby host can start the game if there are between 3 and 7 players in thier lobby.
+The lobby host can start the game if there are between 3 and 7 players in their lobby.
 
 <p align="center">
   <img src="./.img/Lobby.png" alt="Mainpage" width="767">
@@ -92,7 +92,7 @@ If you have any other idea that you would like to implement, feel free to contac
 
 ## Authors & Acknowledgements
 
-This project was implemented by Group 6 of the 2020 SoPra course. Raffael Botschen, Stefanie Javet, Sebastian Küng, Yasara Peiris and Prasun Saurabh.<br>
+This project was implemented by Group 6 of the 2020 SoPra course. Raffael Botschen, Stefanie Javet, Sebastian Kï¿½ng, Yasara Peiris and Prasun Saurabh.<br>
 Thanks to the SoPra team for the templates, and to our TA Dimitri Kohler for his help.
 
 ## License
