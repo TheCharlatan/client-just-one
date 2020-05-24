@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const ActionContainer = styled.div`
 grid-area: 1 / 1 / 2 / 2;
+width: 120%;
 `;
 
 export const UserContainer = styled.div`
