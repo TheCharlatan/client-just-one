@@ -208,7 +208,9 @@ class Game extends React.Component {
             updateTimer: setInterval(() => this.updateGame(), 1000),
             previousState: JSON.parse(JSON.stringify(this.state))
         });
-        sessionStorage.setItem('skippedCounter', '0'); // count number of skipped words (different from words skipped due to player leaving)
+        if (this.state.gameModel && this.state.gameModel.round == 1) {
+            sessionStorage.setItem('skippedCounter', '0'); // count number of skipped words (different from words skipped due to player leaving)
+        }
     }
 
 
