@@ -1,7 +1,7 @@
 # Just One Client
 
 Just One Client (JOC) is a client for the multiplayer game Just One. It is written to work with a server, for which the source code can be found [here](https://github.com/SOPRA-2020/server-just-one).
-JOC is designed as a Single Page Application (SPA) and provides an intuitive and colorful web interface to play the game, as well as use associated functionalities, such as chatting with other users and use lobbies.
+JOC is designed as a Single Page Application (SPA) and provides an intuitive and colorful web interface to play the game, as well as use associated functionalities, such as chatting with other users and lobbies.
 
 ## Technologies
 
@@ -11,7 +11,9 @@ With [styled-components](https://www.styled-components.com/docs) styled React co
 
 ## High-Level Components
 
-JOC is highly modular, using reusable, periodically self-updating React components to implement it's functionality. The most important ones are:
+JOC is highly modular, using reusable React components to implement it's functionality. Where needed they also update with the newest information from the server, e.g. the Chat component.
+
+The most important ones are:
 * [AppRouter](https://github.com/SOPRA-2020/client-just-one/blob/master/src/components/shared/routers/AppRouter.js)<br>
 Handles the routing of the application. Ensures that only logged in players can use it, and handles transition between different parts of the app.
 * [Mainpage](https://github.com/SOPRA-2020/client-just-one/blob/master/src/components/mainpage/MainPage.js)<br>
@@ -19,9 +21,9 @@ The Mainpage component ties together many other components (like Chat, Leaderboa
 * [Lobby](https://github.com/SOPRA-2020/client-just-one/blob/master/src/components/lobby/Lobby.js)<br>
 Before joining a game, at least 3 users have to join a lobby. Also provides functionality for inviting players and chatting.
 * [Chat](https://github.com/SOPRA-2020/client-just-one/blob/master/src/components/chat/Chat.js)<br>
-Responsible for UI and communication with the server for chat components. Gets used by the mainpage and lobby components. Can work with separate endpoints.
+Responsible for the UI and communication with the server for chat messages. Gets used by the mainpage and lobby components. Can work with instance-specific endpoints.
 * [Game](https://github.com/SOPRA-2020/client-just-one/blob/master/src/components/game/Game.js)<br>
-The frontend engine of the game. Based on the current status retrieved, it sets the frontend status and communicates received information to the players. Makes use of many different components for the different game states.
+The frontend engine of the game. Based on the current status retrieved from the server, it sets the frontend status and communicates received information to the players. Makes use of many different components for the different game states.
 
 ## Launch & Deployment
 
@@ -51,7 +53,7 @@ For remote deployment, after pushing a new commit to Github, Github Actions depl
 
 ## UI Flow
 
-When no login is found, users are redirected to the login page. Users can register an account, or log in with existing credentials.
+When no login is found, users are redirected to the login page. There they can register an account, or log in with existing credentials.
 
 <p align="center">
   <img src="./.img/Login.png" alt="Login Page" width="767">
@@ -63,15 +65,15 @@ After logging in, users arrive at the mainpage. They can chat with other users (
   <img src="./.img/Mainpage.png" alt="Mainpage" width="767">
 </p>
 
-Having joined a lobby by clicking the Join Lobby button or creating a new one, users can chat with their team or invite other players that are online.
+Having joined a lobby by clicking the Join Lobby button and selecting one, or having created a new one with the Create Lobby button, users can chat with their team or invite other players that are online.
 The lobby host can start the game if there are between 3 and 7 players in their lobby.
 
 <p align="center">
   <img src="./.img/Lobby.png" alt="Mainpage" width="767">
 </p>
 
-After the lobby host has started the game, the users play it until either all cards are played, or less than 2 players are still in the game.
-Users can leave the game to the lobby by clicking the Leave Game button, which also starts a new round for all players.
+After the lobby host has started the game, the users play it until either all cards are played, or less than 3 players are still in the game.
+Users can leave the game to the lobby by clicking the Leave Game button, which also starts a new round for all remaining players.
 The active player changes after every round. He first has to enter a number to determine the word, and after all clues were entered he can enter the guess.
 The other players can accept or reject the mystery word and, if it was accepted, enter clues.
 After a turn has ended, the outcome is displayed, and a new turn started.
@@ -80,19 +82,19 @@ After a turn has ended, the outcome is displayed, and a new turn started.
   <img src="./.img/Game.png" alt="Mainpage" width="767">
 </p>
 
-After the game has ended, an overview is displayed, and the users get moved back to their lobby.
+After the game has ended, an overview is displayed, and the users get moved back to their lobby after some time.
 
 ## Roadmap
 
 No project is ever completely finished, so here are some features that you could add:
 * Bots: To allow users to play alone, bot support could be added to the game. These bots would appear as normal players, giving clues and guessing.
-* Matchmaking: An alternative to bots would be to make playing with others easier. For this, some sort of matchmaking could be added.
+* Matchmaking: An alternative to bots would be to facilitate playing with others. For this, some sort of matchmaking could be added.
 
 If you have any other idea that you would like to implement, feel free to contact us.
 
 ## Authors & Acknowledgements
 
-This project was implemented by Group 6 of the 2020 SoPra course. Raffael Botschen, Stefanie Javet, Sebastian K�ng, Yasara Peiris and Prasun Saurabh.<br>
+This project was implemented by Group 6 of the 2020 SoPra course, consisting of Raffael Botschen, Stefanie Javet, Sebastian Kueng, Yasara Peiris and Prasun Saurabh.<br>
 Thanks to the SoPra team for the templates, and to our TA Dimitri Kohler for his help.
 
 ## License
