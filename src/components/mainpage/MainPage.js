@@ -120,7 +120,11 @@ export class MainPage extends React.Component {
                     <ChatButton/>
                 </BottomLeftContainer>
                 <CenterContainer style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                    <FormContainer style={{marginTop: 0}}>
+                    <FormContainer style={{
+                        marginTop: 0,
+                        width: "60%",
+                        widthImportant: "true",
+                    }}>
                         <Form style={{width: "auto", height: "auto"}}>
                             <CreateLobbyButton onClick={() => this.showModal()}/>
                             <JoinLobbyButton loadLobbies={this.loadLobbies}/>
