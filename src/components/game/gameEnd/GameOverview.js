@@ -43,6 +43,7 @@ class GameOverview extends React.Component {
             let requestBody = sessionStorage.getItem('userId');
             let gameId = sessionStorage.getItem('gameId');
             sessionStorage.removeItem("gameId");
+            sessionStorage.removeItem("skippedCounter");
             api.delete(`game/${gameId}`,
                 {headers:{'X-Auth-Token': requestHeader},data:requestBody})
                 .then(r => this.props.history.push(`/lobby/${sessionStorage.getItem('lobbyId')}`));
@@ -82,7 +83,7 @@ class GameOverview extends React.Component {
                         return <UserStats user={user} gameStats={this.state.gameStats} />
                       })}
                   </IndividualStatsContainer>
-                  <TeamStats gameStats={this.state.gameStats} roundsPlayed={this.props.roundsPlayed}/>
+                  <TeamStats gameStats={this.state.gameStats} roundsSkipped={this.props.roundsSkipped} />
               </CenterContainer>
           </BaseContainer>
         );
