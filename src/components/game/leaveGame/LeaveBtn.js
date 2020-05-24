@@ -32,6 +32,7 @@ class LeaveButton extends React.Component {
                     'lobbyId':sessionStorage.getItem("lobbyId")
                 });
             let gameId = sessionStorage.getItem('gameId');
+            sessionStorage.removeItem("skippedCounter");
             sessionStorage.removeItem("gameId");
             await api.delete(`game/user/${gameId}`,  {headers: {'X-Auth-Token': requestHeader}, data: requestBody});
         } catch {

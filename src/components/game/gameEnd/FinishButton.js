@@ -23,6 +23,7 @@ class FinishButton extends React.Component {
             let requestBody = sessionStorage.getItem('userId');
             let gameId = sessionStorage.getItem('gameId');
             sessionStorage.removeItem("gameId");
+            sessionStorage.removeItem("skippedCounter");
             await api.delete(`game/${gameId}`, {headers:{'X-Auth-Token': requestHeader}, data:requestBody});
             clearTimeout(this.props.timerId);
         }
