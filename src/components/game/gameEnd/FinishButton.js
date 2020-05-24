@@ -28,7 +28,8 @@ class FinishButton extends React.Component {
             clearTimeout(this.props.timerId);
         }
         catch {
-            console.log("fail");
+            console.log("fail to leave the game");
+            return ;
         }
     }
 

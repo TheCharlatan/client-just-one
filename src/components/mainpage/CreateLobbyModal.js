@@ -100,7 +100,6 @@ export class CreateLobbyModal extends React.Component {
       {
         return;
       }
-      console.log('enter press here! ')
       this.createLobby();
     }
   }

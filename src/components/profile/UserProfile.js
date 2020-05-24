@@ -63,8 +63,6 @@ export class UserProfile extends React.Component {
                 [key]: value,
             },
         });
-
-        console.log(this.state.userData);
     }
 
     async saveModifiedUser() {
@@ -76,7 +74,6 @@ export class UserProfile extends React.Component {
             return;
         }
         this.loadUserData(sessionStorage.getItem('userId'));
-        console.log(this.state.userData);
     }
 
     async loadUserData(userProfileId) {
@@ -93,7 +90,6 @@ export class UserProfile extends React.Component {
             userData.birthDay = userData.birthDay.substring(0,10);
         }
         this.setState({userData: userData});
-        console.log(userData);
     }
 
 
