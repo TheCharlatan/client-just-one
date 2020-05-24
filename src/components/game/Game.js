@@ -174,6 +174,9 @@ class Game extends React.Component {
             }
             else if (prevState.gameModel.gameStatus !== "AWAITING_CLUES") {
                 this.setState({ guessCorrect: 'skipped' });
+                let skippedCount = parseInt(sessionStorage.getItem('skippedCounter'), 10);
+                skippedCount ? skippedCount += 1 : skippedCount = 1;
+                sessionStorage.setItem('skippedCounter', skippedCount.toString());
             }
             else {
                 this.setState({ guessCorrect: 'noValidClues' });
@@ -205,6 +208,9 @@ class Game extends React.Component {
             updateTimer: setInterval(() => this.updateGame(), 1000),
             previousState: JSON.parse(JSON.stringify(this.state))
         });
+        if (this.state.gameModel && this.state.gameModel.round == 1) {
+            sessionStorage.setItem('skippedCounter', '0'); // count number of skipped words (different from words skipped due to player leaving)
+        }
     }
 
 
@@ -294,7 +300,7 @@ class Game extends React.Component {
             return <GameOverview
                 gameModel={this.state.gameModel}
                 users={this.state.users}
-                roundsPlayed={this.state.gameModel.round - 1}
+                roundsSkipped={parseInt(sessionStorage.getItem('skippedCounter'))}
             />;
         }
 
@@ -493,7 +499,7 @@ class Game extends React.Component {
                         </InfoLabel>
                         <Info>
                             <Orange>
-                                {(13 - this.state.gameModel.cardStackCount) - this.state.gameModel.wordsGuessedCorrect - 2*this.state.gameModel.wordsGuessedWrong}
+                                {sessionStorage.getItem('skippedCounter')}
                             </Orange>
                         </Info>
                     </GameInfo>
