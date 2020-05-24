@@ -290,7 +290,7 @@ class Game extends React.Component {
         }
 
         // game has ended -> use separate screen
-        if (this.state.gameModel.gameStatus === "GAME_OVER") {
+        if (this.state.frontendGameStatus === "GAME_OVER") {
             return <GameOverview
                 gameModel={this.state.gameModel}
                 users={this.state.users}
@@ -304,7 +304,7 @@ class Game extends React.Component {
         let changingElements = null;
 
         // no index selected yet
-        if (this.state.gameModel.gameStatus === "AWAITING_INDEX") {
+        if (this.state.frontendGameStatus === "SELECT_INDEX") {
             if (this.isActivePlayer(this.state.currentUser.id)) {
                 changingElements = <SelectNumberContainer gameId={this.state.gameModel.id} /> // active player can select number
             }
